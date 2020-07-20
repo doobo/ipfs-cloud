@@ -1,0 +1,9 @@
+.idea
+.DS_Store
+elfinder-web/target
+elfinder-core/target
+*.iml
+data/
+target/
+pom.xml.releaseBackup
+release.properties
