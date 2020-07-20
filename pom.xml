@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ipfs.cloud</groupId>
-    <artifactId>ipfs-cloud</artifactId>
+    <artifactId>ipfs-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -22,7 +22,7 @@
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <plugin.release.version>2.5.3</plugin.release.version>
     </properties>
-    
+
     <modules>
         <module>ipfs-gateway</module>
     </modules>
