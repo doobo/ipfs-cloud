@@ -15,7 +15,6 @@ public class WordUtils {
 	/**
 	 * 下划线转驼峰
 	 * @param str
-	 * @return
 	 */
 	public static String lineToHump(String str) {
 		if(str == null || str.isEmpty() || !str.contains("_")){
@@ -34,7 +33,6 @@ public class WordUtils {
 	/**
 	 * 驼峰转下划线
 	 * @param str
-	 * @return
 	 */
 	public static String humpToLine(String str) {
 		Matcher matcher = humpPattern.matcher(str);
@@ -48,9 +46,7 @@ public class WordUtils {
 
 	/**
 	 * 首字母大写
-	 *
 	 * @param string
-	 * @return
 	 */
 	public static String toUpperCaseIndex(String string) {
 		char[] methodName = string.toCharArray();
@@ -60,7 +56,6 @@ public class WordUtils {
 
 	/**
 	 * 首字母小写
-	 *
 	 * @param string
 	 * @return
 	 */
@@ -72,9 +67,7 @@ public class WordUtils {
 
 	/**
 	 * 字符转成大写
-	 *
 	 * @param chars
-	 * @return
 	 */
 	public static char toUpperCase(char chars) {
 		if (97 <= chars && chars <= 122) {
@@ -85,9 +78,7 @@ public class WordUtils {
 
 	/**
 	 * 字符转成小写
-	 *
 	 * @param chars
-	 * @return
 	 */
 	public static char toLowerCase(char chars) {
 		if (65 <= chars && chars <= 90) {
@@ -194,7 +185,6 @@ public class WordUtils {
 	 * 保留word字符,其它多替换成指定字符
 	 * @param str
 	 * @param word
-	 * @return
 	 */
 	public static String plusOut(String str, String word, String replacement) {
 		return str.replaceAll("\\G((?:" + word + ")*+).", "$1"+replacement);

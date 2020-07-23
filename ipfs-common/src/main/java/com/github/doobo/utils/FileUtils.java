@@ -104,7 +104,6 @@ public class FileUtils {
 	/**
 	 * 读取资源文件成byte数组,不替换换行符
 	 * @param fileName
-	 * @return
 	 */
 	public static byte[] readResourcesByte(String fileName){
 		ClassPathResource classPathResource = new ClassPathResource(fileName);

@@ -46,7 +46,6 @@ public class DateUtils {
 	 * 字符串转本地时间
 	 * @param date
 	 * @param format
-	 * @return
 	 */
 	public static LocalDate getLocalDate(String date,String format){
 		format = format == null? DateFormat.y_m_d.getFt():format;
@@ -60,7 +59,6 @@ public class DateUtils {
 	/**
 	 * 字符串转本地时间
 	 * @param date
-	 * @return
 	 */
 	public static LocalDate getLocalDate(String date){
 		return getLocalDate(date, null);
@@ -70,7 +68,6 @@ public class DateUtils {
 	 * 字符串转时间
 	 * @param date
 	 * @param format
-	 * @return
 	 */
 	public static Date getDate(String date,String format){
 		format = format == null? DateFormat.y_m_d.getFt():format;
@@ -85,7 +82,6 @@ public class DateUtils {
 	/**
 	 * 字符串转时间
 	 * @param date
-	 * @return
 	 */
 	public static Date getDate(String date){
 		return getDate(date,null);
@@ -94,7 +90,6 @@ public class DateUtils {
       /**
        * @Description 将带有纳秒的时间字符串转换成LocalDateTime
        * @param str
-       * @return
        */
       public static LocalDateTime timestampStrToLocalDateTime(String str){
         if(str == null){
@@ -112,7 +107,6 @@ public class DateUtils {
        * localDateTime时间格式化
        * @param localDateTime
        * @param format
-       * @return
        */
       public static String localDateTimeStr(LocalDateTime localDateTime,String format){
         if(localDateTime == null){
@@ -126,7 +120,6 @@ public class DateUtils {
       /**
        * Date类型转LocalDate类型
        * @param date
-       * @return
        */
       public static LocalDate dateToLocalDate(Date date) {
         if(date == null){
@@ -154,7 +147,6 @@ public class DateUtils {
       /**
        * date转本地时间
        * @param date
-       * @return
        */
       public static LocalDateTime dateToLocalDateTime(Date date) {
         if(date == null){
@@ -168,7 +160,6 @@ public class DateUtils {
       /**
        * 日期格式化
        * @param date
-       * @return
        */
       public static String formatDate(Date date) {
         return formatDateByFormat(date, DateFormat.y_m_d.getFt());
@@ -178,7 +169,6 @@ public class DateUtils {
        * 获取字符串类型的格式
        * @param date
        * @param format
-       * @return
        */
       public static String formatDateByFormat(Date date, String format) {
         String result;
@@ -196,7 +186,6 @@ public class DateUtils {
       /**
        * 获取最大日期
        * @param params
-       * @return
        */
       public static Date getMaxDate(Date... params){
         Date maxDate = params[0];
@@ -227,7 +216,6 @@ public class DateUtils {
 	 * 字符转时间
 	 * @param dateStr
 	 * @param pattern
-	 * @return
 	 */
 	public static LocalDate parseLocalDate(String dateStr, String pattern) {
 		return LocalDate.parse(dateStr, DateTimeFormatter.ofPattern(pattern));
@@ -237,7 +225,6 @@ public class DateUtils {
 	 * 字符转时间
 	 * @param dateTimeStr
 	 * @param pattern
-	 * @return
 	 */
 	public static LocalDateTime parseLocalDateTime(String dateTimeStr, String pattern) {
 		return LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ofPattern(pattern));
@@ -247,7 +234,6 @@ public class DateUtils {
 	 * 字符转时间
 	 * @param timeStr
 	 * @param pattern
-	 * @return
 	 */
 	public static LocalTime parseLocalTime(String timeStr, String pattern) {
 		return LocalTime.parse(timeStr, DateTimeFormatter.ofPattern(pattern));
@@ -257,7 +243,6 @@ public class DateUtils {
 	 * 时间转字符
 	 * @param date
 	 * @param pattern
-	 * @return
 	 */
 	public static String formatLocalDate(LocalDate date, String pattern) {
 		return date.format(DateTimeFormatter.ofPattern(pattern));
@@ -267,7 +252,6 @@ public class DateUtils {
 	 * 时间转字符
 	 * @param datetime
 	 * @param pattern
-	 * @return
 	 */
 	public static String formatLocalDateTime(LocalDateTime datetime, String pattern) {
 		return datetime.format(DateTimeFormatter.ofPattern(pattern));
@@ -277,7 +261,6 @@ public class DateUtils {
 	 * 时间转字符
 	 * @param time
 	 * @param pattern
-	 * @return
 	 */
 	public static String formatLocalTime(LocalTime time, String pattern) {
 		return time.format(DateTimeFormatter.ofPattern(pattern));
@@ -287,7 +270,6 @@ public class DateUtils {
 	 * 日期相隔年数
 	 * @param startDateInclusive
 	 * @param endDateExclusive
-	 * @return
 	 */
 	public static int periodYears(LocalDate startDateInclusive, LocalDate endDateExclusive) {
 		return startDateInclusive.until(endDateExclusive).getYears();
@@ -296,7 +278,6 @@ public class DateUtils {
 	/**
 	 * 当前天,间隔多少年,算周岁
 	 * @param startDateInclusive
-	 * @return
 	 */
 	public static int periodYears(LocalDate startDateInclusive) {
 		return periodYears(startDateInclusive, LocalDate.now());
@@ -306,7 +287,6 @@ public class DateUtils {
 	 * 日期相隔天数
 	 * @param startDateInclusive
 	 * @param endDateExclusive
-	 * @return
 	 */
 	public static long periodDays(LocalDate startDateInclusive, LocalDate endDateExclusive) {
 		return endDateExclusive.toEpochDay() - startDateInclusive.toEpochDay();
@@ -314,7 +294,6 @@ public class DateUtils {
 
 	/**
 	 * 与当前天间隔天数
-	 * @return
 	 */
 	public static long periodDays(LocalDate endDateExclusive) {
 		return endDateExclusive.toEpochDay() - LocalDate.now().toEpochDay();
@@ -324,7 +303,6 @@ public class DateUtils {
 	 * 日期相隔小时
 	 * @param startInclusive
 	 * @param endExclusive
-	 * @return
 	 */
 	public static long durationHours(Temporal startInclusive, Temporal endExclusive) {
 		return Duration.between(startInclusive, endExclusive).toHours();
@@ -334,7 +312,6 @@ public class DateUtils {
 	 * 日期相隔分钟
 	 * @param startInclusive
 	 * @param endExclusive
-	 * @return
 	 */
 	public static long durationMinutes(Temporal startInclusive, Temporal endExclusive) {
 		return Duration.between(startInclusive, endExclusive).toMinutes();
@@ -344,7 +321,6 @@ public class DateUtils {
 	 * 日期相隔毫秒数
 	 * @param startInclusive
 	 * @param endExclusive
-	 * @return
 	 */
 	public static long durationMillis(Temporal startInclusive, Temporal endExclusive) {
 		return Duration.between(startInclusive, endExclusive).toMillis();

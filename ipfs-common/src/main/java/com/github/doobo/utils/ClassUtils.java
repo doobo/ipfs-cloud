@@ -56,7 +56,6 @@ public class ClassUtils {
 
     /**
      * 判断你一个类是否存在某个属性（字段）
-     *
      * @param fieldName 字段
      * @param obj   类对象
      * @return true:存在，false:不存在, null:参数不合法
@@ -75,7 +74,6 @@ public class ClassUtils {
                 break;
             }
         }
-
         return flag;
     }
 }

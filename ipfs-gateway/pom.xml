@@ -11,15 +11,35 @@
 
     <artifactId>ipfs-gateway</artifactId>
 
-    <properties>
-    </properties>
+    <properties></properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
         <!-- 可以在JVM中可靠地执行外部进程的库-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
             <version>${apache.exec.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.doobo</groupId>
+            <artifactId>elfinder-api</artifactId>
+            <version>${elfinder.version}</version>
         </dependency>
     </dependencies>
 </project>

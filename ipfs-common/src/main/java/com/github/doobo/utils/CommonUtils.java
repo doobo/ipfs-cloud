@@ -61,7 +61,6 @@ public class CommonUtils {
   /**
    * WeightParent 对象克隆
    * @param src
-   * @return
    * @throws Exception
    */
   public static <T> List<WeightParent<T>> cloneCopy(List<WeightParent<T>> src) throws CloneNotSupportedException {

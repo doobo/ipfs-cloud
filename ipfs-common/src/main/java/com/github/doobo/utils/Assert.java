@@ -1,5 +1,8 @@
 package com.github.doobo.utils;
 
+/**
+ * 基础信息判断
+ */
 public final class Assert {
 
   private Assert() {

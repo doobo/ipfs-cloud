@@ -32,7 +32,6 @@ public class WeightRandom<T> {
 
   /**
    * 概率恒定获取多个随机元素
-   * @return
    */
   public List<WeightParent> getElementsByFixed(int amount){
     List<WeightParent> list = new ArrayList(amount);
@@ -49,7 +48,6 @@ public class WeightRandom<T> {
 
   /**
    * 递减获取随机值，不重复
-   * @return
    */
   public List<WeightParent> getNoRepeatElementsByDecrement(int amount){
     Assert.isTrue(CommonUtils.hasValue(origin),"无数据源");
@@ -78,7 +76,6 @@ public class WeightRandom<T> {
 
   /**
    * 恒定概率获取不重复的多个元素
-   * @return
    */
   public List<WeightParent> getNoRepeatElementsByFixed(int amount){
     Assert.isTrue(CommonUtils.hasValue(origin),"无数据源");
@@ -103,7 +100,6 @@ public class WeightRandom<T> {
 
 	/**
 	 * 获取原始值
-	 * @return
 	 */
 	public List<WeightParent<T>> getOrigin() {
     return origin;
@@ -111,7 +107,6 @@ public class WeightRandom<T> {
 
   /**
    * 获取一个随机元素
-   * @return
    */
   public WeightParent<T> getOneElement(){
     long count = origin.stream().filter(Objects::nonNull).filter(f->f.getCount()>0).count();
@@ -128,7 +123,6 @@ public class WeightRandom<T> {
   /**
    * 重置元素
    * @param preTmp
-   * @return
    */
   private boolean resetData(List<WeightParent<T>> preTmp){
     if(CommonUtils.hasValue(preTmp)){
@@ -140,7 +134,6 @@ public class WeightRandom<T> {
 
   /**
    * 重新计算和
-   * @return
    */
   private boolean resetSum(){
     if(CommonUtils.hasValue(origin)){
@@ -151,7 +144,6 @@ public class WeightRandom<T> {
 
   /**
    * 全部循环获取随机元素
-   * @return
    */
   private WeightParent getWeightElementByAll(){
     Integer n;
@@ -172,7 +164,6 @@ public class WeightRandom<T> {
 
   /**
    * 二分法获取随机预测值
-   * @return
    */
   private WeightParent getRandomElementByBinary(){
     Integer n;
@@ -203,7 +194,6 @@ public class WeightRandom<T> {
    * 二分法查找值
    * @param list
    * @param key
-   * @return
    */
   private WeightParent binarySearch(List<WeightParent<T>> list, int key){
     Assert.isTrue(CommonUtils.hasValue(list),"参数异常");

@@ -104,7 +104,6 @@ public class FileTypeUtils {
     /**
      * 获取文件类型
      * @param in
-     * @return
      */
     public static String getFileType(InputStream in){
         String res = null;
@@ -133,7 +132,6 @@ public class FileTypeUtils {
     /**
      * 得到上传文件的文件头
      * @param src
-     * @return
      */
     public static String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder();
