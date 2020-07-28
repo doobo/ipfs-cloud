@@ -9,6 +9,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -228,6 +230,31 @@ public class FileUtils {
 			fw.close();
 		} catch (IOException e) {
 			log.error("FileUtilsError", e);
+		}
+	}
+
+	/**
+	 * 获取zip里面指定的文件
+	 * @param in
+	 * @param fileName
+	 * @throws IOException
+	 */
+	public static byte[] queryFileInZip(byte[] in, String fileName) throws IOException {
+		try(ByteArrayInputStream is = new ByteArrayInputStream(in);
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			ZipInputStream zin = new ZipInputStream(is)){
+			ZipEntry ze;
+			while ((ze = zin.getNextEntry()) != null) {
+				if (ze.getName().equals(fileName)) {
+					byte[] buffer = new byte[9000];
+					int len;
+					while ((len = zin.read(buffer)) != -1) {
+						out.write(buffer, 0, len);
+					}
+					break;
+				}
+			}
+			return out.toByteArray();
 		}
 	}
 

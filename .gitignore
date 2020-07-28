@@ -7,3 +7,4 @@ data/
 target/
 pom.xml.releaseBackup
 release.properties
+.ipfs
