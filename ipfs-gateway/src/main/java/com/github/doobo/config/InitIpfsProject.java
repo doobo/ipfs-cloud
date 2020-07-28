@@ -1,5 +1,6 @@
 package com.github.doobo.config;
 
+import com.github.doobo.utils.OsUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +16,16 @@ public class InitIpfsProject {
 	 */
 	@PostConstruct
 	public void initIpfsEnv(){
-
+		switch (OsUtils.getSystemType()){
+			case MAC_OS:
+				initMac64Ipfs();
+				break;
+			case Linux:
+				initLinux64Ipfs();
+				break;
+			case Windows:
+				initWin64Ipfs();
+		}
 	}
 
 	/**

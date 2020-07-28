@@ -15,8 +15,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
 
         <dependency>
@@ -41,5 +41,13 @@
             <artifactId>elfinder-api</artifactId>
             <version>${elfinder.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>ipfs.cloud</groupId>
+            <artifactId>ipfs-common</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>
