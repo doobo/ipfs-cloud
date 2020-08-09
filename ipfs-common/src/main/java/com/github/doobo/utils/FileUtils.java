@@ -246,7 +246,7 @@ public class FileUtils {
 			ZipEntry ze;
 			while ((ze = zin.getNextEntry()) != null) {
 				if (ze.getName().equals(fileName)) {
-					byte[] buffer = new byte[9000];
+					byte[] buffer = new byte[8192];
 					int len;
 					while ((len = zin.read(buffer)) != -1) {
 						out.write(buffer, 0, len);
