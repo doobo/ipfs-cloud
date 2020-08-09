@@ -19,6 +19,11 @@ import java.io.OutputStream;
 public class InitIpfsProject {
 
 	/**
+	 * ipfs命令
+	 */
+	public static String IPFS;
+
+	/**
 	 * 初始化系统环境
 	 */
 	@PostConstruct
@@ -39,11 +44,6 @@ public class InitIpfsProject {
 	}
 
 	/**
-	 * ipfs命令
-	 */
-	public static String IPFS;
-
-	/**
 	 * 初始化windows环境
 	 * @return
 	 */
@@ -53,11 +53,11 @@ public class InitIpfsProject {
 		try (OutputStream out = new FileOutputStream(".ipfs/go-ipfs/ipfs.exe")){
 			byte[] ipfs = FileUtils.queryFileInZip(rs, "go-ipfs/ipfs.exe");
 			out.write(ipfs);
+			IPFS = new File(".ipfs/go-ipfs/ipfs.exe").getCanonicalPath();
 		} catch (Exception e){
 			log.error("init windows ipfs env fail", e);
 			return false;
 		}
-		IPFS = ".ipfs/go-ipfs/ipfs.exe";
 		return true;
 	}
 
@@ -92,11 +92,12 @@ public class InitIpfsProject {
 			if(tar != null && !tar.isEmpty()){
 				TerminalUtils.execCmd("tar zxvf go-ipfs.tar.gz", new File(".ipfs"));
 			}
+			IPFS = new File(".ipfs/go-ipfs/ipfs").getCanonicalPath();
 		} catch (Exception e){
 			log.error("init windows ipfs env fail", e);
 			return false;
 		}
-		IPFS = ".ipfs/go-ipfs/ipfs";
+
 		return true;
 	}
 }
