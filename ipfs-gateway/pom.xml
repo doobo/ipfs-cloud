@@ -44,7 +44,7 @@
 
         <dependency>
             <groupId>ipfs.cloud</groupId>
-            <artifactId>ipfs-common</artifactId>
+            <artifactId>ipfs-software</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
