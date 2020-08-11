@@ -17,20 +17,19 @@ public class InitUtils {
 	 */
 	public static String IPFS;
 
-	public static void initIpfsEnv(){
+	public static boolean initIpfsEnv(){
 		FileUtils.createFile(".ipfs", ".initIpfs");
 		switch (OsUtils.getSystemType()){
 			case MAC_OS:
-				initMac64Ipfs();
-				break;
+				return initMac64Ipfs();
 			case Linux:
-				initLinux64Ipfs();
-				break;
+				return initLinux64Ipfs();
 			case Windows:
-				initWin64Ipfs();
+				return initWin64Ipfs();
 			default:
 				log.warn("not support system env, can't init ipfs");
 		}
+		return false;
 	}
 
 	/**

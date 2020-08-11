@@ -11,8 +11,6 @@
 
     <artifactId>ipfs-gateway</artifactId>
 
-    <properties></properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -27,13 +25,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-
-        <!-- 可以在JVM中可靠地执行外部进程的库-->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-exec</artifactId>
-            <version>${apache.exec.version}</version>
         </dependency>
 
         <dependency>

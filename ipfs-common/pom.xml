@@ -9,7 +9,6 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>ipfs-common</artifactId>
 
     <dependencies>
@@ -17,6 +16,13 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons.lang3.version}</version>
+        </dependency>
+
+        <!-- 可以在JVM中可靠地执行外部进程的库-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>${apache.exec.version}</version>
         </dependency>
 
         <!--JSON解析和http工具-->

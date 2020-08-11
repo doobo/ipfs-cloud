@@ -16,6 +16,9 @@ public class InitIpfsProject {
 	 */
 	@PostConstruct
 	public void initIpfsEnv(){
-		InitUtils.initIpfsEnv();
+		if(!InitUtils.initIpfsEnv()){
+			return;
+		}
+		System.out.println(InitUtils.IPFS);
 	}
 }
