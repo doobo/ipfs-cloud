@@ -36,8 +36,6 @@ public class TerminalUtils {
 			try {
 				// 执行命令, 返回一个子进程对象（命令在子进程中执行）
 				process = Runtime.getRuntime().exec(cmd, null, dir);
-				// 方法阻塞, 等待命令执行完成（成功会返回0）
-				process.waitFor();
 				// 获取命令执行结果, 有两个结果: 正常的输出 和 错误的输出（PS: 子进程的输出就是主进程的输入）
 				bufIn = new BufferedReader(new InputStreamReader(process.getInputStream(), "UTF-8"));
 				bufError = new BufferedReader(new InputStreamReader(process.getErrorStream(), "UTF-8"));
@@ -49,6 +47,8 @@ public class TerminalUtils {
 				while ((line = bufError.readLine()) != null) {
 					result.append(line).append('\n');
 				}
+				// 方法阻塞, 等待命令执行完成（成功会返回0）
+				process.waitFor();
 			} catch (Exception e){
 				return e.getMessage();
 			} finally {
@@ -63,7 +63,8 @@ public class TerminalUtils {
 		});
 		executor.execute(future);
 		try {
-			return future.get(timeout, TimeUnit.SECONDS); //取得结果，同时设置超时执行时间,同样可以用future.get(),不设置执行超时时间取得结果
+			//取得结果，同时设置超时执行时间,同样可以用future.get(),不设置执行超时时间取得结果
+			return future.get(timeout, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			future.cancel(true);
 		} finally {

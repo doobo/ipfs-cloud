@@ -24,7 +24,7 @@ public class InitIpfsProject {
 		}
 		//初始化Ipfs环境
 		if(!InitUtils.isIpfsInit()){
-			String str = TerminalUtils.execCmd(InitUtils.IPFS + " init");
+			TerminalUtils.execCmd(InitUtils.IPFS + " init");
 			log.info("IPFs is already initialized.");
 		}
 	}
