@@ -1,6 +1,8 @@
 package com.github.doobo.config;
 
 import com.github.doobo.soft.InitUtils;
+import com.github.doobo.utils.TerminalUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -8,6 +10,7 @@ import javax.annotation.PostConstruct;
 /**
  * ipfs环境初始化
  */
+@Slf4j
 @Component
 public class InitIpfsProject {
 
@@ -19,6 +22,10 @@ public class InitIpfsProject {
 		if(!InitUtils.initIpfsEnv()){
 			return;
 		}
-		System.out.println(InitUtils.IPFS);
+		//初始化Ipfs环境
+		if(!InitUtils.isIpfsInit()){
+			String str = TerminalUtils.execCmd(InitUtils.IPFS + " init");
+			log.info("IPFs is already initialized.");
+		}
 	}
 }

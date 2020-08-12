@@ -68,6 +68,15 @@ public class InitUtils {
 	}
 
 	/**
+	 * 检测Ipfs是否初始化
+	 */
+	public static boolean isIpfsInit(){
+		String home = System.getProperty("user.home");
+		log.info(home);
+		return new File(home + File.separator + ".ipfs").exists();
+	}
+
+	/**
 	 * linux和mac os下面的ipfs环境初始化
 	 * @param rs
 	 * @return
