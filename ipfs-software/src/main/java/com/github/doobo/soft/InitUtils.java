@@ -34,7 +34,6 @@ public class InitUtils {
 
 	/**
 	 * 初始化windows环境
-	 * @return
 	 */
 	public static boolean initWin64Ipfs(){
 		FileUtils.createFile(".ipfs/go-ipfs", ".goIpfsExe");
@@ -52,7 +51,6 @@ public class InitUtils {
 
 	/**
 	 * 初始化macOs环境
-	 * @return
 	 */
 	public static boolean initMac64Ipfs(){
 		byte[] rs =FileUtils.readResourcesByte("lib/mac64/go-ipfs.tar.gz");
@@ -77,9 +75,25 @@ public class InitUtils {
 	}
 
 	/**
+	 * 拷贝私有网络库
+	 */
+	public static boolean creatSwarmKey(){
+		String home = System.getProperty("user.home");
+		String ipfsHome = home + File.separator + ".ipfs";
+		FileUtils.createFile(ipfsHome, "swarm.key");
+		byte[] rs =FileUtils.readResourcesByte("key/swarm.key");
+		try (FileOutputStream out = new FileOutputStream(ipfsHome + File.separator + "swarm.key")){
+			out.write(rs);
+		} catch (Exception e){
+			log.error("InitUtilsCreateSwarmKey",e);
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * linux和mac os下面的ipfs环境初始化
 	 * @param rs
-	 * @return
 	 */
 	private static boolean initUnixIpfs(byte[] rs) {
 		try (OutputStream out = new FileOutputStream(".ipfs/go-ipfs.tar.gz")){
