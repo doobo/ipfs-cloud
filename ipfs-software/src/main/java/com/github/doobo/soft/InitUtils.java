@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 @Slf4j
 public class InitUtils {
@@ -87,6 +88,21 @@ public class InitUtils {
 		} catch (Exception e){
 			log.error("InitUtilsCreateSwarmKey",e);
 			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 配置IPFS私有网络
+	 * @return
+	 */
+	public static boolean createIpfsPrivateNetwork(String[] boot){
+		creatSwarmKey();
+		TerminalUtils.execCmd(IPFS + " bootstrap rm all");
+		if(boot != null && boot.length > 0){
+			Arrays.stream(boot).forEach(m->{
+				TerminalUtils.execCmd(IPFS + " bootstrap add " + m);
+			});
 		}
 		return true;
 	}

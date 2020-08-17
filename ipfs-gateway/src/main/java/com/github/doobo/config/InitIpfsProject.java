@@ -39,6 +39,7 @@ public class InitIpfsProject implements InitializingBean {
 	public void afterPropertiesSet() throws Exception {
 		if(ipfsConfig.isPrivateNetwork()){
 			log.info("IPFS is private network.");
+			InitUtils.createIpfsPrivateNetwork(ipfsConfig.getBootstrap());
 		}
 	}
 }
