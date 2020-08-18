@@ -1,15 +1,15 @@
 package com.github.doobo.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.exec.*;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.File;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * 基本命令行工具
@@ -107,5 +107,53 @@ public class TerminalUtils {
 				log.error("TerminalUtils关闭流失败");
 			}
 		}
+	}
+
+	/**
+	 * 异步启动,不阻塞
+	 * @param sh
+	 */
+	public static void asyncExecute(String sh) {
+		new Thread(() -> {
+			syncExecute(sh, null, Long.MAX_VALUE);
+		}).start();
+	}
+
+	/**
+	 * 有返回执行程序
+	 * @param cmd
+	 * @param pwd
+	 * @param timeout 等待时间,毫秒
+	 */
+	public static byte[] syncExecute(String cmd, String pwd, long timeout){
+		File file = pwd == null?null: new File(pwd);
+		try {
+			final CommandLine commandLine = CommandLine.parse(cmd);
+			try(ByteArrayOutputStream bs = new ByteArrayOutputStream()){
+				//设置超时时间：3分钟
+				ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
+				DefaultExecutor executor = new DefaultExecutor();
+				executor.setStreamHandler(new PumpStreamHandler(bs, bs));
+				executor.setWorkingDirectory(file);
+				executor.execute(commandLine);
+				bs.flush();
+				log.info("ExecuteInfo:{}",new String(bs.toByteArray(), UTF_8.name()));
+				executor.setWatchdog(watchdog);
+				return bs.toByteArray();
+			}
+		} catch (Exception e){
+			log.info("asyncExecute执行异常", e);
+		}
+		return new byte[0];
+	}
+
+	/**
+	 * 同步启动程序,无返回
+	 * @param sh
+	 * @throws IOException
+	 */
+	public static void syncExecute(CommandLine sh) throws IOException {
+		DefaultExecutor executor = new DefaultExecutor();
+		executor.execute(sh);
 	}
 }

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
@@ -71,7 +72,6 @@ public class InitUtils {
 	 */
 	public static boolean isIpfsInit(){
 		String home = System.getProperty("user.home");
-		log.info(home);
 		return new File(home + File.separator + ".ipfs").exists();
 	}
 
@@ -97,7 +97,9 @@ public class InitUtils {
 	 * @return
 	 */
 	public static boolean createIpfsPrivateNetwork(String[] boot){
-		creatSwarmKey();
+		if(!creatSwarmKey()){
+			return false;
+		}
 		TerminalUtils.execCmd(IPFS + " bootstrap rm all");
 		if(boot != null && boot.length > 0){
 			Arrays.stream(boot).forEach(m->{
@@ -105,6 +107,14 @@ public class InitUtils {
 			});
 		}
 		return true;
+	}
+
+	/**
+	 * 启动ipfs daemon程序
+	 * @return
+	 */
+	public static void startDaemon(){
+		TerminalUtils.asyncExecute(IPFS + " daemon");
 	}
 
 	/**

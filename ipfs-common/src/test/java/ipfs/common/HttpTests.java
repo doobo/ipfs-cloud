@@ -1,10 +1,12 @@
 package ipfs.common;
 
 import com.alibaba.fastjson.JSON;
+import com.github.doobo.utils.TerminalUtils;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
+import org.apache.commons.exec.CommandLine;
 import org.junit.Test;
 import vip.ipav.okhttp.OkHttpClientTools;
 
@@ -33,5 +35,12 @@ public class HttpTests {
 			ls = ls.stream().distinct().filter(Objects::nonNull).sorted().collect(Collectors.toList());
 			ls.forEach(m-> System.out.println(m));
 		}
+	}
+
+	@Test
+	public void testIpfs() throws IOException {
+		TerminalUtils.syncExecute(
+			 CommandLine.parse("/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs daemon")
+		);
 	}
 }
