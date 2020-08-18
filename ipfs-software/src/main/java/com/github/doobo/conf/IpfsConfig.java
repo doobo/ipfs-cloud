@@ -1,6 +1,7 @@
 package com.github.doobo.conf;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
+@Accessors(chain = true)
 @ConfigurationProperties(prefix = "ipfs")
 public class IpfsConfig {
 
