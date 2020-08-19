@@ -137,7 +137,22 @@ public class InitUtils {
 		byte[] bt = TerminalUtils.syncExecute(IPFS, "id");
 		if(bt != null && bt.length > 0){
 			try {
-				return JSON.parseObject(new String(bt, UTF_8.name()), Node.class);
+				Node node = JSON.parseObject(new String(bt, UTF_8.name()), Node.class);
+				String swarm = TerminalUtils.syncExecuteStr(IPFS, "config Addresses.Swarm");
+				//获取ipfs端口号
+				if(swarm != null) {
+					List<String> sm = JsonPath.using(CONF).parse(swarm).read("$");
+					if(CommonUtils.hasValue(sm)){
+						for(String m : sm){
+							String num = WordUtils.getStrEndNumber(m);
+							if(num != null){
+								node.setPort(num);
+								break;
+							}
+						}
+					}
+				}
+				return node;
 			} catch (Exception e) {
 				log.error("getNodeInfoError", e);
 			}

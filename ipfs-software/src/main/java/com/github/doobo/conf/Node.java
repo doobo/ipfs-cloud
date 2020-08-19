@@ -15,6 +15,8 @@ public class Node {
 
 	private String ip;
 
+	private String port;
+
 	@JSONField(name = "ID")
 	private String cid;
 
