@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class InitIpfsProject implements InitializingBean {
+public class InitIpfsProject {
 
 	@Resource
 	private IpfsConfig ipfsConfig;
@@ -30,13 +30,10 @@ public class InitIpfsProject implements InitializingBean {
 		}
 		//初始化Ipfs环境
 		if(!InitUtils.isIpfsInit()){
-			TerminalUtils.execCmd(InitUtils.IPFS + " init");
+			TerminalUtils.syncExecute(InitUtils.IPFS + " init", null, 60000);
 			log.info("IPFS is already initialized.");
 		}
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
+		//是否是私有网络
 		if(ipfsConfig.isPrivateNetwork()){
 			if(InitUtils.createIpfsPrivateNetwork(ipfsConfig.getBootstrap())){
 				log.info("IPFS is private network.");

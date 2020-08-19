@@ -23,4 +23,6 @@ public class IpfsConfig {
 	private Integer httpPort;
 
 	private boolean privateNetwork;
+
+	private String cid;
 }

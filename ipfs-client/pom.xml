@@ -50,10 +50,25 @@
         </dependency>
 
         <dependency>
+            <groupId>com.github.doobo</groupId>
+            <artifactId>elfinder-api</artifactId>
+            <version>${elfinder.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ipfs.cloud</groupId>
             <artifactId>ipfs-software</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

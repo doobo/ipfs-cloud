@@ -71,7 +71,7 @@ public class InitUtils {
 	 */
 	public static boolean isIpfsInit(){
 		String home = System.getProperty("user.home");
-		return new File(home + File.separator + ".ipfs").exists();
+		return new File(home + File.separator + ".ipfs" + File.separator + "config").exists();
 	}
 
 	/**
