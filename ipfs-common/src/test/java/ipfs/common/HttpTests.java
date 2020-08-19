@@ -10,10 +10,13 @@ import org.apache.commons.exec.CommandLine;
 import org.junit.Test;
 import vip.ipav.okhttp.OkHttpClientTools;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class HttpTests {
 
@@ -39,8 +42,12 @@ public class HttpTests {
 
 	@Test
 	public void testIpfs() throws IOException {
-		TerminalUtils.syncExecute(
-			 CommandLine.parse("/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs daemon")
-		);
+		/*TerminalUtils.syncExecute(
+			 CommandLine.parse("/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs id")
+		);*/
+
+		byte[] bt = TerminalUtils.syncExecute(new File("/Users/doobo/back/ipfs-cloud/data"),
+			"/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs", "id");
+		System.out.println(new String(bt, UTF_8.name()));
 	}
 }

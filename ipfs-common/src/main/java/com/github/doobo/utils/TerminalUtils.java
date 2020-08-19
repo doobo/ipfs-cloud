@@ -2,6 +2,7 @@ package com.github.doobo.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.concurrent.ExecutorService;
@@ -130,21 +131,55 @@ public class TerminalUtils {
 		try {
 			final CommandLine commandLine = CommandLine.parse(cmd);
 			try(ByteArrayOutputStream bs = new ByteArrayOutputStream()){
-				//设置超时时间：3分钟
-				ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
 				DefaultExecutor executor = new DefaultExecutor();
 				executor.setStreamHandler(new PumpStreamHandler(bs, bs));
 				executor.setWorkingDirectory(file);
 				executor.execute(commandLine);
 				bs.flush();
-				log.info("ExecuteInfo:{}",new String(bs.toByteArray(), UTF_8.name()));
+				log.debug("ExecuteInfo:{}",new String(bs.toByteArray(), UTF_8.name()));
+				ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
 				executor.setWatchdog(watchdog);
 				return bs.toByteArray();
 			}
 		} catch (Exception e){
-			log.info("asyncExecute执行异常", e);
+			log.error("asyncExecuteError,{}", cmd, e);
 		}
 		return new byte[0];
+	}
+
+	/**
+	 * 设置等待时间
+	 * @param cmd
+	 * @param timeout
+	 */
+	public static byte[] syncExecute(String cmd, long timeout){
+		return syncExecute(cmd, null, timeout);
+	}
+
+	/**
+	 * 立即返回
+	 * @param cmd
+	 */
+	public static byte[] syncExecute(File pwd, String... cmd){
+		String sh = null;
+		if(cmd != null && cmd.length > 0){
+			sh = StringUtils.join(cmd, " ");
+		}
+		try {
+			String path = pwd==null?null:pwd.getCanonicalPath();
+			return syncExecute(sh, path,TIMEOUT * 1000);
+		} catch (IOException e) {
+			log.error("syncExecuteError,{}" ,sh ,e);
+		}
+		return new byte[0];
+	}
+
+	/**
+	 * 立即返回
+	 * @param cmd
+	 */
+	public static byte[] syncExecute(String... cmd){
+		return syncExecute(null, cmd);
 	}
 
 	/**

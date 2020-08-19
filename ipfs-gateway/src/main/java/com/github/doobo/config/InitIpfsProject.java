@@ -4,11 +4,11 @@ import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.soft.InitUtils;
 import com.github.doobo.utils.TerminalUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Collections;
 
 /**
  * ipfs环境初始化

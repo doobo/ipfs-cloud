@@ -5,6 +5,8 @@ import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * ipfs常用基本配置
  */
@@ -24,5 +26,5 @@ public class IpfsConfig {
 
 	private boolean privateNetwork;
 
-	private String cid;
+	private List<Node> nodes;
 }

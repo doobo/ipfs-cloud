@@ -1,8 +1,12 @@
 package com.github.doobo.soft;
 
+import com.alibaba.fastjson.JSON;
+import com.github.doobo.conf.Node;
 import com.github.doobo.utils.FileUtils;
 import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.TerminalUtils;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.Option;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -10,8 +14,16 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Slf4j
 public class InitUtils {
+
+	/**
+	 * json-path解析配置
+	 */
+	private static Configuration CONF
+		= Configuration.builder().build().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
 
 	/**
 	 * ipfs命令
@@ -93,7 +105,6 @@ public class InitUtils {
 
 	/**
 	 * 配置IPFS私有网络
-	 * @return
 	 */
 	public static boolean createIpfsPrivateNetwork(String[] boot){
 		if(!creatSwarmKey()){
@@ -110,10 +121,24 @@ public class InitUtils {
 
 	/**
 	 * 启动ipfs daemon程序
-	 * @return
 	 */
 	public static void startDaemon(){
 		TerminalUtils.asyncExecute(IPFS + " daemon");
+	}
+
+	/**
+	 * 获取ipfs节点配置
+	 */
+	public static Node getIpfsNodeInfo(){
+		byte[] bt = TerminalUtils.syncExecute(IPFS, "id");
+		if(bt != null && bt.length > 0){
+			try {
+				return JSON.parseObject(new String(bt, UTF_8.name()), Node.class);
+			} catch (Exception e) {
+				log.error("getNodeInfoError", e);
+			}
+		}
+		return null;
 	}
 
 	/**
