@@ -1,7 +1,9 @@
 package ipfs.common;
 
 import com.alibaba.fastjson.JSON;
+import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.TerminalUtils;
+import com.github.doobo.utils.WordUtils;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -12,6 +14,8 @@ import vip.ipav.okhttp.OkHttpClientTools;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -46,8 +50,15 @@ public class HttpTests {
 			 CommandLine.parse("/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs id")
 		);*/
 
-		byte[] bt = TerminalUtils.syncExecute(new File("/Users/doobo/back/ipfs-cloud/data"),
-			"/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs", "id");
+		byte[] bt = TerminalUtils.syncExecute(
+			"/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs config Addresses.Swarm --json [\"/ip4/0.0.0.0/tcp/4001\",\"/ip6/::/tcp/4001\",\"/ip4/0.0.0.0/udp/4001/quic\",\"/ip6/::/udp/4001/quic\"]");
 		System.out.println(new String(bt, UTF_8.name()));
+	}
+
+	@Test
+	public void testNetworkPort(){
+		System.out.println(OsUtils.checkIpPortOpen("5fu8.com", 80));
+		System.out.println(OsUtils.isHostReachable("172.16.30.252", 100));
+		System.out.println(WordUtils.getStrEndNumber("abc1234"));
 	}
 }

@@ -1,18 +1,22 @@
 package com.github.doobo.soft;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONPath;
+import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.conf.Node;
-import com.github.doobo.utils.FileUtils;
-import com.github.doobo.utils.OsUtils;
-import com.github.doobo.utils.TerminalUtils;
+import com.github.doobo.utils.*;
 import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -139,6 +143,54 @@ public class InitUtils {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * 更新ipfs控制
+	 * @param ipfsConfig
+	 */
+	public static void updateConfig(IpfsConfig ipfsConfig){
+		String swarm = TerminalUtils.syncExecuteStr(IPFS, "config Addresses.Swarm");
+		//修改4001接口
+		if(swarm != null){
+			List<String> sm = JsonPath.using(CONF).parse(swarm).read("$");
+			List<String> rm = new ArrayList<>();
+			if(CommonUtils.hasValue(sm)){
+				sm.forEach(m->{
+					String num = WordUtils.getStrEndNumber(m);
+					if(num != null){
+						rm.add(m.replace(num, ipfsConfig.getPort().toString()));
+					}
+					if(m.endsWith("quic")){
+						num = WordUtils.getStrEndNumber(m.substring(0,m.lastIndexOf("/")));
+						if(num != null) {
+							rm.add(m.replace(num, ipfsConfig.getPort().toString()));
+						}
+					}
+				});
+			}
+			if(!rm.isEmpty()){
+				TerminalUtils.execCmd(IPFS, "config Addresses.Swarm --json", JSON.toJSONString(rm));
+			}
+		}
+		//修改5001接口
+		String api = TerminalUtils.syncExecuteStr(IPFS, "config Addresses.API");
+		if(api != null){
+			String num = WordUtils.getStrEndNumber(api);
+			if(num != null) {
+				TerminalUtils.syncExecuteStr(IPFS, "config Addresses.API", api.replace(num
+					, ipfsConfig.getAdminPort().toString()));
+			}
+		}
+		//修改8080接口
+		String gateway = TerminalUtils.syncExecuteStr(IPFS, "config Addresses.Gateway");
+		if(gateway != null){
+			String num = WordUtils.getStrEndNumber(gateway);
+			if(num != null) {
+				TerminalUtils.syncExecuteStr(IPFS, "config Addresses.Gateway", gateway.replace(num
+					, ipfsConfig.getHttpPort().toString()));
+			}
+		}
 	}
 
 	/**

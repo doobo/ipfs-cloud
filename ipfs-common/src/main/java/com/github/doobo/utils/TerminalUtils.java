@@ -85,6 +85,17 @@ public class TerminalUtils {
 	/**
 	 * 执行系统命令, 返回执行结果
 	 * @param cmd 需要执行的命令
+	 */
+	public static String execCmd(String ...cmd) {
+		if(cmd != null && cmd.length > 0){
+			return execCmd(StringUtils.join(cmd, " "), null, TIMEOUT);
+		}
+		return null;
+	}
+
+	/**
+	 * 执行系统命令, 返回执行结果
+	 * @param cmd 需要执行的命令
 	 * @param pwd 执行命令的子进程的工作目录, null 表示和当前主进程工作目录相同
 	 */
 	public static String execCmd(String cmd, File pwd) {
@@ -180,6 +191,19 @@ public class TerminalUtils {
 	 */
 	public static byte[] syncExecute(String... cmd){
 		return syncExecute(null, cmd);
+	}
+
+	/**
+	 * 立即返回
+	 * @param cmd
+	 */
+	public static String syncExecuteStr(String... cmd){
+		try {
+			return new String(syncExecute(null, cmd), UTF_8.name());
+		} catch (UnsupportedEncodingException e) {
+			log.error("syncExecuteStrError", e);
+		}
+		return null;
 	}
 
 	/**

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.Collections;
 
 /**
  * ipfs环境初始化
@@ -33,6 +32,8 @@ public class InitIpfsProject {
 			TerminalUtils.syncExecute(InitUtils.IPFS + " init", null, 60000);
 			log.info("IPFS is already initialized.");
 		}
+		//修改默认端口号
+		InitUtils.updateConfig(ipfsConfig);
 		//是否是私有网络
 		if(ipfsConfig.isPrivateNetwork()){
 			if(InitUtils.createIpfsPrivateNetwork(ipfsConfig.getBootstrap())){

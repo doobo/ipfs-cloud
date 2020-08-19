@@ -190,4 +190,18 @@ public class WordUtils {
 		return str.replaceAll("\\G((?:" + word + ")*+).", "$1"+replacement);
 	}
 
+	/**
+	 * 返回字符串后面的数字
+	 * @param str
+	 * @return
+	 */
+	public static String getStrEndNumber(String str){
+		Pattern pattern = Pattern.compile("\\d+$");
+		Matcher matcher = pattern.matcher(str);
+		if(matcher.find()){
+			return matcher.group();
+		}
+		return null;
+	}
+
 }
