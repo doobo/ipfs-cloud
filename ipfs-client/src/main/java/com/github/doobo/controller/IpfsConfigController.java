@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 public class IpfsConfigController {
@@ -16,5 +17,10 @@ public class IpfsConfigController {
 	@GetMapping("/ipfs/config")
 	public IpfsConfig queryConfig(){
 		return ipfsConfigApiService.getIpfsConfig();
+	}
+
+	@GetMapping("/ipfs/nodes")
+	public List<IpfsConfig> queryNodesConfig(){
+		return ipfsConfigApiService.queryNodeConfigList();
 	}
 }

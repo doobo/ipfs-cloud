@@ -4,9 +4,9 @@ import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.soft.InitUtils;
 import com.github.doobo.utils.TerminalUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 /**
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class InitIpfsProject {
+public class InitIpfsProject implements CommandLineRunner {
 
 	@Resource
 	private IpfsConfig ipfsConfig;
@@ -22,8 +22,8 @@ public class InitIpfsProject {
 	/**
 	 * 初始化系统环境
 	 */
-	@PostConstruct
-	public void initIpfsEnv(){
+	@Override
+	public void run(String... args) throws Exception {
 		if(!InitUtils.initIpfsEnv()){
 			return;
 		}
