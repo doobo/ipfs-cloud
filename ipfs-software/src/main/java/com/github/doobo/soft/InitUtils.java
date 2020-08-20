@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONPath;
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.conf.Node;
+import com.github.doobo.params.StringParams;
 import com.github.doobo.utils.*;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -185,7 +186,12 @@ public class InitUtils {
 				});
 			}
 			if(!rm.isEmpty()){
-				TerminalUtils.execCmd(IPFS, "config Addresses.Swarm --json", JSON.toJSONString(rm));
+				if(OsUtils.getSystemType() == StringParams.Windows){
+					TerminalUtils.execCmd(IPFS, "config Addresses.Swarm --json"
+						, JSON.toJSONString(rm).replace("\"","\"\"\""));
+				}else{
+					TerminalUtils.execCmd(IPFS, "config Addresses.Swarm --json", JSON.toJSONString(rm));
+				}
 			}
 		}
 		//修改5001接口
