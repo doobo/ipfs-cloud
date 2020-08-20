@@ -57,7 +57,7 @@ public class HttpTests {
 
 	@Test
 	public void testNetworkPort(){
-		System.out.println(OsUtils.checkIpPortOpen("5fu8.com", 80));
+		System.out.println(OsUtils.checkIpPortOpen("192.168.4.119", 9201));
 		System.out.println(OsUtils.isHostReachable("172.16.30.252", 100));
 		System.out.println(WordUtils.getStrEndNumber("abc1234"));
 	}

@@ -14,11 +14,6 @@ public class IpfsConfigController {
 	@Resource
 	IpfsConfigApiService ipfsConfigApiService;
 
-	@GetMapping("/ipfs/config")
-	public IpfsConfig queryConfig(){
-		return ipfsConfigApiService.getIpfsConfig();
-	}
-
 	@GetMapping("/ipfs/nodes")
 	public List<IpfsConfig> queryNodesConfig(){
 		return ipfsConfigApiService.queryNodeConfigList();

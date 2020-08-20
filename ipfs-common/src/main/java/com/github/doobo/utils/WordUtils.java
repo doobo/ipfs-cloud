@@ -8,9 +8,11 @@ import java.util.regex.Pattern;
  */
 public class WordUtils {
 
-	private static Pattern linePattern = Pattern.compile("_(\\w)");
+	private final static Pattern linePattern = Pattern.compile("_(\\w)");
 
-	private static Pattern humpPattern = Pattern.compile("[A-Z]");
+	private final static Pattern humpPattern = Pattern.compile("[A-Z]");
+
+	private final static String IP_V4 = "\\A(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}\\z";
 
 	/**
 	 * 下划线转驼峰
@@ -202,6 +204,17 @@ public class WordUtils {
 			return matcher.group();
 		}
 		return null;
+	}
+
+	/**
+	 * 判断是否是IPV4地址
+	 * @param ip
+	 */
+	public static boolean isIpV4Address(String ip){
+		if(ip == null){
+			return false;
+		}
+		return ip.matches(IP_V4);
 	}
 
 }

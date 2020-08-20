@@ -7,6 +7,7 @@ import com.github.doobo.soft.InitUtils;
 import com.github.doobo.utils.CommonUtils;
 import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.TerminalUtils;
+import com.github.doobo.utils.WordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -56,7 +57,12 @@ public class IpfsInitClient implements CommandLineRunner {
 					Node node = m.getNodes().get(0);
 					node.setPort(node.getPort()==null?m.getPort().toString():node.getPort());
 					if(OsUtils.checkIpPortOpen(node.getIp(), Integer.parseInt(node.getPort()))){
-						String ipfs = String.format("/ip4/%s/tcp/%s/ipfs/%s",node.getIp(), node.getPort(), node.getCid());
+						String ipfs;
+						if(WordUtils.isIpV4Address(node.getIp())){
+							ipfs = String.format("/ip4/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
+						}else {
+							ipfs = String.format("/dnsaddr/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
+						}
 						TerminalUtils.syncExecute(IPFS, "bootstrap add", ipfs);
 					}
 				}
