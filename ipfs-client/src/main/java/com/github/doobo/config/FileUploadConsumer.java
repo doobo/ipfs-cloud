@@ -53,7 +53,7 @@ public class FileUploadConsumer extends CmdObserver {
 		if(!file.exists()){
 			return null;
 		}
-		String result = TerminalUtils.syncExecuteStr(IPFS, "add", name);
+		String result = TerminalUtils.syncExecuteStr(IPFS, "add", "\""+name+"\"");
 		name = name.replace("\\\\","/").replace("\\","/");
 		String fileName = name.substring(name.lastIndexOf("/")+1);
 		result = ipfsCid(result, fileName);
