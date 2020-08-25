@@ -54,7 +54,7 @@ public class FileUploadConsumer extends CmdObserver {
 			return null;
 		}
 		String result = TerminalUtils.syncExecuteStr(IPFS, "add", name);
-		name = name.replace("\\\\","/");
+		name = name.replace("\\\\","/").replace("\\","/");
 		String fileName = name.substring(name.lastIndexOf("/")+1);
 		result = ipfsCid(result, fileName);
 		if(result != null){
