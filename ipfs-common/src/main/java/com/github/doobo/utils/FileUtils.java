@@ -222,11 +222,13 @@ public class FileUtils {
 	 * @param fileName
 	 */
 	public static void writFile(String fileData, String fileName) {
-		File f=new File(fileName);//新建一个文件对象，如果不存在则创建一个该文件
+		//新建一个文件对象，如果不存在则创建一个该文件
+		File f = new File(fileName);
 		FileWriter fw;
 		try {
 			fw=new FileWriter(f);
-			fw.write(fileData);//将字符串写入到指定的路径下的文件中
+			//将字符串写入到指定的路径下的文件中
+			fw.write(fileData);
 			fw.close();
 		} catch (IOException e) {
 			log.error("FileUtilsError", e);

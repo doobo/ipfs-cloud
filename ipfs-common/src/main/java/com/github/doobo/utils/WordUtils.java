@@ -102,7 +102,7 @@ public class WordUtils {
 				strAfterRemoveCRSB.append(content.charAt(i));
 		}
 		String strAfterRemoveCR = strAfterRemoveCRSB.toString();
-		if (strAfterRemoveCR == null || strAfterRemoveCR.length() == 0) {
+		if (strAfterRemoveCR.length() == 0) {
 			return "";
 		}
 		StringBuilder resultSB = new StringBuilder();

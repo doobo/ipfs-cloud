@@ -18,6 +18,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -60,5 +62,16 @@ public class HttpTests {
 		System.out.println(OsUtils.checkIpPortOpen("192.168.4.119", 9201));
 		System.out.println(OsUtils.isHostReachable("172.16.30.252", 100));
 		System.out.println(WordUtils.getStrEndNumber("abc1234"));
+	}
+
+	@Test
+	public void testRex(){
+		Pattern pattern = Pattern.compile("( )(Qm.*?)( bbc.txt)$", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher matcher = pattern.matcher("1.71 KiB / 1.71 KiB  100.00%\u001B[2K\n" +
+			"\n" +
+			" 1.71 KiB / 1.71 KiB  100.00%added QmSAtiyoVY4GsBptZLKYXe7SCzyYEgwGVBfzTUvXMvNaXK bbc.txt");
+		if(matcher.find()){
+			System.out.println(matcher.group(2));
+		}
 	}
 }
