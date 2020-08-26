@@ -3,6 +3,7 @@ package com.github.doobo.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.*;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StreamUtils;
 
 import java.io.*;
 import java.util.concurrent.ExecutorService;
@@ -207,12 +208,46 @@ public class TerminalUtils {
 	}
 
 	/**
-	 * 同步启动程序,无返回
-	 * @param sh
-	 * @throws IOException
+	 * 主程序带参数执行
+	 * @param main
+	 * @param params
 	 */
-	public static void syncExecute(CommandLine sh) throws IOException {
-		DefaultExecutor executor = new DefaultExecutor();
-		executor.execute(sh);
+	public static String syncMainExecute(String main, String ...params) {
+		CommandLine commandLine = new CommandLine(main);
+		commandLine.addArguments(params, false);
+		try(ByteArrayOutputStream bs = new ByteArrayOutputStream()) {
+			DefaultExecutor executor = new DefaultExecutor();
+			executor.setStreamHandler(new PumpStreamHandler(bs, bs));
+			executor.execute(commandLine);
+			bs.flush();
+			ExecuteWatchdog watchdog = new ExecuteWatchdog(TIMEOUT * 1000);
+			executor.setWatchdog(watchdog);
+			return new String(bs.toByteArray(), UTF_8.name());
+		} catch (Exception e){
+			log.error("syncExecuteError", e);
+		}
+		return null;
+	}
+
+	/**
+	 * 多参数执行系统命令
+	 * @param cmd
+	 */
+	public static String syncProcess(String ...cmd){
+		StringBuilder sl = new StringBuilder();
+		try {
+			ProcessBuilder pb = new ProcessBuilder(cmd);
+			Process p = pb.start();
+			p.waitFor();
+			try (ByteArrayOutputStream out = new ByteArrayOutputStream()){
+				StreamUtils.copy(p.getInputStream(), out);
+				sl.append(new String(out.toByteArray(), UTF_8.name()));
+			}
+			sl.append(StreamUtils.copyToString(p.getInputStream(), UTF_8));
+			sl.append(StreamUtils.copyToString(p.getErrorStream(), UTF_8));
+		} catch (Exception e) {
+			log.error("syncProcessError", e);
+		}
+		return sl.toString();
 	}
 }

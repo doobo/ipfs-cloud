@@ -9,7 +9,18 @@ public enum StringParams {
 	Windows("Windows"),
 	Linux("Linux"),
 	JSON_TYPE("application/json"),
-	CONTENT_TYPE("Content-Type");
+	CONTENT_TYPE("Content-Type"),
+	IPFS_SUFFIX(".ipfs"),
+	UPLOAD("upload"),
+	/*斜杠*/
+	SLASH("\\"),
+	/*双斜杠*/
+	SLASH_DOUBLE("\\\\"),
+	/*反斜杠*/
+	BACKSLASH("/"),
+	SPOT("."),
+	QUOTATION_MARKS("\'"),
+	QUOTATION_MARKS_DOUBLE("\"");
 
 	private String value;
 

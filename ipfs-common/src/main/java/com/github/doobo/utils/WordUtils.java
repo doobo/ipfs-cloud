@@ -1,7 +1,11 @@
 package com.github.doobo.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * 字符类工具
@@ -215,6 +219,56 @@ public class WordUtils {
 			return false;
 		}
 		return ip.matches(IP_V4);
+	}
+
+	/**
+	 * 模拟JS的encodeURIComponent
+	 * @param str
+	 */
+	public static String encodeURIComponent(String str){
+		try {
+			return URLEncoder.encode(str, UTF_8.name())
+				.replaceAll("\\+", "%20")
+				.replaceAll("\\!", "%21")
+				.replaceAll("\\'", "%27")
+				.replaceAll("\\(", "%28")
+				.replaceAll("\\)", "%29")
+				.replaceAll("\\~", "%7E");
+		} catch (UnsupportedEncodingException e) {
+			return str;
+		}
+	}
+
+	/**
+	 * 模拟JS使用的encodeURI
+	 * @param str
+	 */
+	public static String encodeURI(String str) {
+		String isoStr = null;
+		try {
+			isoStr = new String(str.getBytes(UTF_8.name()), "ISO-8859-1");
+		} catch (UnsupportedEncodingException e) {
+			return str;
+		}
+		char[] chars = isoStr.toCharArray();
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < chars.length; i++) {
+			if ((chars[i] <= 'z' && chars[i] >= 'a')
+				|| (chars[i] <= 'Z' && chars[i] >= 'A') || chars[i] == '-'
+				|| chars[i] == '_' || chars[i] == '.' || chars[i] == '!'
+				|| chars[i] == '~' || chars[i] == '*' || chars[i] == '\''
+				|| chars[i] == '(' || chars[i] == ')' || chars[i] == ';'
+				|| chars[i] == '/' || chars[i] == '?' || chars[i] == ':'
+				|| chars[i] == '@' || chars[i] == '&' || chars[i] == '='
+				|| chars[i] == '+' || chars[i] == '$' || chars[i] == ','
+				|| chars[i] == '#') {
+				sb.append(chars[i]);
+			} else {
+				sb.append("%");
+				sb.append(Integer.toHexString(chars[i]));
+			}
+		}
+		return sb.toString();
 	}
 
 }

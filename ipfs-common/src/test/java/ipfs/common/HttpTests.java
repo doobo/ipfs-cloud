@@ -9,13 +9,15 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.junit.Test;
+import org.springframework.util.StreamUtils;
 import vip.ipav.okhttp.OkHttpClientTools;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -47,14 +49,38 @@ public class HttpTests {
 	}
 
 	@Test
-	public void testIpfs() throws IOException {
+	public void testIpfs() throws Exception {
 		/*TerminalUtils.syncExecute(
 			 CommandLine.parse("/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs id")
 		);*/
 
-		byte[] bt = TerminalUtils.syncExecute(
-			"/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs config Addresses.Swarm --json [\"/ip4/0.0.0.0/tcp/4001\",\"/ip6/::/tcp/4001\",\"/ip4/0.0.0.0/udp/4001/quic\",\"/ip6/::/udp/4001/quic\"]");
-		System.out.println(new String(bt, UTF_8.name()));
+		/*byte[] bt = TerminalUtils.syncExecute(
+			"/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs add /Users/doobo/back/ipfs-cloud/data/aaa/bb-\\ c.txt");
+		System.out.println(new String(bt, UTF_8.name()));*/
+
+		CommandLine commandLine = new CommandLine("/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs");
+		commandLine.addArguments(new String[]{"add","/Users/doobo/back/ipfs-cloud/data/aaa/bb- c.txt"}, false);
+		try(ByteArrayOutputStream bs = new ByteArrayOutputStream()) {
+			DefaultExecutor executor = new DefaultExecutor();
+			executor.setStreamHandler(new PumpStreamHandler(bs, bs));
+			executor.execute(commandLine);
+			bs.flush();
+			ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
+			executor.setWatchdog(watchdog);
+			System.out.println(new String(bs.toByteArray(), UTF_8.name()));
+		}
+
+
+		/*ProcessBuilder pb = new ProcessBuilder("/Users/doobo/back/ipfs-cloud/.ipfs/go-ipfs/ipfs","add","/Users/doobo/back/ipfs-cloud/data/aaa/bb- c.txt");
+		Process p = pb.start();
+		int exitCode = p.waitFor();
+		try (ByteArrayOutputStream out = new ByteArrayOutputStream()){
+			StreamUtils.copy(p.getInputStream(), out);
+			System.out.println(new String(out.toByteArray(), UTF_8.name()));
+		}
+		System.out.println(StreamUtils.copyToString(p.getInputStream(), UTF_8));
+		System.out.println(StreamUtils.copyToString(p.getErrorStream(), UTF_8));
+		System.out.println(exitCode);*/
 	}
 
 	@Test
@@ -73,5 +99,25 @@ public class HttpTests {
 		if(matcher.find()){
 			System.out.println(matcher.group(2));
 		}
+	}
+
+	@Test
+	public void testPath() throws UnsupportedEncodingException {
+		String uri = URLEncoder.encode("bbc/bb- c.txt", UTF_8.name());
+		System.out.println(uri);
+
+		String encodeData = URLEncoder.encode("bbc/bb- c.txt", "UTF-8")
+			.replaceAll("\\+", "%20")
+			.replaceAll("\\!", "%21")
+			.replaceAll("\\'", "%27")
+			.replaceAll("\\(", "%28")
+			.replaceAll("\\)", "%29")
+			.replaceAll("\\~", "%7E");
+		System.out.println(encodeData);
+
+		String decodeData = URLDecoder.decode("bbc/bb-%20c.txt", "UTF-8");
+		System.out.println(decodeData);
+
+		System.out.println(WordUtils.encodeURI("bbc/bb- c.txt"));
 	}
 }

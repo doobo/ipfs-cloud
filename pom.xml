@@ -42,6 +42,7 @@
         <module>ipfs-common</module>
         <module>ipfs-software</module>
         <module>ipfs-client</module>
+        <module>ipfs-backup</module>
     </modules>
 
     <dependencyManagement>

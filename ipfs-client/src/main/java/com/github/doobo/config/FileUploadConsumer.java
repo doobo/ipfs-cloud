@@ -4,8 +4,11 @@ import cn.yours.elfinder.ElFinderConstants;
 import cn.yours.elfinder.param.ObServerVO;
 import cn.yours.elfinder.service.VolumeHandler;
 import cn.yours.web.consume.CmdObserver;
+import com.github.doobo.params.StringParams;
 import com.github.doobo.utils.FileUtils;
+import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.TerminalUtils;
+import com.github.doobo.utils.WordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,7 +26,7 @@ public class FileUploadConsumer extends CmdObserver {
 
 	@Override
 	public void handleObserver(ObServerVO vo) {
-		if(!"upload".equalsIgnoreCase(vo.getCmd())){
+		if(!StringParams.UPLOAD.str().equalsIgnoreCase(vo.getCmd())){
 			return;
 		}
 		JSONObject jsonObject = vo.getResult();
@@ -53,12 +56,18 @@ public class FileUploadConsumer extends CmdObserver {
 		if(!file.exists()){
 			return null;
 		}
-		String result = TerminalUtils.syncExecuteStr(IPFS, "add", "\""+name+"\"");
-		name = name.replace("\\\\","/").replace("\\","/");
-		String fileName = name.substring(name.lastIndexOf("/")+1);
+		String result = null;
+		if(OsUtils.getSystemType() == StringParams.Windows){
+			result = TerminalUtils.syncExecuteStr(IPFS, "add", String.format("\"%s\"", name));
+		}else{
+			result = TerminalUtils.syncMainExecute(IPFS, "add", name);
+		}
+		name = name.replace(StringParams.SLASH_DOUBLE.str(),StringParams.BACKSLASH.str())
+			.replace(StringParams.SLASH.str(),StringParams.BACKSLASH.str());
+		String fileName = name.substring(name.lastIndexOf(StringParams.BACKSLASH.str())+1);
 		result = ipfsCid(result, fileName);
 		if(result != null){
-			FileUtils.writFile(result, name.replace(fileName, "."+fileName));
+			FileUtils.writFile(result, name.replace(fileName, fileName + StringParams.IPFS_SUFFIX.str()));
 		}
 		return result;
 	}
