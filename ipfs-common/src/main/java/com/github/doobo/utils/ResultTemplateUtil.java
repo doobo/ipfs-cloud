@@ -45,9 +45,9 @@ public final class ResultTemplateUtil {
         }
         tResultTemplate
                 .setChanges(changes)
-                .setPageCount(PageCount)
-                .setPageIndex(pageIndex)
-                .setPageTotal(pageTotal);
+                .setPages(PageCount)
+                .setCurrent(pageIndex)
+                .setTotal(pageTotal);
         return tResultTemplate;
     }
 

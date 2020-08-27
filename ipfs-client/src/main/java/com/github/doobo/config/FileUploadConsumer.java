@@ -8,11 +8,9 @@ import com.github.doobo.params.StringParams;
 import com.github.doobo.utils.FileUtils;
 import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.TerminalUtils;
-import com.github.doobo.utils.WordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.regex.Matcher;
@@ -21,7 +19,6 @@ import java.util.regex.Pattern;
 import static com.github.doobo.soft.InitUtils.IPFS;
 
 @Slf4j
-@Component
 public class FileUploadConsumer extends CmdObserver {
 
 	@Override

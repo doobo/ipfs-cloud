@@ -1,7 +1,6 @@
 package com.github.doobo.params;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -26,19 +25,19 @@ public class ResultTemplate<T> {
     private Long changes;
 
 	/**
-	 * 分页索引
+	 * 当前页
 	 */
-    private Long pageIndex;
+    private Long current;
 
 	/**
 	 * 分页长度
 	 */
-    private Long pageCount;
+    private Long pages;
 
 	/**
 	 * 分页总和
 	 */
-    private Long pageTotal;
+    private Long total;
 
 	/**
 	 * 数据集合

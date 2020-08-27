@@ -3,6 +3,8 @@ package com.github.doobo.model;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 单个文件上传后返回信息
  */
@@ -18,6 +20,7 @@ public class IpfsFileInfo {
 	/**
 	 * ipfs的cid
 	 */
+	@NotNull(message = "文件的cid不能为空")
 	private String ipfs;
 
 	/**
