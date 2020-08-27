@@ -4,6 +4,7 @@ import cn.yours.elfinder.ElFinderConstants;
 import cn.yours.elfinder.param.ObServerVO;
 import cn.yours.elfinder.service.VolumeHandler;
 import cn.yours.web.consume.CmdObserver;
+import com.github.doobo.handler.IpfsBackHandler;
 import com.github.doobo.params.StringParams;
 import com.github.doobo.utils.FileUtils;
 import com.github.doobo.utils.OsUtils;
@@ -11,7 +12,9 @@ import com.github.doobo.utils.TerminalUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,7 +22,11 @@ import java.util.regex.Pattern;
 import static com.github.doobo.soft.InitUtils.IPFS;
 
 @Slf4j
+@Component
 public class FileUploadConsumer extends CmdObserver {
+
+	@Resource
+	IpfsBackHandler ipfsBackHandler;
 
 	@Override
 	public void handleObserver(ObServerVO vo) {
@@ -41,6 +48,7 @@ public class FileUploadConsumer extends CmdObserver {
 			VolumeHandler handler = vo.getVolumeHandlerByHash(hash);
 			String name = handler.getTarget().toString();
 			obj.put("ipfs", ipfsUpload(name));
+			ipfsBackHandler.backUpFile(obj);
 		}
 	}
 

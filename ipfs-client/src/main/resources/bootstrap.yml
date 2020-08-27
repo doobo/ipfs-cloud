@@ -10,6 +10,8 @@ spring:
     multipart:
       max-file-size: 10GB
       max-request-size: 30GB
+  main:
+    allow-bean-definition-overriding: true
   cloud:
     gateway:
       discovery:
