@@ -236,6 +236,19 @@ public class FileUtils {
 	}
 
 	/**
+	 * 如果目录不存在,则创建目录
+	 * @param path
+	 */
+	public static boolean createDirIfAbsent(String path){
+		File folder = new File(path);
+		//文件夹路径不存在
+		if (!folder.exists()) {
+			return folder.mkdirs();
+		}
+		return true;
+	}
+
+	/**
 	 * 获取zip里面指定的文件
 	 * @param in
 	 * @param fileName

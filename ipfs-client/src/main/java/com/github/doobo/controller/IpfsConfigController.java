@@ -15,11 +15,6 @@ public class IpfsConfigController {
 	@Resource
 	IpfsConfigApiService ipfsConfigApiService;
 
-	@GetMapping("/ipfs/nodes")
-	public List<IpfsConfig> queryNodesConfig(){
-		return ipfsConfigApiService.queryNodeConfigList();
-	}
-
 	/**
 	 * 跳转到文件管理界面
 	 */
@@ -28,5 +23,10 @@ public class IpfsConfigController {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("redirect:/fm.html#elf_A_");
 		return mv;
+	}
+
+	@GetMapping("/ipfs/nodes")
+	public List<IpfsConfig> queryNodesConfig(){
+		return ipfsConfigApiService.queryNodeConfigList();
 	}
 }

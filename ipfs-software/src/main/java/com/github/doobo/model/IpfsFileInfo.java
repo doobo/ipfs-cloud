@@ -15,12 +15,13 @@ public class IpfsFileInfo {
 	/**
 	 * 文件hash值
 	 */
+	@NotNull(message = "文件路径不能为空-hash")
 	private String hash;
 
 	/**
 	 * ipfs的cid
 	 */
-	@NotNull(message = "文件的cid不能为空")
+	@NotNull(message = "文件的cid不能为空-ipfs")
 	private String ipfs;
 
 	/**

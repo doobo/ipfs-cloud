@@ -12,6 +12,7 @@ public enum StringParams {
 	CONTENT_TYPE("Content-Type"),
 	IPFS_SUFFIX(".ipfs"),
 	UPLOAD("upload"),
+	JSON(".json"),
 	/*斜杠*/
 	SLASH("\\"),
 	/*双斜杠*/

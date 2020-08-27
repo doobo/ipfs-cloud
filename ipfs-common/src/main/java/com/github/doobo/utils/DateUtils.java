@@ -28,6 +28,7 @@ public class DateUtils {
 		hm("HH:mm"),
 		hms("HH:mm:ss"),
 		yMdHmsS("yyyyMMddHHmmssSSS"),
+		yMdH("yyyyMMddHH"),
 		y_m("yyyy-MM"),
 		y_m_d_hm("yyyy-MM-dd HH:mm");
 
