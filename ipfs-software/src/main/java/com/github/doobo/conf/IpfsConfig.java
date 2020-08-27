@@ -26,5 +26,7 @@ public class IpfsConfig {
 
 	private boolean privateNetwork;
 
+	private boolean startDaemon;
+
 	private List<Node> nodes;
 }

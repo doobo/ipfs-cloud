@@ -40,7 +40,9 @@ public class InitIpfsProject implements CommandLineRunner {
 				log.info("IPFS is private network.");
 			}
 		}
-		InitUtils.startDaemon();
-		log.info("IPFS守护程序启动成功....");
+		if(ipfsConfig.isStartDaemon()){
+			InitUtils.startDaemon();
+			log.info("IPFS守护程序启动成功....");
+		}
 	}
 }

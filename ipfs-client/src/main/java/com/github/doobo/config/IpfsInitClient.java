@@ -40,6 +40,9 @@ public class IpfsInitClient implements CommandLineRunner {
 			TerminalUtils.syncExecute(IPFS + " init", null, 60000);
 			log.info("IPFS is already initialized.");
 		}
+		if(!ipfsConfig.isStartDaemon()){
+			return;
+		}
 		//修改默认端口号
 		InitUtils.updateConfig(ipfsConfig);
 		//是否是私有网络
