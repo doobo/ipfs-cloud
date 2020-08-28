@@ -19,3 +19,23 @@
 
 ## 国内资源备份
 [ipfs-cloud-码云](https://gitee.com/doobo/ipfs-cloud)
+
+## 部署
+### 单个内网集群部署
+* 启用至少一个spring cloud注册中心，测试时，可使用自带的默认注册中心
+* 启动ipfs-gateway服务，该服务注册到spring cloud注册中心后，其它服务可自动发现这个ipfs节点
+* 启动ipfs-backup服务，该服务用来备份文件，可启动多个，每个上传的文件多会下载到备份服务器上，需要的磁盘空间比较大，测试可不启动
+* 启用ipfs-search-es服务，用来搜索文件，测试时，可以不启用
+* 启用ipfs-client服务，该服务提供了内网的http接口，可调用进行文件上传，上传后会自动同步到ipfs节点，同时备份文件和添加到搜索服务器上
+
+> 所有的服务多可以在本地节点使用相关的http地址和文件cid进行文件下载，如：http://ipfs-gateway:18080/ipfs/Qm...
+> 如需要提供对外http下载，可代理到相关URL即可，集群内部文件下载，推荐使用本机的localhost:18080/ipfs/Qm...获取，这样可利用p2p传输
+
+### 多区域集群部署,(北京、上海、广州、香港、北美、欧洲)组网
+* 每个区域至少暴露一个spring cloud注册中心和一个ipfs-gateway服务，保证使用公网IP可以相互访问
+* ipfs-backup服务以-Dipfs.startDaemon=false启动到ipfs-gateway所在的服务器上，保证公网可访问
+* 启用ipfs-search-es服务，用来搜索文件，测试时，可以不启用,提供可外网访问的地址，如-Deureka.instance.preferIpAddress=false -Deureka.instance.hostname=bj2.5fu8.com -Deureka.instance.nonSecurePort=6107
+* 启用ipfs-client服务，这个不需要暴露到外网，每个区域按需求启动即可，每个区域调用本区域的http接口进行文件上传，会通过ipfs-backup服务自动同步到全网
+
+> 文件上传尽可能使用本地的ipfs-client进行上传，会自动通过ipfs分发到全网
+> ，提高网络传输效率，上传文件后，ipfs-client不要立即停机，防止其它区域在同步文件时，访问不到文件
