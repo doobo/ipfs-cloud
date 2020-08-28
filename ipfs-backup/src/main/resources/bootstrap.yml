@@ -31,8 +31,6 @@ eureka:
     register-with-eureka: true
     #表示是否从Eureka Server获取注册信息，默认为true
     fetch-registry: true
-    service-url:
-      defaultZone: http://union:123456@center.5fu8.com/eureka/
     healthcheck:
           enabled: true
     eurekaServiceUrlPollIntervalSeconds: 60

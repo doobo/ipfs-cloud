@@ -2,3 +2,8 @@ ipfs:
   bootstrap:
     - /ip4/149.129.78.38/tcp/4001/ipfs/QmcFcguezGgVNvVCugFdbrCvh4XWxqF1TiBwA46dAuQ1WP
 #    - /dnsaddr/img.ipav.vip/tcp/4001/ipfs/QmcFcguezGgVNvVCugFdbrCvh4XWxqF1TiBwA46dAuQ1WP
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://union:123456@120.79.137.50:3376/eureka/

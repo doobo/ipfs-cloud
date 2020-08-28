@@ -1,7 +1,6 @@
 package com.github.doobo.service;
 
 import com.github.doobo.model.IpfsFileInfo;
-import com.github.doobo.params.ResultTemplate;
 
 /**
  * 文件备份服务
