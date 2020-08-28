@@ -17,6 +17,7 @@ public class IpfsBackHandler {
 
 	/**
 	 * 调用备份服务
+	 * 根据需要,可以改成广播，失败重发等
 	 * @param obj
 	 */
 	public ResultTemplate<Boolean> backUpFile(JSONObject obj){
