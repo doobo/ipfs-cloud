@@ -5,6 +5,7 @@ import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.service.IpfsConfigService;
 import com.github.doobo.soft.InitUtils;
 import com.github.doobo.utils.CommonUtils;
+import com.github.doobo.utils.OsUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -56,6 +57,10 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 			IpfsConfig config;
 			String res;
 			for(ServiceInstance item : ls){
+				//检测端口号是否可访问
+				if(!OsUtils.checkIpPortOpen(item.getHost(), item.getPort())){
+					continue;
+				}
 				try {
 					res = Objects.requireNonNull(OkHttpClientTools.getInstance()
 						.get()
