@@ -19,7 +19,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Slf4j
 public class TerminalUtils {
 
-	private static final long TIMEOUT = 60;
+	private static final long TIMEOUT = 120;
 
 	/**
 	 * 执行系统命令, 返回执行结果

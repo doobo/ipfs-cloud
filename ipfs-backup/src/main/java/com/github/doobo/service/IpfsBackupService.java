@@ -12,5 +12,5 @@ public interface IpfsBackupService {
 	 * 备份文件服务
 	 * @param info
 	 */
-	ResultTemplate<Boolean> backUpFile(IpfsFileInfo info);
+	void backUpFile(IpfsFileInfo info);
 }
