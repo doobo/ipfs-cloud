@@ -9,7 +9,7 @@ import java.util.List;
  * 返回模板工具类
  *
  */
-public final class ResultTemplateUtil {
+public final class ResultUtils {
 
     public static ResultTemplate<Boolean> ofThrowable(Throwable throwable) {
         if (throwable == null) {

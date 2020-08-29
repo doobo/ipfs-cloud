@@ -3,7 +3,7 @@ package com.github.doobo.service;
 import com.github.doobo.api.IpfsBackupControllerApi;
 import com.github.doobo.model.IpfsFileInfo;
 import com.github.doobo.params.ResultTemplate;
-import com.github.doobo.utils.ResultTemplateUtil;
+import com.github.doobo.utils.ResultUtils;
 import feign.hystrix.FallbackFactory;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ public class IpfsBackupApiFallbackService implements FallbackFactory<IpfsBackupC
 		return new IpfsBackupControllerApi() {
 			@Override
 			public ResultTemplate<Boolean> backUpFile(IpfsFileInfo info) {
-				return ResultTemplateUtil.ofThrowable(throwable);
+				return ResultUtils.ofThrowable(throwable);
 			}
 		};
 	}

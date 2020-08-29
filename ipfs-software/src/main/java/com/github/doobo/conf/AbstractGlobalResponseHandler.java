@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.doobo.params.ErrorInfo;
 import com.github.doobo.params.ResultTemplate;
-import com.github.doobo.utils.ResultTemplateUtil;
+import com.github.doobo.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
@@ -51,7 +51,7 @@ public abstract class AbstractGlobalResponseHandler implements ResponseBodyAdvic
         if (body instanceof ResultTemplate) {
             result = (ResultTemplate) body;
         } else {
-            result = ResultTemplateUtil.of(body);
+            result = ResultUtils.of(body);
         }
         if (body instanceof String) {
             try {
@@ -76,18 +76,18 @@ public abstract class AbstractGlobalResponseHandler implements ResponseBodyAdvic
 	public ResultTemplate handle(Exception e) {
 		//参数异常
 		if (e instanceof BindException) {
-			return ResultTemplateUtil.of(null, new ErrorInfo(0,
+			return ResultUtils.of(null, new ErrorInfo(0,
 				getErrorResultMessage(((BindException) e).getAllErrors())));
 		}
 		if (e instanceof MethodArgumentNotValidException) {
-			return ResultTemplateUtil.of(null, new ErrorInfo(0,
+			return ResultUtils.of(null, new ErrorInfo(0,
 				getErrorResultMessage(((MethodArgumentNotValidException) e).getBindingResult().getAllErrors())));
 		}
 		if (e instanceof CustomException) {
 			CustomException customException = (CustomException) e;
-			return ResultTemplateUtil.of(null, new ErrorInfo(customException.getCode(), e.getMessage()));
+			return ResultUtils.of(null, new ErrorInfo(customException.getCode(), e.getMessage()));
 		}
-		return ResultTemplateUtil.of(null, new ErrorInfo(0, e.getMessage()));
+		return ResultUtils.of(null, new ErrorInfo(0, e.getMessage()));
 	}
 
 	/**

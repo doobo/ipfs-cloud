@@ -88,6 +88,14 @@ public class DateUtils {
 		return getDate(date,null);
 	}
 
+	/**
+	 * 获取当前时间
+	 */
+	public static Date getCurDate(){
+		Calendar calendar = Calendar.getInstance();
+		return calendar.getTime();
+	}
+
       /**
        * @Description 将带有纳秒的时间字符串转换成LocalDateTime
        * @param str

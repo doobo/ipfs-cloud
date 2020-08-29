@@ -4,7 +4,7 @@ import com.github.doobo.api.IpfsBackupControllerApi;
 import com.github.doobo.model.IpfsFileInfo;
 import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.service.IpfsBackupService;
-import com.github.doobo.utils.ResultTemplateUtil;
+import com.github.doobo.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +34,6 @@ public class IpfsBackupController implements IpfsBackupControllerApi {
 	@Override
 	public ResultTemplate<Boolean> backUpFile(@Validated @RequestBody IpfsFileInfo info) {
 		ipfsBackupService.backUpFile(info);
-		return ResultTemplateUtil.of(Boolean.TRUE);
+		return ResultUtils.of(Boolean.TRUE);
 	}
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 单个文件上传后返回信息
@@ -64,5 +65,13 @@ public class IpfsFileInfo {
 	 */
 	private Long ts;
 
+	/**
+	 * 是否可写
+	 */
 	private Integer write;
+
+	/**
+	 * 文件自定义摘要,方便搜索
+	 */
+	private List<String> remarks;
 }
