@@ -70,7 +70,7 @@ public class FileUploadConsumer extends CmdObserver {
 		name = name.replace(StringParams.SLASH_DOUBLE.str(),StringParams.BACKSLASH.str())
 			.replace(StringParams.SLASH.str(),StringParams.BACKSLASH.str());
 		String fileName = name.substring(name.lastIndexOf(StringParams.BACKSLASH.str())+1);
-		result = ipfsCid(result, fileName);
+		result = ipfsCid(result);
 		if(result != null){
 			FileUtils.writFile(result, name.replace(fileName, fileName + StringParams.IPFS_SUFFIX.str()));
 		}
@@ -81,11 +81,11 @@ public class FileUploadConsumer extends CmdObserver {
 	 * 截取cid
 	 * @param rs
 	 */
-	public String ipfsCid(String rs, String fileName){
+	public String ipfsCid(String rs){
 		if(rs == null || rs.isEmpty()){
 			return null;
 		}
-		Pattern pattern = Pattern.compile("( )(Qm.*?)( "+fileName+")", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern pattern = Pattern.compile("( )(Qm.*?)( )", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher matcher = pattern.matcher(rs);
 		if(matcher.find()){
 			return matcher.group(2);
