@@ -1,8 +1,13 @@
 package com.github.doobo.controller;
 
 import com.github.doobo.conf.IpfsConfig;
+import com.github.doobo.model.IpfsFileInfo;
+import com.github.doobo.model.SearchVO;
+import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.service.IpfsConfigApiService;
+import com.github.doobo.service.IpfsSearchApiService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -15,6 +20,9 @@ public class IpfsConfigController {
 	@Resource
 	IpfsConfigApiService ipfsConfigApiService;
 
+	@Resource
+	IpfsSearchApiService ipfsSearchApiService;
+
 	/**
 	 * 跳转到文件管理界面
 	 */
@@ -25,8 +33,21 @@ public class IpfsConfigController {
 		return mv;
 	}
 
+	/**
+	 * 当前的ipfs节点基础信息
+	 * @return
+	 */
 	@GetMapping("/ipfs/nodes")
 	public List<IpfsConfig> queryNodesConfig(){
 		return ipfsConfigApiService.queryNodeConfigList();
+	}
+
+	/**
+	 * 文件搜索
+	 * @param vo
+	 */
+	@PostMapping("ipfs/search")
+	ResultTemplate<List<IpfsFileInfo>> search(SearchVO vo){
+		return ipfsSearchApiService.search(vo);
 	}
 }

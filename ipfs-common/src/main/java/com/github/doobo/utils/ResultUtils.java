@@ -18,6 +18,13 @@ public final class ResultUtils {
         return of(Boolean.FALSE, new ErrorInfo(throwable.getMessage()));
     }
 
+	public static <T> ResultTemplate<T> ofError(Throwable throwable, T t) {
+		if (throwable == null) {
+			return of(t);
+		}
+		return of(t, new ErrorInfo(throwable.getMessage()));
+	}
+
     public static ResultTemplate<Boolean> of(int effectedNum) {
         if (effectedNum > 0) {
             return of(Boolean.TRUE);
@@ -59,4 +66,12 @@ public final class ResultUtils {
     public static <T> List<T> singleList(T data) {
         return data != null ? Collections.singletonList(data) : Collections.emptyList();
     }
+
+	/**
+	 * 定义空数组类型
+	 * @param <T>
+	 */
+	public static <T> List<T> singleList(Class<T> cls) {
+		return Collections.emptyList();
+	}
 }

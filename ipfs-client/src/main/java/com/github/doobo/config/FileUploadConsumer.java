@@ -5,6 +5,7 @@ import cn.yours.elfinder.param.ObServerVO;
 import cn.yours.elfinder.service.VolumeHandler;
 import cn.yours.web.consume.CmdObserver;
 import com.github.doobo.handler.IpfsBackHandler;
+import com.github.doobo.handler.IpfsSearchHandler;
 import com.github.doobo.params.StringParams;
 import com.github.doobo.utils.FileUtils;
 import com.github.doobo.utils.OsUtils;
@@ -28,6 +29,9 @@ public class FileUploadConsumer extends CmdObserver {
 	@Resource
 	IpfsBackHandler ipfsBackHandler;
 
+	@Resource
+	IpfsSearchHandler ipfsSearchHandler;
+
 	@Override
 	public void handleObserver(ObServerVO vo) {
 		if(!StringParams.UPLOAD.str().equalsIgnoreCase(vo.getCmd())){
@@ -49,6 +53,7 @@ public class FileUploadConsumer extends CmdObserver {
 			String name = handler.getTarget().toString();
 			obj.put("ipfs", ipfsUpload(name));
 			ipfsBackHandler.backUpFile(obj);
+			ipfsSearchHandler.saveFileInfo(obj);
 		}
 	}
 

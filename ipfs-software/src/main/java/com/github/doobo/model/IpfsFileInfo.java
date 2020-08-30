@@ -74,4 +74,14 @@ public class IpfsFileInfo {
 	 * 文件自定义摘要,方便搜索
 	 */
 	private List<String> remarks;
+
+	/**
+	 * 文件所属的节点id
+	 */
+	private String nodeId;
+
+	/**
+	 * 文件所属节点
+	 */
+	private List<String> nodes;
 }
