@@ -10,6 +10,7 @@ public enum StringParams {
 	Linux("Linux"),
 	JSON_TYPE("application/json"),
 	CONTENT_TYPE("Content-Type"),
+	IPFS("ipfs"),
 	IPFS_SUFFIX(".ipfs"),
 	UPLOAD("upload"),
 	JSON(".json"),
@@ -19,11 +20,11 @@ public enum StringParams {
 	SLASH_DOUBLE("\\\\"),
 	/*反斜杠*/
 	BACKSLASH("/"),
-	SPOT("."),
-	QUOTATION_MARKS("\'"),
-	QUOTATION_MARKS_DOUBLE("\"");
+	DOT("."),
+	QUOTES_SINGLE("'"),
+	QUOTES_DOUBLE("\"");
 
-	private String value;
+	private final String value;
 
 	StringParams(String value) {
 		this.value = value;

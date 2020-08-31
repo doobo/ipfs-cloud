@@ -8,6 +8,7 @@ import com.github.doobo.service.IpfsSearchService;
 import com.github.doobo.utils.ResultUtils;
 import org.frameworkset.elasticsearch.client.ClientInterface;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -24,16 +25,16 @@ public class IndexController implements IpfsSearchControllerApi {
 
 	@GetMapping("")
 	public ResultTemplate<Object> indexPage(){
-		return ResultUtils.of(clientInterface.existIndice("IpfsSearchDocument"));
+		return ResultUtils.of(clientInterface.existIndice("ipfs_search_document"));
 	}
 
 	@Override
-	public ResultTemplate<Boolean> saveFileInfo(IpfsFileInfo fileInfo) {
+	public ResultTemplate<Boolean> saveFileInfo(@RequestBody IpfsFileInfo fileInfo) {
 		return ipfsSearchService.saveFileInfo(fileInfo);
 	}
 
 	@Override
-	public ResultTemplate<List<IpfsFileInfo>> search(SearchVO vo) {
+	public ResultTemplate<List<IpfsFileInfo>> search(@RequestBody SearchVO vo) {
 		return ipfsSearchService.search(vo);
 	}
 }

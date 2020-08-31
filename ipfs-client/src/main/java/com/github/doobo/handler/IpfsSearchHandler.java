@@ -30,8 +30,10 @@ public class IpfsSearchHandler {
 			return ResultUtils.ofThrowable(new CustomException("保存的文件信息为空"));
 		}
 		Node node = InitUtils.getIpfsNodeInfo();
-		info.setNodeId(node.getCid());
-		info.setNodes(node.getIpfs());
+		if(node != null) {
+			info.setNodeId(node.getCid());
+			info.setNodes(node.getIpfs());
+		}
 		return ipfsSearchApiService.saveFileInfo(info);
 	}
 }

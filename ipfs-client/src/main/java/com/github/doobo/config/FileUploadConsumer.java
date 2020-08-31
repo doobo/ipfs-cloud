@@ -51,9 +51,13 @@ public class FileUploadConsumer extends CmdObserver {
 			if(hash == null) continue;
 			VolumeHandler handler = vo.getVolumeHandlerByHash(hash);
 			String name = handler.getTarget().toString();
-			obj.put("ipfs", ipfsUpload(name));
-			ipfsBackHandler.backUpFile(obj);
-			ipfsSearchHandler.saveFileInfo(obj);
+			obj.put(StringParams.IPFS.str(), ipfsUpload(name));
+			if(ipfsBackHandler.backUpFile(obj).getOk()){
+				log.info("文件备份成功,{},{}", name, obj.getString(StringParams.IPFS.str()));
+			}
+			if(ipfsSearchHandler.saveFileInfo(obj).getOk()){
+				log.info("添加到搜索服务,{},{}", name, obj.getString(StringParams.IPFS.str()));
+			}
 		}
 	}
 
