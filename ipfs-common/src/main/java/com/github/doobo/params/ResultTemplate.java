@@ -27,15 +27,20 @@ public class ResultTemplate<T> {
 	/**
 	 * 当前页
 	 */
-    private Long current;
+    private Long index;
 
 	/**
 	 * 分页长度
 	 */
+	private Long size;
+
+	/**
+	 * 分页的页数
+	 */
     private Long pages;
 
 	/**
-	 * 分页总和
+	 * 总记录数
 	 */
     private Long total;
 

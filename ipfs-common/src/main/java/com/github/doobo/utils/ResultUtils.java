@@ -53,7 +53,7 @@ public final class ResultUtils {
         tResultTemplate
                 .setChanges(changes)
                 .setPages(PageCount)
-                .setCurrent(pageIndex)
+                .setIndex(pageIndex)
                 .setTotal(pageTotal);
         return tResultTemplate;
     }

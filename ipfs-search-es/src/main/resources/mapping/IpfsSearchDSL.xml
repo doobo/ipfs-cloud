@@ -1,455 +1,68 @@
 <properties>
-    <property name="indexAffairs">
-        <![CDATA[
-        {
-              "query": {
-                "bool": {
-                    "filter": [
-                        {
-                          "exists": {
-                            "field": "affairs_id"
-                          }
-                        }
-
-                    #if ($affairsId != $null)
-                    ,
-                    {
-                      "term": {
-                        "affairs_id": {
-                          "value": $affairsId
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($isSimpleName == $null && $affairsName != $null && $affairsName != '')
-                    ,
-                    {
-                      "bool": {
-                        "should": [
-                          {
-                            "match_phrase": {
-                              "affairs_name": "$affairsName"
-                            }
-                          },
-                          {
-                            "match_phrase": {
-                              "affairs_simple_name": "$affairsName"
-                            }
-                          }
-                        ]
-                      }
-                    }
-                    #end
-
-                    #if ($isSimpleName != $null && $isSimpleName == true)
-                    ,
-                    {
-                      "match_phrase": {
-                        "affairs_simple_name": "$affairsName"
-                      }
-                    }
-                    #end
-
-                    #if ($isSimpleName != $null && $isSimpleName == false)
-                    ,
-                    {
-                      "match_phrase": {
-                        "affairs_name": "$affairsName"
-                      }
-                    }
-                    #end
-
-                    #if ($affairsLocalId != $null)
-                    ,
-                    {
-                      "term": {
-                        "affairs_local_id.keyword": {
-                          "value": "$affairsLocalId"
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($serviceSubject != $null && $serviceSubject > 0)
-                    ,
-                    #if ($serviceSubject != $null && $serviceSubject == 1)
-                    {
-                      "bool": {
-                        "should": [
-                          {
-                            "term": {
-                              "service_subject": {
-                                "value": 1
-                              }
-                            }
-                          },
-                          {
-                            "term": {
-                              "service_subject": {
-                                "value": 3
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                    #elseif ($serviceSubject != $null && $serviceSubject == 2)
-                    {
-                      "bool": {
-                        "should": [
-                          {
-                            "term": {
-                              "service_subject": {
-                                "value": 2
-                              }
-                            }
-                          },
-                          {
-                            "term": {
-                              "service_subject": {
-                                "value": 3
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                    #else
-                    {
-                      "term": {
-                        "service_subject": {
-                          "value": $serviceSubject
-                        }
-                      }
-                    }
-                    #end
-                    #end
-
-                    #if ($departmentId != $null && $departmentId > 0)
-                    ,
-                    {
-                      "term": {
-                        "department_id": {
-                          "value": $departmentId
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($affairsType !=$null && $affairsType > 0)
-                    ,
-                    {
-                      "term": {
-                        "affairs_type": {
-                          "value": $affairsType
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($affairsSubjectId !=$null && $affairsSubjectId > 0)
-                    ,
-                    {
-                      "bool": {
-                        "should": [
-                          {
-                            "term": {
-                              "affairs_subject_id": {
-                                "value": 1
-                              }
-                            }
-                          },
-                          {
-                            "term": {
-                              "affairs_subject_id": {
-                                "value": 2
-                              }
-                            }
-                          }
-                        ]
-                      }
-                    }
-                    #end
-
-                    #if ($affairsObjectId != $null && $affairsObjectId > 0)
-                    ,
-                    {
-                      "term": {
-                        "affairs_object_id": {
-                          "value": $affairsObjectId
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($onlineSupport != $null)
-                    ,
-                    {
-                      "term": {
-                        "online_support": {
-                          "value": $onlineSupport
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($bookingSupport != $null)
-                    ,
-                    {
-                      "term": {
-                        "booking_support": {
-                          "value": $bookingSupport
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($exerciseLevel != $null)
-                    ,
-                    {
-                      "term": {
-                        "exercise_level": {
-                          "value": $exerciseLevel
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($implementSectorId != $null)
-                    ,
-                    {
-                      "term": {
-                        "implement_sector_id": {
-                          "value": $implementSectorId
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($provinceStd != $null)
-                    ,
-                    {
-                      "term": {
-                        "province_std": {
-                          "value": $provinceStd
-                        }
-                      }
-                    }
-                    #end
-
-                    #if ($netLevelArray != $null && $netLevelArray.size() > 0)
-                    ,
-                    {
-                        "bool": {
-                          "should": [
-                            {
-                              "term": {
-                                "net_level": {
-                                  "value": "$netLevelArray[0]"
-                                }
-                              }
-                            }
-                    #foreach ($item in $netLevelArray)
-                            ,
-                            {
-                              "term": {
-                                "net_level": {
-                                  "value": "$item"
-                                }
-                              }
-                            }
-                    #end
-                          ]
-                        }
-                    }
-                    #end
-
-                  ]
-                }
-              },
-
-              #set ($from = ($index - 1) * $size)
-              "from":$from,
-              "size":$size
-            }
-        ]]>
-    </property>
-
-    <property name="indexAffairsMarkResult">
+    <property name="ipfsSearch">
         <![CDATA[
           {
           "query" : {
             "bool": {
               "must": [
                  {
-                   "term": {"user_id": $userId}
-                  },
-                  {
-                   "term": {"delete_mark": false}
-                  },
-                 {
-                  "exists":{"field":"node_end_time"}
-                 }
-              ],
-              "must_not":[
-                {
-                   "term": {"node_type": 4}
-                },
-                {
-                   "term": {"node_type": 3}
-                },
-                {
-                   "term": {"node_type": 2}
-                },
-                {
-                   "term": {"node_standard_code": 1008 }
-                }
-              ],
-              "filter": {
-                  "range": {
-                    "modify_date": {
-                      "gt": $now.getTime()
+                   "term": {"deleteMark": 0}
+                  }
+                #if ($cid != $null && $cid != '')
+                  ,{
+                   "term": {"ipfs.keyword": "$cid" }
+                  }
+                #end
+                #if ($mime != $null && $mime != '')
+                  ,{
+                   "term": {"mime.keyword": "$mime" }
+                  }
+                #end
+                #if ($nodeId != $null && $nodeId != '')
+                  ,{
+                   "term": {"nodeId.keyword": "$nodeId" }
+                  }
+                #end
+                #if ($query != $null && $query != '')
+                  ,{
+                    "multi_match": {
+                      "query": "$query",
+                      "fields": [ "name", "remarks","mime"]
                     }
                   }
-              }
-            }
-          },
-          #set ($from = ($index - 1) * $size)
-          "from":$from,
-          "size":$size,
-          "sort":[
-            {
-                "mark_id":"asc"
-            }
-          ]
-         }
-        ]]>
-    </property>
-
-    <property name="indexRelatedAffairs">
-        <![CDATA[
-          {
-          "query" : {
-            "bool": {
-              "must": [
-                 {
-                   "term": {"is_theme_affair": false}
-                  },
-                  {
-                   "term": {"delete_mark": false}
-                  }
-              ]
-              #if ($type != $null)
-              ,"should":[
-                {
-                   "term": {"service_subject": $type}
-                },
-                {
-                   "term": {"service_subject": 3}
-                }
-              ],
-              "minimum_should_match": 1
-              #end
-              #if ($nodeIds != $null && $nodeIds.size() > 0)
-               ,"filter": {
-                    "terms": {
-                      "node_id": $nodeIds
-                    }
-               }
-              #end
-            }
-          },
-          #set ($from = ($index - 1) * $size)
-          "from":$from,
-          "size":$size,
-          "sort":[
-            {
-                "sort_code":"desc"
-            }
-          ]
-         }
-        ]]>
-    </property>
-
-    <property name="indexAffairInfos">
-        <![CDATA[
-          {
-          "query" : {
-            "bool": {
-              "must": [
-                 {
-                   "term": {"enable_mark": true}
-                  }
-                #if ($departmentId != $null)
-                  ,{
-                   "term": {"department_id": $departmentId}
-                  }
                 #end
-                #if ($affairId != $null)
-                  ,{
-                   "term": {"affairs_id": $affairId}
-                  }
-                #end
-                #if ($affairInfoId != $null)
-                  ,{
-                   "term": {"affairs_info_id": $affairInfoId}
-                  }
-                #end
-                #if ($affairStatus != $null && $affairStatus == 2)
-                  ,{
-                   "exists":{"field":"affairs_real_finish"}
-                  }
-                #end
-                #if ($deleteMark != $null)
-                  ,{
-                   "term": {"delete_mark": $deleteMark}
-                  }
-                #else
-                 ,{
-                   "term": {"delete_mark": false}
-                  }
-                #end
-              ],
-              "must_not":[
-                #if ($affairStatus != $null && $affairStatus == 1)
-                  {
-                   "exists":{"field":"affairs_real_finish"}
-                  },
-                #end
-                {
-                   "term": {"enable_mark": false}
-                }
               ]
               ,"filter": [
-                    #if ($acceptStatus != $null && $acceptStatus.size() > 0)
-                    {
-                     "terms": {"accept_status": $acceptStatus}
-                    },
-                    #end
-                    #if ($acceptStartDate != $null)
+                    #if ($createTime != $null)
                     {
                      "range": {
-                        "affairs_start": {
-                          "gt": $acceptStartDate.getTime()
+                        "createTime": {
+                          "gte": $createTime.getTime()
                         }
                       }
                     },
                     #end
-                    #if ($acceptEndDate != $null)
+                    #if ($gtSize != $null)
                     {
                      "range": {
-                        "affairs_start": {
-                          "lte": $acceptEndDate.getTime()
+                        "size": {
+                          "gte": $gtSize
                         }
                       }
                     },
                     #end
-                    #if ($affairsInfoIds != $null && $affairsInfoIds.size() > 0)
+                    #if ($ltSize != $null)
                     {
-                        "terms": {"affairs_info_id": $affairsInfoIds}
+                     "range": {
+                        "size": {
+                          "lte": $ltSize
+                        }
+                      }
+                    },
+                    #end
+                    {
+                       "term": {"deleteMark": 0}
                     }
-                    #end
                ]
             }
           },
@@ -457,29 +70,14 @@
           "from":$from,
           "size":$size
           ,"sort":[
-            #if ($sortList.affairName != $null)
+            #if ($sortList.size != $null)
                 {
-                    "affair_name.keyword":#if(${sortList.affairName}) "asc" #else "desc" #end
+                    "size":#if(${sortList.size}) "asc" #else "desc" #end
                 },
             #end
-            #if ($sortList.affairsStart != $null)
+            #if ($sortList.createTime != $null)
                 {
-                    "affairs_start":#if(${sortList.affairsStart}) "asc" #else "desc" #end
-                },
-            #end
-            #if ($sortList.proposerName != $null)
-                {
-                    "proposer_name.keyword":#if(${sortList.proposerName}) "asc" #else "desc" #end
-                },
-            #end
-            #if ($sortList.nodeEndTime != $null)
-                {
-                    "node_end_time":#if(${sortList.nodeEndTime}) "asc" #else "desc" #end
-                },
-            #end
-            #if ($sortList.modifyDate != $null)
-                {
-                    "modify_date":#if(${sortList.modifyDate}) "asc" #else "desc" #end
+                    "createTime":#if(${sortList.createTime}) "asc" #else "desc" #end
                 }
             #else
                 {}

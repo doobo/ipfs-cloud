@@ -32,5 +32,5 @@ public class PageParam {
 	/**
 	 * 排序字段,true-asc,false-desc
 	 */
-	private Map<String, Boolean> sort;
+	private Map<String, Boolean> sortList;
 }
