@@ -1,6 +1,7 @@
 package com.github.doobo.weight;
 
 
+import com.github.doobo.params.CustomException;
 import com.github.doobo.utils.Assert;
 import com.github.doobo.utils.CommonUtils;
 
@@ -9,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
-
-import static java.util.stream.Collectors.summingInt;
 
 /**
  * 权重随机算法
@@ -34,13 +33,16 @@ public class WeightRandom<T> {
    * 概率恒定获取多个随机元素
    */
   public List<WeightParent> getElementsByFixed(int amount){
-    List<WeightParent> list = new ArrayList(amount);
+    List<WeightParent> list = new ArrayList<>(amount);
     for(int i = 0; i < amount; i++){
-      WeightParent weightParent = getRandomElementByBinary();
+      WeightParent<T> weightParent = getRandomElementByBinary();
       try {
+      	if(weightParent == null){
+      		continue;
+		}
         list.add((WeightParent) weightParent.clone());
       } catch (CloneNotSupportedException e) {
-        Assert.isTrue(false,"数据拷贝失败，请检测克隆方法");
+        throw new CustomException("数据拷贝失败，请检测克隆方法");
       }
     }
     return list;
@@ -57,15 +59,18 @@ public class WeightRandom<T> {
     try {
        backup = CommonUtils.cloneCopy(origin);
     } catch (Exception e) {
-      Assert.isTrue(false,"备份数据源失败，请检测克隆方法");
+		throw new CustomException("备份数据源失败，请检测克隆方法");
     }
     List<WeightParent> list = new ArrayList<>(amount);
     for(int i = 0 ;i < amount; i++){
-      WeightParent tmp = getRandomElementByBinary();
+      WeightParent<T> tmp = getRandomElementByBinary();
       try {
+      	if(tmp == null){
+      		continue;
+		}
         list.add((WeightParent)tmp.clone());
       } catch (CloneNotSupportedException e) {
-        Assert.isTrue(false,"数据拷贝失败，请检测克隆方法");
+		  throw new CustomException("数据拷贝失败，请检测克隆方法");
       }
       tmp.setCount(0);
       setMinAndMaxAndSum();
@@ -85,11 +90,15 @@ public class WeightRandom<T> {
     int i = 0;
     int max = amount+100;
     while (result.size() < amount && i < max){
-      WeightParent tmp = getRandomElementByBinary();
+      WeightParent<T> tmp = getRandomElementByBinary();
       try {
+      	if(tmp == null){
+      		i++;
+      		continue;
+		}
         result.put(tmp.getUniqueKey(),(WeightParent)tmp.clone());
       } catch (CloneNotSupportedException e) {
-        Assert.isTrue(false,"数据拷贝失败，请检测克隆方法");
+		  throw new CustomException("数据拷贝失败，请检测克隆方法");
       }
       i++;
     }
@@ -113,11 +122,13 @@ public class WeightRandom<T> {
     Assert.isTrue(count>=0,"数据源不够！");
     WeightParent<T> weightParent = getRandomElementByBinary();
     try {
+	  if(weightParent == null){
+		  throw new CustomException("数据拷贝失败，请检测克隆方法");
+	  }
       return (WeightParent<T>) weightParent.clone();
     } catch (CloneNotSupportedException e) {
-      Assert.isTrue(false,"数据拷贝失败，请检测克隆方法");
+		throw new CustomException("数据拷贝失败，请检测克隆方法");
     }
-    return null;
   }
 
   /**
@@ -137,7 +148,7 @@ public class WeightRandom<T> {
    */
   private boolean resetSum(){
     if(CommonUtils.hasValue(origin)){
-      sum = origin.stream().filter(Objects::nonNull).collect(summingInt(WeightParent::getCount));
+      sum = origin.stream().filter(Objects::nonNull).mapToInt(WeightParent::getCount).sum();
     }
     return true;
   }
@@ -145,15 +156,14 @@ public class WeightRandom<T> {
   /**
    * 全部循环获取随机元素
    */
-  private WeightParent getWeightElementByAll(){
-    Integer n;
-    Integer m;
+  private WeightParent<T> getWeightElementByAll(){
+    int n,m;
     if (sum <= 0) {
       return null;
     }
     n = random.nextInt(sum); // n in [0, weightSum)
     m = 0;
-    for (WeightParent o : origin) {
+    for (WeightParent<T> o : origin) {
       if (m <= n && n < m + o.getCount()) {
         return o;
       }
@@ -165,8 +175,8 @@ public class WeightRandom<T> {
   /**
    * 二分法获取随机预测值
    */
-  private WeightParent getRandomElementByBinary(){
-    Integer n;
+  private WeightParent<T> getRandomElementByBinary(){
+    int n;
     if (sum <= 0) {
       return null;
     }
@@ -181,7 +191,7 @@ public class WeightRandom<T> {
   private void setMinAndMaxAndSum(){
     int m = 0;
     if(CommonUtils.hasValue(origin)) {
-      for (WeightParent o : origin) {
+      for (WeightParent<T> o : origin) {
         o.setMin(m);
         m += o.getCount();
         o.setMax(m);
@@ -195,7 +205,7 @@ public class WeightRandom<T> {
    * @param list
    * @param key
    */
-  private WeightParent binarySearch(List<WeightParent<T>> list, int key){
+  private WeightParent<T> binarySearch(List<WeightParent<T>> list, int key){
     Assert.isTrue(CommonUtils.hasValue(list),"参数异常");
     int lo = 0;
     int hi = list.size() - 1;

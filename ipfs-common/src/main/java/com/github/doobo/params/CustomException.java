@@ -1,6 +1,5 @@
-package com.github.doobo.conf;
+package com.github.doobo.params;
 
-import com.github.doobo.params.ErrorInfo;
 import lombok.Getter;
 
 /**

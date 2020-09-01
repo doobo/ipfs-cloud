@@ -2,6 +2,7 @@ package com.github.doobo.conf;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.doobo.params.CustomException;
 import com.github.doobo.params.ErrorInfo;
 import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.utils.ResultUtils;

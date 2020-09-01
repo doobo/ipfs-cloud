@@ -224,12 +224,9 @@ public class FileUtils {
 	public static void writFile(String fileData, String fileName) {
 		//新建一个文件对象，如果不存在则创建一个该文件
 		File f = new File(fileName);
-		FileWriter fw;
-		try {
-			fw=new FileWriter(f);
+		try (FileWriter fw=new FileWriter(f)){
 			//将字符串写入到指定的路径下的文件中
 			fw.write(fileData);
-			fw.close();
 		} catch (IOException e) {
 			log.error("FileUtilsError", e);
 		}
@@ -239,13 +236,13 @@ public class FileUtils {
 	 * 如果目录不存在,则创建目录
 	 * @param path
 	 */
-	public static boolean createDirIfAbsent(String path){
+	public static File createDirIfAbsent(String path){
 		File folder = new File(path);
 		//文件夹路径不存在
 		if (!folder.exists()) {
-			return folder.mkdirs();
+			folder.mkdirs();
 		}
-		return true;
+		return folder;
 	}
 
 	/**

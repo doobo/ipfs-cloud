@@ -1,5 +1,7 @@
 package com.github.doobo.utils;
 
+import com.github.doobo.params.CustomException;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,22 +60,22 @@ public class ClassUtils {
      * 判断你一个类是否存在某个属性（字段）
      * @param fieldName 字段
      * @param obj   类对象
-     * @return true:存在，false:不存在, null:参数不合法
+     * @return true:存在，false:不存在
      */
-    public static Boolean isExistFieldName(String fieldName, Object obj) {
+    public static boolean isExistFieldName(String fieldName, Object obj) {
         if (obj == null ||fieldName.isEmpty()) {
-            return null;
+        	throw new CustomException("参数异常");
         }
         //获取这个类的所有属性
         Field[] fields = obj.getClass().getDeclaredFields();
         boolean flag = false;
         //循环遍历所有的fields
-        for (int i = 0; i < fields.length; i++) {
-            if (fields[i].getName().equals(fieldName)) {
-                flag = true;
-                break;
-            }
-        }
+		for (Field field : fields) {
+			if (field.getName().equals(fieldName)) {
+				flag = true;
+				break;
+			}
+		}
         return flag;
     }
 }

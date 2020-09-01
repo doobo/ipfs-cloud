@@ -17,26 +17,25 @@ public class CommonUtils {
     /**
      * 是否有值
      * @param collection
-     * @return
      */
     public static boolean hasValue(Collection<?> collection){
-        return (collection == null || collection.isEmpty())?false:true;
+        return collection != null && !collection.isEmpty();
     }
 
     public static boolean hasValue(Map map){
-        return (map == null || map.isEmpty())?false:true;
+        return map != null && !map.isEmpty();
     }
 
     public static boolean hasValue(Object[] arr){
-        return (arr == null || arr.length == 0)?false:true;
+        return arr != null && arr.length != 0;
     }
 
     public static boolean hasValue(Object obj){
-        return obj == null?false:true;
+        return obj != null;
     }
 
     public static boolean hasValue(String str){
-        return (str == null || str.isEmpty())?false:true;
+        return str != null && !str.isEmpty();
     }
 
   /**
@@ -47,15 +46,16 @@ public class CommonUtils {
    * @throws IOException
    * @throws ClassNotFoundException
    */
-  public static <T> List<T> deepCopy(List<T> src) throws IOException, ClassNotFoundException {
-    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-    ObjectOutputStream out = new ObjectOutputStream(byteOut);
-    out.writeObject(src);
+  public static <T extends Serializable> List<T> deepCopy(List<T> src) throws IOException, ClassNotFoundException {
+    try(ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+    		ObjectOutputStream out = new ObjectOutputStream(byteOut)) {
+		out.writeObject(src);
 
-    ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
-    ObjectInputStream in = new ObjectInputStream(byteIn);
-    List<T> dest = (List<T>) in.readObject();
-    return dest;
+		try(ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
+			ObjectInputStream in = new ObjectInputStream(byteIn)) {
+		  return (List<T>) in.readObject();
+	  }
+	}
   }
 
   /**
