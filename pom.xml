@@ -16,6 +16,49 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
+    <name>ipfs-parent</name>
+    <url>https://gitee.com/doobo/ipfs-cloud</url>
+    <description>基于SpringCloud的IPFS私有云,主要解决文件存储分发问题,不考虑挖矿,支持内网部署和多区域集群部署,(北京、上海、广州、香港、北美、欧洲)组网</description>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://projectlombok.org/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>scm:https://github.com/doobo/ipfs-cloud</url>
+        <connection>scm:git:git@github.com:doobo/ipfs-cloud.git</connection>
+        <developerConnection>scm:git:git@github.com:doobo/ipfs-cloud.git</developerConnection>
+        <tag>master</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>com.github.doobo</id>
+            <name>doobo</name>
+            <email>doobo@foxmail.com</email>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>oss</id>
+            <url>
+                https://oss.sonatype.org/service/local/staging/deploy/maven2
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>oss</id>
+            <uniqueVersion>false</uniqueVersion>
+            <url>
+                https://oss.sonatype.org/content/repositories/snapshots
+            </url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <properties>
         <apache.exec.version>1.3</apache.exec.version>
         <commons.lang3.version>3.8.1</commons.lang3.version>
