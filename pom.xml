@@ -12,7 +12,7 @@
     <groupId>ipfs.cloud</groupId>
     <artifactId>ipfs-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <name>ipfs-parent</name>
     <url>https://gitee.com/doobo/ipfs-cloud</url>
@@ -30,7 +30,7 @@
         <url>scm:https://github.com/doobo/ipfs-cloud</url>
         <connection>scm:git:git@github.com:doobo/ipfs-cloud.git</connection>
         <developerConnection>scm:git:git@github.com:doobo/ipfs-cloud.git</developerConnection>
-        <tag>v1.0</tag>
+        <tag>master</tag>
     </scm>
 
     <developers>
