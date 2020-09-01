@@ -1,8 +1,6 @@
 package ipfs.common;
 
-import com.alibaba.fastjson.JSON;
 import com.github.doobo.utils.OsUtils;
-import com.github.doobo.utils.TerminalUtils;
 import com.github.doobo.utils.WordUtils;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
@@ -13,7 +11,6 @@ import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.junit.Test;
-import org.springframework.util.StreamUtils;
 import vip.ipav.okhttp.OkHttpClientTools;
 
 import java.io.*;

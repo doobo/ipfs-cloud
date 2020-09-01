@@ -81,7 +81,7 @@ public class WeightRandom<T extends Serializable> {
     Assert.isTrue(count>=amount,"数据源不够！");
     HashMap<String,WeightParent<T>> result = new HashMap<>(amount);
     int i = 0;
-    int max = amount*amount;
+    int max = amount*amount*amount;
     while (result.size() < amount && i < max){
       	WeightParent<T> tmp = getRandomElementByBinary();
 		if(tmp == null){

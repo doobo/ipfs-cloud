@@ -46,8 +46,7 @@ public class CommonUtils {
   public static <T extends Serializable> List<T> deepCopy(List<T> src) throws Exception {
     try(ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
     		ObjectOutputStream out = new ObjectOutputStream(byteOut)) {
-		out.writeObject(src);
-
+		out.writeObject((Serializable)src);
 		try(ByteArrayInputStream byteIn = new ByteArrayInputStream(byteOut.toByteArray());
 			ObjectInputStream in = new ObjectInputStream(byteIn)) {
 		  return (List<T>) in.readObject();

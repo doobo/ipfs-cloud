@@ -1,5 +1,6 @@
 package ipfs.common;
 
+import com.github.doobo.utils.CommonUtils;
 import com.github.doobo.weight.WeightParent;
 import com.github.doobo.weight.WeightRandom;
 import org.junit.Test;
@@ -10,7 +11,7 @@ import java.util.List;
 public class RandomTests {
 
 	@Test
-	public void testRandom(){
+	public void testRandom() throws Exception {
 		List<WeightParent<String>> wss = new ArrayList<>();
 		WeightParent<String> ws;
 		for(int i = 0; i < 10; i++){
@@ -19,6 +20,11 @@ public class RandomTests {
 			ws.setCount(10-i);
 			wss.add(ws);
 		}
+
+
+		List<WeightParent<String>> w2s = CommonUtils.deepCopy(wss);
+		wss.get(0).setCount(100);
+		System.out.println(w2s.get(0).getCount());
 
 		/**
 		 * 恒定概率随机输出
