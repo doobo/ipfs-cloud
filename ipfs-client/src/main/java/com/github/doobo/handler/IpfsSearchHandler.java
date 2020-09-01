@@ -1,9 +1,9 @@
 package com.github.doobo.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.github.doobo.conf.CustomException;
 import com.github.doobo.conf.Node;
 import com.github.doobo.model.IpfsFileInfo;
+import com.github.doobo.params.CustomException;
 import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.service.IpfsSearchApiService;
 import com.github.doobo.soft.InitUtils;
