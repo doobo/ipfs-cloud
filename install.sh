@@ -11,4 +11,4 @@
 
 mvn clean
 mvn release:prepare
-mvn release:perform
+#mvn release:perform
