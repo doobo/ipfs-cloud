@@ -1,8 +1,9 @@
 package com.github.doobo.weight;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class WeightParent<T> implements java.io.Serializable,Cloneable {
+public class WeightParent<T extends Serializable> implements java.io.Serializable,Cloneable {
 
   /**
    * 唯一键
@@ -79,13 +80,12 @@ public class WeightParent<T> implements java.io.Serializable,Cloneable {
     this.t = t;
   }
 
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    WeightParent<T> weightParent = (WeightParent<T>)super.clone();
-    weightParent.setT(this.getT());
-    weightParent.setMax(this.getMax());
-    weightParent.setMin(this.getMin());
-    weightParent.setCount(this.getCount());
-    return weightParent;
-  }
+	public static <T extends Serializable> WeightParent<T> newInstance(WeightParent<T> policy) {
+		WeightParent<T> copyPolicy = new WeightParent<>();
+		copyPolicy.setT(policy.getT());
+		copyPolicy.setMax(policy.getMax());
+		copyPolicy.setMin(policy.getMin());
+		copyPolicy.setCount(policy.getCount());
+		return copyPolicy;
+	}
 }

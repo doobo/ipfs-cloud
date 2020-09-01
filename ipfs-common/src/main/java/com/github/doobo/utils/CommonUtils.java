@@ -42,11 +42,8 @@ public class CommonUtils {
    * List实现深拷贝，拷贝对象需要实现了序列化
    * @param src
    * @param <T>
-   * @return
-   * @throws IOException
-   * @throws ClassNotFoundException
    */
-  public static <T extends Serializable> List<T> deepCopy(List<T> src) throws IOException, ClassNotFoundException {
+  public static <T extends Serializable> List<T> deepCopy(List<T> src) throws Exception {
     try(ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
     		ObjectOutputStream out = new ObjectOutputStream(byteOut)) {
 		out.writeObject(src);
@@ -61,15 +58,14 @@ public class CommonUtils {
   /**
    * WeightParent 对象克隆
    * @param src
-   * @throws Exception
    */
-  public static <T> List<WeightParent<T>> cloneCopy(List<WeightParent<T>> src) throws CloneNotSupportedException {
+  public static <T extends Serializable> List<WeightParent<T>> cloneCopy(List<WeightParent<T>> src) {
     if(!hasValue(src)){
       return null;
     }
     List<WeightParent<T>> result = new ArrayList<>(src.size());
-    for(WeightParent t: src){
-      result.add((WeightParent<T>)t.clone());
+    for(WeightParent<T> t: src){
+      result.add(WeightParent.newInstance(t));
     }
     return result;
   }
