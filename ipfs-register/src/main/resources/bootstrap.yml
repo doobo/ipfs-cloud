@@ -1,0 +1,51 @@
+server:
+  port: 6109
+
+spring:
+  application:
+    name: ipfs-register
+  profiles:
+    active: dev
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true #gateway 运行从注册中心发现服务
+          lowerCaseServiceId: true #服务serviceId不分区大小写
+  security:
+    basic:
+      enabled: true
+    user:
+      name: union
+      password: 123456
+
+eureka:
+  instance:
+    hostname: localhost
+    instance-id: ${spring.application.name}:${server.port}
+    status-page-url-path: /actuator/info
+    health-check-url-path: /actuator/health
+  server:
+    peerEurekaNodesUpdateIntervalMs: 60000
+    #自我保护模式,它的架构哲学是宁可同时保留所有微服务:健康的微服务和不健康的微服务都会保留,也不盲目注销任何健康的微服务
+    enableSelfPreservation: false
+  client:
+    #表示是否将自己注册到Eureka Server，默认为true,多注册中心改成true
+    register-with-eureka: true
+    #表示是否从Eureka Server获取注册信息，默认为true，多注册中心改成true
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@${eureka.instance.hostname}:${server.port}/eureka/
+
+info:
+  app:
+    name: ${spring.application.name}
+
+logging:
+  level:
+    root: warn
+    com.github.doobo: info
+  file:
+    path: data/logs/${spring.application.name}
+
+

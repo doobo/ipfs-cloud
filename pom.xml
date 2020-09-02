@@ -86,6 +86,7 @@
         <module>ipfs-client</module>
         <module>ipfs-backup</module>
         <module>ipfs-search-es</module>
+        <module>ipfs-register</module>
     </modules>
 
     <dependencyManagement>
