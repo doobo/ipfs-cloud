@@ -7,3 +7,14 @@ eureka:
   client:
     service-url:
       defaultZone: http://union:123456@120.79.137.50:3376/eureka/
+
+info:
+  app:
+    name: ${spring.application.name}
+
+logging:
+  level:
+    root: warn
+    com.github.doobo: info
+  file:
+    path: data/logs/${spring.application.name}

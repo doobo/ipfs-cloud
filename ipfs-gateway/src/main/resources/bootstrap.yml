@@ -31,15 +31,6 @@ eureka:
           enabled: true
     eurekaServiceUrlPollIntervalSeconds: 60
 
-logging:
-  level:
-    root: warn
-    com.github.doobo: info
-
-info:
-  app:
-    name: ${spring.application.name}
-
 feign:
   hystrix:
     enabled: true
