@@ -1,5 +1,6 @@
 package com.github.doobo.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.frameworkset.orm.annotation.ESId;
 import com.frameworkset.orm.annotation.ESIndex;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 @ESIndex(name="ipfs_search_document")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class IpfsSearchDocument extends IpfsFileInfo{
 
 	/**
