@@ -1,13 +1,19 @@
 # ipfs-cloud
 
 > 基于SpringCloud的IPFS私有云,主要解决文件存储分发问题,不考虑挖矿
-* 内网快速搭建私有文件存储服务，能快速部署、快速访问、无限扩容、自动分发、自动备份
+* 内网快速搭建私有文件存储服务，能快速部署、快速访问、无限扩容、自动分发、自动备份，支持内网部署和多跨区域组网部署
 
-## 愿景
-* ipfs-client为分布式客户端,单独启动，自动组网，内网启动一台即可快速调用ipfs相关的API接口，快速进行文件上传下载，并实现文件的加密上传
-* ipfs-gateway为网关，为了内网的客户端自动组网，目前意义不大，有单独组建内网的可用使用，配合注册中心使用即可，客户端会自动把网关的节点加入本身节点
+## 模块简单介绍
+* ipfs-client为分布式客户端,单独启动，自动组网，内网启动一台即可快速调用ipfs相关的API接口，快速进行文件上传下载,
+文件上传后会自动分发到ipfs机器，上传接口会返回文件的cid，同时在client端保存一份'文件名'+'.ipfs'的文件，里面的内容是该文件的全网唯一CID编码，通过该编码可以
+在任意集群的节点进行文件下载、查看等操作
+* ipfs-gateway为网关，用来给客户端自动组网，组建集群时，用来自动添加网关节点，配合注册中心使用即可，客户端会自动把网关的节点加入自己的bootstrap中
+这样，不同地区的子集群也能通过网关进行文件分发和获取，不同地区的子集群，可通过网关的IPFS获取任意集群内容的文件
 * ipfs-search-es为文件搜索服务的es实现,可根据文件的cid、节点id、文件类型、文件名、文件内容、添加的时间范围来搜索相关文件
-* ipfs-backup为文件备份服务，可单独启动，备份以年月日时作为目录，文件的cid作为文件名，保存到备份服务器
+* ipfs-backup为文件备份服务，可单独启动，备份以年月日时作为目录，文件的cid作为文件名，保存到备份服务器，备份服务器最好能和网关共用IPFS节点，
+即备份节点不启动IPFS,-Dipfs.startDaemon=false;如果是全内网部署，随便一台服务器启动即可
+* ipfs-register为简单的springCloud注册中心程序，对暂没有注册中心的，可以启动一个，其它服务启动时，添加命令
+-Deureka.client.serviceUrl.defaultZone=http://union:123456@127.0.0.1:6109/eureka/,即可注册进去
 
 ## 搜索和加密
 * 搜索服务可基于elasticSearch来搜索，也可用基于MySQL等数据库实现，基于统一接口调用，保证实现相关接口即可，注意保证数据幂等性和搜索结构一致性。
@@ -39,3 +45,13 @@
 
 > 文件上传尽可能使用本地的ipfs-client进行上传，会自动通过ipfs分发到全网
 > ，提高网络传输效率，上传文件后，ipfs-client不要立即停机，防止其它区域在同步文件时，访问不到文件
+
+## 打包命令
+```
+mvn clean
+mvn install
+
+//启动
+nohup java -jar -Dserver.port=9051 -Dipfs.port=9052 -Dipfs.adminPort=9053 -Dipfs.httpPort=9054 ipfs-client-1.1-SNAPSHOT.jar > /dev/null 2>&1 &
+nohup java -jar -Dserver.port=9057 -Dipfs.port=9052 -Dipfs.adminPort=9053 -Dipfs.httpPort=9054 -Dipfs.startDaemon=false ipfs-search-es-1.1-SNAPSHOT.jar > /dev/null 2>&1 &
+```
