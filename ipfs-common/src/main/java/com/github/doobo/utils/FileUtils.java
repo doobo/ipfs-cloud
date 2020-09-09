@@ -1,11 +1,15 @@
 package com.github.doobo.utils;
 
+import lombok.experimental.PackagePrivate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StreamUtils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +22,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * 文件常用工具
  */
 @Slf4j
+@PackagePrivate
 public class FileUtils {
 
 	/**
@@ -267,6 +272,27 @@ public class FileUtils {
 				}
 			}
 			return out.toByteArray();
+		}
+	}
+
+	/**
+	 * 删除文件
+	 * @param tempList
+	 */
+	public static void deleteFiles(List<String> tempList) {
+		if (!CollectionUtils.isEmpty(tempList)) {
+			for (String fileName : tempList) {
+				File file = new File(fileName);
+				if(!file.exists()){
+					continue;
+				}
+				Path path = file.toPath();
+				try {
+					Files.delete(path);
+				} catch (IOException e) {
+					log.info("deleteFilesError", e);
+				}
+			}
 		}
 	}
 
