@@ -6,6 +6,8 @@ import com.github.doobo.model.SearchVO;
 import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.service.IpfsConfigApiService;
 import com.github.doobo.service.IpfsSearchApiService;
+import com.github.doobo.soft.InitUtils;
+import com.github.doobo.utils.ResultUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +49,12 @@ public class IpfsConfigController {
 	 * @param vo
 	 */
 	@PostMapping("ipfs/search")
-	ResultTemplate<List<IpfsFileInfo>> search(SearchVO vo){
+	public ResultTemplate<List<IpfsFileInfo>> search(SearchVO vo){
 		return ipfsSearchApiService.search(vo);
+	}
+
+	@GetMapping("/ipfs")
+	public ResultTemplate<Boolean> exitFile(String cid){
+		return ResultUtils.of(InitUtils.exitIpfsFile(cid));
 	}
 }

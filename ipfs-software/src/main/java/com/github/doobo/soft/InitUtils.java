@@ -8,6 +8,7 @@ import com.github.doobo.utils.*;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
+import lombok.experimental.PackagePrivate;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -20,6 +21,7 @@ import java.util.List;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
+@PackagePrivate
 public class InitUtils {
 
 	/**
@@ -231,5 +233,20 @@ public class InitUtils {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * 判断当前IPFS节点是否能读取到文件
+	 * @param cid
+	 */
+	public static boolean exitIpfsFile(String cid){
+		if(cid == null ||  cid.isEmpty()){
+			return false;
+		}
+		String result = TerminalUtils.execCmd(3,IPFS, "block stat", cid);
+		if(result == null || result.isEmpty()){
+			return false;
+		}
+		return result.contains(String.format("Key: %s",cid));
 	}
 }

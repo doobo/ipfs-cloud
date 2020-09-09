@@ -87,11 +87,15 @@ public class TerminalUtils {
 	 * 执行系统命令, 返回执行结果
 	 * @param cmd 需要执行的命令
 	 */
-	public static String execCmd(String ...cmd) {
+	public static String execCmd(long timeout, String ...cmd) {
 		if(cmd != null && cmd.length > 0){
-			return execCmd(StringUtils.join(cmd, " "), null, TIMEOUT);
+			return execCmd(StringUtils.join(cmd, " "), null, timeout);
 		}
 		return null;
+	}
+
+	public static String execCmd(String ...cmd) {
+		return execCmd(TIMEOUT,  cmd);
 	}
 
 	/**
