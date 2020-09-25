@@ -23,11 +23,12 @@ eureka:
   instance:
       hostname: localhost
       prefer-ip-address: true
-      instance-id: ${spring.application.name}:${server.port}
-      status-page-url-path: /actuator/info
-      health-check-url-path: /actuator/health
       #指定服务暴露的端口，可以和服务不同
       non-secure-port: ${server.port}
+      instance-id: ${spring.application.name}:${server.port}
+      status-page-url-path: http://${eureka.instance.hostname}:${eureka.instance.non-secure-port}/actuator/info
+      health-check-url-path: http://${eureka.instance.hostname}:${eureka.instance.non-secure-port}/actuator/health
+
   client:
     #表示是否将自己注册到Eureka Server，默认为true
     register-with-eureka: true
