@@ -58,5 +58,7 @@ public class ResultTemplate<T> {
 	 * 详细信息
 	 */
     private Object detail;
+
+    private int code;
 }
 
