@@ -39,6 +39,7 @@ public class IndexController implements IpfsSearchControllerApi {
 	public ResultTemplate<List<IpfsFileInfo>> search(@RequestBody SearchVO vo) {
 		return ipfsSearchService.search(vo);
 	}
+
 	@GetMapping("date")
 	public ResultTemplate<Date> indexDate(){
 		return ResultUtils.of(DateUtils.getCurDate());
