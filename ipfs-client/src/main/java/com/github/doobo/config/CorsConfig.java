@@ -3,7 +3,6 @@ package com.github.doobo.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.annotation.Order;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -13,8 +12,7 @@ import java.util.Collections;
 /**
  * 单独配置client跨域,需要时开启
  */
-//@Order(-1)
-//@Configuration
+@Configuration
 public class CorsConfig {
 
 	@Bean
