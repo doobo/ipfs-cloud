@@ -1,6 +1,7 @@
 ipfs:
   bootstrap:
     - /ip4/149.129.78.38/tcp/4001/ipfs/QmcFcguezGgVNvVCugFdbrCvh4XWxqF1TiBwA46dAuQ1WP
+    - /ip4/120.79.137.50/tcp/3101/ipfs/QmZJ9bSnE8rDBzjLLQ6hQF299uzhMwifysv23h65Mo5JA8
 #    - /dnsaddr/img.ipav.vip/tcp/4001/ipfs/QmcFcguezGgVNvVCugFdbrCvh4XWxqF1TiBwA46dAuQ1WP
 
 eureka:
