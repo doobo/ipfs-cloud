@@ -1,9 +1,9 @@
 package com.github.doobo.config;
 
 import cn.yours.elfinder.ElFinderConstants;
+import cn.yours.elfinder.configuration.CmdObserver;
 import cn.yours.elfinder.param.ObServerVO;
 import cn.yours.elfinder.service.VolumeHandler;
-import cn.yours.web.consume.CmdObserver;
 import com.github.doobo.handler.IpfsBackHandler;
 import com.github.doobo.handler.IpfsSearchHandler;
 import com.github.doobo.params.StringParams;

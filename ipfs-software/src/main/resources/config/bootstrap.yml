@@ -5,6 +5,12 @@ ipfs:
 #    - /dnsaddr/img.ipav.vip/tcp/4001/ipfs/QmcFcguezGgVNvVCugFdbrCvh4XWxqF1TiBwA46dAuQ1WP
 
 eureka:
+  instance:
+    #指定服务暴露的端口，可以和服务不同
+    non-secure-port: ${server.port}
+    instance-id: ${spring.application.name}:${server.port}
+    status-page-url-path: http://${eureka.instance.hostname}:${eureka.instance.non-secure-port}/actuator/info
+    health-check-url-path: http://${eureka.instance.hostname}:${eureka.instance.non-secure-port}/actuator/health
   client:
     service-url:
       defaultZone: http://union:123456@120.79.137.50:3376/eureka/

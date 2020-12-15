@@ -13,8 +13,6 @@ spring:
           enabled: true #gateway 运行从注册中心发现服务
           lowerCaseServiceId: true #服务serviceId不分区大小写
   security:
-    basic:
-      enabled: true
     user:
       name: union
       password: 123456
@@ -22,11 +20,6 @@ spring:
 eureka:
   instance:
     hostname: localhost
-    #指定服务暴露的端口，可以和服务不同
-    non-secure-port: ${server.port}
-    instance-id: ${spring.application.name}:${server.port}
-    status-page-url-path: http://${eureka.instance.hostname}:${eureka.instance.non-secure-port}/actuator/info
-    health-check-url-path: http://${eureka.instance.hostname}:${eureka.instance.non-secure-port}/actuator/health
   server:
     peerEurekaNodesUpdateIntervalMs: 60000
     #自我保护模式,它的架构哲学是宁可同时保留所有微服务:健康的微服务和不健康的微服务都会保留,也不盲目注销任何健康的微服务
