@@ -239,7 +239,7 @@ public class InitUtils {
 	 * 判断当前IPFS节点是否能读取到文件
 	 * @param cid
 	 */
-	public static boolean exitIpfsFile(String cid){
+	public static boolean existIpfsFile(String cid){
 		if(cid == null ||  cid.isEmpty()){
 			return false;
 		}

@@ -55,6 +55,6 @@ public class IpfsConfigController {
 
 	@GetMapping("/ipfs")
 	public ResultTemplate<Boolean> exitFile(String cid){
-		return ResultUtils.of(InitUtils.exitIpfsFile(cid));
+		return ResultUtils.of(InitUtils.existIpfsFile(cid));
 	}
 }

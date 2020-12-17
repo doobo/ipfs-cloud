@@ -25,7 +25,7 @@ public class IndexController implements IpfsSearchControllerApi {
 	@Resource
 	IpfsSearchService ipfsSearchService;
 
-	@GetMapping("")
+	//@GetMapping("")
 	public ResultTemplate<Object> indexPage(){
 		return ResultUtils.of(clientInterface.existIndice("ipfs_search_document"));
 	}
