@@ -21,7 +21,7 @@ info:
 
 logging:
   level:
-    root: warn
+    root: info
     com.github.doobo: info
   file:
     path: data/logs/${spring.application.name}

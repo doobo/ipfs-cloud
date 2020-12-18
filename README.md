@@ -27,6 +27,8 @@
 
 ### ipfs-search-es
 文件搜索服务的es实现,需要搜索文件的可启动，可根据文件的cid、节点id、文件类型、文件名、文件内容、添加的时间范围来搜索相关文件
+[搜索页面前端代码](https://gitee.com/doobo/ipfs-search)
+![简单的搜索界面](https://ipfs.ipav.vip/ipfs/QmWjXPAAeSV7XwjnfLkxCCvSpwsHPr5bK3qUtGaXgsGUWM)
 
 ### ipfs-backup
 文件备份服务，需要备份上传文件的可启动，备份以年月日时作为目录，文件的cid作为文件名，保存到备份服务器，备份服务器最好能和网关共用IPFS节点，

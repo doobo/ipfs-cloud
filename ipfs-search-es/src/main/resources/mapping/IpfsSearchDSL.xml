@@ -33,11 +33,20 @@
                 #end
               ]
               ,"filter": [
-                    #if ($createTime != $null)
+                    #if ($minTime != $null)
                     {
                      "range": {
                         "createTime": {
-                          "gte": $createTime.getTime()
+                          "gte": $minTime.getTime()
+                        }
+                      }
+                    },
+                    #end
+                    #if ($maxTime != $null)
+                    {
+                     "range": {
+                        "createTime": {
+                          "lte": $maxTime.getTime()
                         }
                       }
                     },

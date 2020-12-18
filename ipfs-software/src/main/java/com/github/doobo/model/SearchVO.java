@@ -44,8 +44,14 @@ public class SearchVO extends PageParam {
 	private Long ltSize;
 
 	/**
-	 * 创建时间
+	 * 最小时间
 	 */
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date createTime;
+	private Date minTime;
+
+	/**
+	 * 最大时间
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date maxTime;
 }
