@@ -83,6 +83,5 @@ java -jar -Dserver.port=9051 -Dipfs.port=9052 -Dipfs.adminPort=9053 -Dipfs.httpP
 nohup java -jar -Dserver.port=9057 -Dipfs.port=9052 -Dipfs.adminPort=9053 -Dipfs.httpPort=9054 -Dipfs.startDaemon=false ipfs-search-es-1.1-SNAPSHOT.jar > /dev/null 2>&1 &
 ```
 
-## IPFS讨论区
-微信小程序，基于ipfs实现的图片上传
-![微雅视频](https://ipfs.ipav.vip/ipfs/QmRJd1LoyQWQFmoM88hohaHkhAnSkNVATAs8AXvTamZS1m)
+## IPFS讨论互助群
+![QQ群.jpeg](https://5fu8.com/ipfs/QmQaeZXpSKZYnrvyuKKPGXkcDZTqyA9cdKuegH4qr3AMgr)
