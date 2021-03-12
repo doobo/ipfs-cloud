@@ -4,6 +4,7 @@ import cn.yours.elfinder.ElFinderConstants;
 import cn.yours.elfinder.configuration.CmdObserver;
 import cn.yours.elfinder.param.ObServerVO;
 import cn.yours.elfinder.service.VolumeHandler;
+import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.handler.IpfsBackHandler;
 import com.github.doobo.handler.IpfsSearchHandler;
 import com.github.doobo.model.PathVO;
@@ -34,6 +35,9 @@ public class FileUploadConsumer extends CmdObserver {
 
 	@Resource
 	IpfsSearchHandler ipfsSearchHandler;
+
+	@Resource
+	IpfsConfig ipfsConfig;
 
 	@Override
 	public void handleObserver(ObServerVO vo) {
@@ -93,7 +97,7 @@ public class FileUploadConsumer extends CmdObserver {
 			.replace(StringParams.SLASH.str(),StringParams.BACKSLASH.str());
 		String fileName = name.substring(name.lastIndexOf(StringParams.BACKSLASH.str())+1);
 		result = ipfsCid(result);
-		if(result != null){
+		if(result != null && ipfsConfig.isWriteFile()){
 			FileUtils.writFile(result, name.replace(fileName, fileName + StringParams.IPFS_SUFFIX.str()));
 		}
 		return result;
@@ -135,6 +139,9 @@ public class FileUploadConsumer extends CmdObserver {
 					item.setTs(Calendar.getInstance().getTimeInMillis());
 					if(ipfsSearchHandler.saveFileInfo(new JSONObject(item)).getOk()){
 						log.info("添加到搜索服务,{},{}", item.getPath(), item.getIpfs());
+					}
+					if(ipfsConfig.isWriteFile()) {
+						FileUtils.writFile(cid, item.getPath().replace(item.getName(), item.getName() + StringParams.IPFS_SUFFIX.str()));
 					}
 				}
 			}
