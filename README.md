@@ -3,8 +3,8 @@
 
 > 博客类小程序源码，快速开通流量主，中台图片上传基于IPFS实现，[代码地址](https://gitee.com/doobo/min-pro)
 
-## ipfs-cloud图解
-![ipfs-cloud图解](https://5fu8.com/ipfs/QmS3R8RzyUrrpRR3TnHYYVp6Ec7m34n5TVr8JomTMZXy6q)
+## ipfs-cloud部署
+![ipfs-cloud部署](https://5fu8.com/ipfs/QmaWevpzdx7Eg1udssPuUiKz9uY8YEE3Mzm9GN4pkV5Zax)
 [ipfs-cloud流程图](https://api.5fu8.com/template/link/go/rYzqmi)
 
 ## 支持全内网隔离部署
