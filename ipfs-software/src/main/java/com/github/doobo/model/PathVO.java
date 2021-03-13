@@ -36,6 +36,11 @@ public class PathVO {
 	private String path;
 
 	/**
+	 * 目标目录
+	 */
+	private String target;
+
+	/**
 	 * 目录摘要,方便搜索
 	 */
 	private List<String> remarks;

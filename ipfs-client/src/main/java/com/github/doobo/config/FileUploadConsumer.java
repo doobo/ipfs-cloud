@@ -9,12 +9,15 @@ import com.github.doobo.handler.IpfsBackHandler;
 import com.github.doobo.handler.IpfsSearchHandler;
 import com.github.doobo.model.PathVO;
 import com.github.doobo.params.StringParams;
+import com.github.doobo.soft.ContextHolderUtil;
 import com.github.doobo.utils.FileUtils;
 import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.TerminalUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -22,7 +25,6 @@ import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static com.github.doobo.soft.InitUtils.IPFS;
 
@@ -51,21 +53,29 @@ public class FileUploadConsumer extends CmdObserver {
 			return;
 		}
 		JSONObject obj;
-		String hash,pHash;
-		Set<PathVO> path = new HashSet<>();
+		String hash,pHash,name;
+		Set<PathVO> path = null;
+		VolumeHandler handler;
+		//目标目录
+		String target = ContextHolderUtil.getRequest().getParameter(ElFinderConstants.ELFINDER_PARAMETER_TARGET);
+		if(StringUtils.isNotBlank(target)){
+			handler = vo.getVolumeHandlerByHash(target);
+			target = handler.getTarget().toString();
+		}
 		for(int i = 0 ;i < array.length(); i++){
 			obj = array.getJSONObject(i);
 			hash = obj.optString(ElFinderConstants.ELFINDER_PARAMETER_HASH,null);
 			pHash = obj.optString(ElFinderConstants.ELFINDER_PARAMETER_PARENTHASH,null);
 			if(hash == null) continue;
+			handler = vo.getVolumeHandlerByHash(hash);
+			name = handler.getTarget().toString();
 			if(pHash != null && pHash.length() > 2){
 				PathVO po = new PathVO();
 				po.setHash(pHash);
+				po.setTarget(target);
 				po.setPath(vo.getVolumeHandlerByHash(pHash).getTarget().toString());
-				path.add(po);
+				path = noRepeatPath(po, path);
 			}
-			VolumeHandler handler = vo.getVolumeHandlerByHash(hash);
-			String name = handler.getTarget().toString();
 			obj.put(StringParams.IPFS.str(), ipfsUpload(name));
 			if(ipfsBackHandler.backUpFile(obj).getOk()){
 				log.info("文件备份成功,{},{}", name, obj.getString(StringParams.IPFS.str()));
@@ -79,6 +89,36 @@ public class FileUploadConsumer extends CmdObserver {
 	}
 
 	/**
+	 *  目录去重,取外层目录
+	 */
+	private Set<PathVO> noRepeatPath(PathVO path,  Set<PathVO> st){
+		st = st == null ? new HashSet<>(1): st;
+		if(StringUtils.isBlank(path.getPath())){
+			return st;
+		}
+		//非目录形式的文件上传,不解析目录
+		if(path.getPath() != null &&  path.getPath().equals(path.getTarget())){
+			return st;
+		}
+		if(st.isEmpty()){
+			st.add(path);
+			return st;
+		}
+		String curPath = path.getPath(), iph;
+		for(PathVO item :  st){
+			iph = item.getPath();
+			if(iph.length() > curPath.length() && iph.startsWith(curPath)){
+				BeanUtils.copyProperties(path,  item);
+				return st;
+			}else if(iph.length() <= curPath.length() && curPath.startsWith(iph)){
+				return  st;
+			}
+		}
+		st.add(path);
+		return st;
+	}
+
+	/**
 	 * ipfs文件分发
 	 * @param name
 	 */
@@ -87,7 +127,7 @@ public class FileUploadConsumer extends CmdObserver {
 		if(!file.exists()){
 			return null;
 		}
-		String result = null;
+		String result;
 		if(OsUtils.getSystemType() == StringParams.Windows){
 			result = TerminalUtils.syncExecuteStr(IPFS, "add", String.format("\"%s\"", name));
 		}else{
@@ -111,19 +151,11 @@ public class FileUploadConsumer extends CmdObserver {
 		if(ps == null || ps.isEmpty()){
 			return null;
 		}
-		Set<String> sp = ps.stream().map(PathVO::getPath).collect(Collectors.toSet());
-		if(sp.isEmpty()){
-			return null;
-		}
-		//取最短的目录上传ipfs
+		String result,cid;
+		File file;
 		List<PathVO> rs = new ArrayList<>();
-		String min = sp.stream().min(Comparator.comparingInt(String::length)).get();
 		for(PathVO item : ps){
-			if(item.getPath().startsWith(min) && !item.getPath().equals(min)){
-				continue;
-			}
-			File file = new File(item.getPath());
-			String result;
+			file = new File(item.getPath());
 			if(file.exists() && file.isDirectory()){
 				item.setName(file.getName());
 				rs.add(item);
@@ -132,7 +164,7 @@ public class FileUploadConsumer extends CmdObserver {
 				}else{
 					result = TerminalUtils.syncMainExecute(IPFS, "add", "-r", item.getPath());
 				}
-				String cid = ipfsPathCid(result, item.getName());
+				cid = ipfsPathCid(result, item.getName());
 				if(cid != null && !cid.isEmpty()){
 					item.setIpfs(cid);
 					item.setRemarks(Collections.singletonList(result));
