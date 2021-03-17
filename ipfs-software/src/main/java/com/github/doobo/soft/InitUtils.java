@@ -27,7 +27,7 @@ public class InitUtils {
 	/**
 	 * json-path解析配置
 	 */
-	private static Configuration CONF
+	private static final Configuration CONF
 		= Configuration.builder().build().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
 
 	/**
