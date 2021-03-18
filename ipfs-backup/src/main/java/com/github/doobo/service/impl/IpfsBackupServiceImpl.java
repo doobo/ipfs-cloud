@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Objects;
 
 import static com.github.doobo.soft.InitUtils.IPFS;
+import static com.github.doobo.soft.InitUtils.IPFS_CONF_ARRAY;
 
 /**
  * 文件备份处理服务
@@ -51,7 +52,7 @@ public class IpfsBackupServiceImpl implements IpfsBackupService {
 		Volume volume = Objects.requireNonNull(elfinderStorage.getVolumes().get(0));
 		backPath = volume.getRoot().toString() + File.separator + backPath;
 		FileUtils.createDirIfAbsent(backPath);
-		TerminalUtils.syncExecute(new File(backPath), IPFS, "get", info.getIpfs());
+		TerminalUtils.syncExecute(new File(backPath), IPFS, "get", info.getIpfs(), IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
 		FileUtils.writFile(JSON.toJSONString(info), backPath+File.separator
 			+info.getIpfs()+ StringParams.JSON.str());
 	}

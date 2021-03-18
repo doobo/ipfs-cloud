@@ -10,10 +10,12 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import lombok.experimental.PackagePrivate;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,16 +29,25 @@ public class InitUtils {
 	/**
 	 * json-path解析配置
 	 */
-	private static Configuration CONF
+	private final static Configuration CONF
 		= Configuration.builder().build().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
 
 	/**
 	 * ipfs命令
 	 */
+	private static String IPFS_DIR = ".ipfs";
+
+	public static String IPFS_CONF = "";
+
+	public static String[] IPFS_CONF_ARRAY= new String[]{"-c", ""};
+
 	public static String IPFS;
 
-	public static boolean initIpfsEnv(){
-		FileUtils.createFile(".ipfs", ".initIpfs");
+	public static String IPFS_EXTEND;
+
+	public static boolean initIpfsEnv(String ipfsDir){
+		IPFS_DIR = ipfsDir == null? IPFS_DIR: ipfsDir;
+		File file = FileUtils.createFile(IPFS_DIR+"/.ipfs", ".initIpfs");
 		switch (OsUtils.getSystemType()){
 			case MAC_OS:
 				return initMac64Ipfs();
@@ -45,9 +56,19 @@ public class InitUtils {
 			case Windows:
 				return initWin64Ipfs();
 			default:
+				if(file.isDirectory() && file.delete()){
+					log.warn("delete .initIpfs file");
+				}
 				log.warn("not support system env, can't init ipfs");
 		}
 		return false;
+	}
+
+	/**
+	 * 兼容原版本
+	 */
+	public static boolean initIpfsEnv(){
+		return initIpfsEnv(null);
 	}
 
 	/**
@@ -59,7 +80,10 @@ public class InitUtils {
 		try (OutputStream out = new FileOutputStream(".ipfs/go-ipfs/ipfs.exe")){
 			byte[] ipfs = FileUtils.queryFileInZip(rs, "go-ipfs/ipfs.exe");
 			out.write(ipfs);
-			IPFS = new File(".ipfs/go-ipfs/ipfs.exe").getCanonicalPath();
+			IPFS = new File(IPFS_DIR+"/go-ipfs/ipfs.exe").getCanonicalPath();
+			IPFS_CONF = String.format(" -c '%s'", new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
+			IPFS_CONF_ARRAY[1] = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
+			IPFS_EXTEND = String.format("%s -c '%s'", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
 		} catch (Exception e){
 			log.error("init windows ipfs env fail", e);
 			return false;
@@ -87,59 +111,85 @@ public class InitUtils {
 	 * 检测Ipfs是否初始化
 	 */
 	public static boolean isIpfsInit(){
-		String home = System.getProperty("user.home");
-		return new File(home + File.separator + ".ipfs" + File.separator + "config").exists();
+		//String home = System.getProperty("user.home");
+		return new File(IPFS_DIR + File.separator + ".ipfs" + File.separator + "config").exists();
 	}
 
 	/**
 	 * 拷贝私有网络库
 	 */
-	public static boolean creatSwarmKey(){
-		String home = System.getProperty("user.home");
-		String ipfsHome = home + File.separator + ".ipfs";
+	public static boolean creatSwarmKey(String swarmKey){
+		byte[] rs = new byte[0];
+		if(StringUtils.isBlank(swarmKey)){
+			rs =FileUtils.readResourcesByte("key/swarm.key");
+		}else {
+			try {
+				rs = swarmKey.getBytes(UTF_8.name());
+			} catch (UnsupportedEncodingException e) {
+				log.warn("creatSwarmKeyError", e);
+			}
+		}
+		String ipfsHome = IPFS_DIR + File.separator + ".ipfs";
 		FileUtils.createFile(ipfsHome, "swarm.key");
-		byte[] rs =FileUtils.readResourcesByte("key/swarm.key");
 		try (FileOutputStream out = new FileOutputStream(ipfsHome + File.separator + "swarm.key")){
 			out.write(rs);
 		} catch (Exception e){
-			log.error("InitUtilsCreateSwarmKey",e);
+			log.error("creatSwarmKeyError",e);
 			return false;
 		}
 		return true;
 	}
 
 	/**
+	 * 删除私有密钥
+	 */
+	public static void delSwarmKey(){
+		String ipfsHome = IPFS_DIR + File.separator + ".ipfs";
+		File file = FileUtils.createFile(ipfsHome, "swarm.key");
+		if(file.exists()){
+			file.deleteOnExit();
+		}
+	}
+
+	/**
 	 * 配置IPFS私有网络
 	 */
-	public static boolean createIpfsPrivateNetwork(String[] boot){
-		if(!creatSwarmKey()){
+	public static boolean createIpfsPrivateNetwork(String[] boot, String swarmKey){
+		if(!creatSwarmKey(swarmKey)){
 			return false;
 		}
-		TerminalUtils.execCmd(IPFS + " bootstrap rm all");
+		TerminalUtils.syncExecute(IPFS, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1], " bootstrap rm all");
 		if(boot != null && boot.length > 0){
 			Arrays.stream(boot).forEach(m->{
-				TerminalUtils.execCmd(IPFS + " bootstrap add " + m);
+				TerminalUtils.syncExecuteStr(IPFS_EXTEND, " bootstrap add " + m);
 			});
 		}
 		return true;
 	}
 
 	/**
+	 * 旧方法兼容
+	 */
+	public static boolean createIpfsPrivateNetwork(String[] boot){
+		return createIpfsPrivateNetwork(boot, null);
+	}
+
+	/**
 	 * 启动ipfs daemon程序
 	 */
 	public static void startDaemon(){
-		TerminalUtils.asyncExecute(IPFS + " daemon");
+		TerminalUtils.asyncExecute(IPFS_EXTEND + " daemon");
 	}
 
 	/**
 	 * 获取ipfs节点配置
 	 */
 	public static Node getIpfsNodeInfo(){
-		byte[] bt = TerminalUtils.syncExecute(IPFS, "id");
-		if(bt != null && bt.length > 0){
+		byte[] bt = TerminalUtils.syncExecute(IPFS_EXTEND, "id");
+		if(bt.length > 0){
 			try {
 				Node node = JSON.parseObject(new String(bt, UTF_8.name()), Node.class);
-				String swarm = TerminalUtils.syncExecuteStr(IPFS, "config Addresses.Swarm");
+				String swarm = TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.Swarm");
 				//获取ipfs端口号
 				if(swarm != null) {
 					List<String> sm = JsonPath.using(CONF).parse(swarm).read("$");
@@ -163,10 +213,9 @@ public class InitUtils {
 
 	/**
 	 * 更新ipfs控制
-	 * @param ipfsConfig
 	 */
 	public static void updateConfig(IpfsConfig ipfsConfig){
-		String swarm = TerminalUtils.syncExecuteStr(IPFS, "config Addresses.Swarm");
+		String swarm = TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.Swarm");
 		//修改4001接口
 		if(swarm != null){
 			List<String> sm = JsonPath.using(CONF).parse(swarm).read("$");
@@ -188,27 +237,27 @@ public class InitUtils {
 			if(!rm.isEmpty()){
 				if(OsUtils.getSystemType() == StringParams.Windows){
 					TerminalUtils.execCmd(IPFS, "config Addresses.Swarm --json"
-						, JSON.toJSONString(rm).replace("\"","\"\"\""));
+						, JSON.toJSONString(rm).replace("\"","\"\"\""), IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
 				}else{
-					TerminalUtils.execCmd(IPFS, "config Addresses.Swarm --json", JSON.toJSONString(rm));
+					TerminalUtils.execCmd(IPFS, "config Addresses.Swarm --json", JSON.toJSONString(rm), IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
 				}
 			}
 		}
 		//修改5001接口
-		String api = TerminalUtils.syncExecuteStr(IPFS, "config Addresses.API");
+		String api = TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.API");
 		if(api != null){
 			String num = WordUtils.getStrEndNumber(api);
 			if(num != null) {
-				TerminalUtils.syncExecuteStr(IPFS, "config Addresses.API", api.replace(num
+				TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.API", api.replace(num
 					, ipfsConfig.getAdminPort().toString()));
 			}
 		}
 		//修改8080接口
-		String gateway = TerminalUtils.syncExecuteStr(IPFS, "config Addresses.Gateway");
+		String gateway = TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.Gateway");
 		if(gateway != null){
 			String num = WordUtils.getStrEndNumber(gateway);
 			if(num != null) {
-				TerminalUtils.syncExecuteStr(IPFS, "config Addresses.Gateway", gateway.replace(num
+				TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.Gateway", gateway.replace(num
 					, ipfsConfig.getHttpPort().toString()));
 			}
 		}
@@ -219,15 +268,18 @@ public class InitUtils {
 	 * @param rs
 	 */
 	private static boolean initUnixIpfs(byte[] rs) {
-		try (OutputStream out = new FileOutputStream(".ipfs/go-ipfs.tar.gz")){
+		try (OutputStream out = new FileOutputStream(IPFS_DIR + "/go-ipfs.tar.gz")){
 			out.write(rs);
 			out.flush();
 			out.close();
 			String tar = TerminalUtils.execCmd("which tar");
 			if(tar != null && !tar.isEmpty()){
-				TerminalUtils.execCmd("tar zxvf go-ipfs.tar.gz", new File(".ipfs"));
+				TerminalUtils.execCmd("tar zxvf go-ipfs.tar.gz", new File(IPFS_DIR));
 			}
-			IPFS = new File(".ipfs/go-ipfs/ipfs").getCanonicalPath();
+			IPFS = new File(IPFS_DIR + "/go-ipfs/ipfs").getCanonicalPath();
+			IPFS_CONF = String.format(" -c '%s'", new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
+			IPFS_CONF_ARRAY[1] = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
+			IPFS_EXTEND = String.format("%s -c '%s'", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
 		} catch (Exception e){
 			log.error("init windows ipfs env fail", e);
 			return false;
@@ -243,7 +295,7 @@ public class InitUtils {
 		if(cid == null ||  cid.isEmpty()){
 			return false;
 		}
-		String result = TerminalUtils.execCmd(3,IPFS, "block stat", cid);
+		String result = TerminalUtils.execCmd(3,IPFS, "block stat", cid, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
 		if(result == null || result.isEmpty()){
 			return false;
 		}

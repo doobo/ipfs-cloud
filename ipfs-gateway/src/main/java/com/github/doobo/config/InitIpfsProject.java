@@ -29,16 +29,18 @@ public class InitIpfsProject implements CommandLineRunner {
 		}
 		//初始化Ipfs环境
 		if(!InitUtils.isIpfsInit()){
-			TerminalUtils.syncExecute(InitUtils.IPFS + " init", null, 60000);
+			TerminalUtils.syncExecute(InitUtils.IPFS_EXTEND + " init", null, 60000);
 			log.info("IPFS is already initialized.");
 		}
 		//修改默认端口号
 		InitUtils.updateConfig(ipfsConfig);
 		//是否是私有网络
 		if(ipfsConfig.isPrivateNetwork()){
-			if(InitUtils.createIpfsPrivateNetwork(ipfsConfig.getBootstrap())){
+			if(InitUtils.createIpfsPrivateNetwork(ipfsConfig.getBootstrap(), ipfsConfig.getSwarmKey())){
 				log.info("IPFS is private network.");
 			}
+		}else{
+			InitUtils.delSwarmKey();
 		}
 		if(ipfsConfig.isStartDaemon()){
 			InitUtils.startDaemon();

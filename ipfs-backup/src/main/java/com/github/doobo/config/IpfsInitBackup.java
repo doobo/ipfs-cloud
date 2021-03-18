@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.github.doobo.soft.InitUtils.IPFS;
+import static com.github.doobo.soft.InitUtils.IPFS_EXTEND;
 
 /**
  * ipfs环境初始化
@@ -37,7 +37,7 @@ public class IpfsInitBackup implements CommandLineRunner {
 		}
 		//初始化Ipfs环境
 		if(!InitUtils.isIpfsInit()){
-			TerminalUtils.syncExecute(IPFS + " init", null, 60000);
+			TerminalUtils.syncExecute(IPFS_EXTEND + " init", null, 60000);
 			log.info("IPFS is already initialized.");
 		}
 		if(!ipfsConfig.isStartDaemon()){
@@ -47,9 +47,11 @@ public class IpfsInitBackup implements CommandLineRunner {
 		InitUtils.updateConfig(ipfsConfig);
 		//是否是私有网络
 		if(ipfsConfig.isPrivateNetwork()){
-			if(InitUtils.createIpfsPrivateNetwork(ipfsConfig.getBootstrap())){
+			if(InitUtils.createIpfsPrivateNetwork(ipfsConfig.getBootstrap(), ipfsConfig.getSwarmKey())){
 				log.info("IPFS is private network.");
 			}
+		}else{
+			InitUtils.delSwarmKey();
 		}
 
 		//添加其它网关节点
@@ -66,7 +68,7 @@ public class IpfsInitBackup implements CommandLineRunner {
 						}else {
 							ipfs = String.format("/dnsaddr/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
 						}
-						TerminalUtils.syncExecute(IPFS, "bootstrap add", ipfs);
+						TerminalUtils.syncExecuteStr(IPFS_EXTEND, "bootstrap add", ipfs);
 					}
 				}
 			});

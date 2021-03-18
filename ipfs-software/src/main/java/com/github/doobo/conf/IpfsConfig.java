@@ -42,6 +42,11 @@ public class IpfsConfig {
 	private boolean privateNetwork;
 
 	/**
+	 * 私有秘钥
+	 */
+	private String swarmKey;
+
+	/**
 	 * 是否启动go-ipfs
 	 */
 	private boolean startDaemon;

@@ -84,7 +84,8 @@ public class IndexController implements IpfsSearchControllerApi {
 			}
 		}
 		try(ServletOutputStream outputStream = response.getOutputStream()){
-			outputStream.write(TerminalUtils.syncExecute(InitUtils.IPFS, "cat", cid));
+			outputStream.write(TerminalUtils.syncExecute(InitUtils.IPFS, "cat"
+				, cid, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]));
 		}
 	}
 
