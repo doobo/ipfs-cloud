@@ -19,15 +19,15 @@ public class CollectingLog extends LogOutputStream {
 	/**
 	 * 消息体标识
 	 */
-	private String tag = "string";
+	private String tag = "line";
 
 	@Override
 	protected void processLine(String line, int level) {
-		if(CmdObservedUtils.getInstance().isObserver()){
-			ObServerVO vo = new ObServerVO();
+		if(IpfsObservedUtils.isObserver()){
+			IpfsObserverVO vo = new IpfsObserverVO();
 			vo.setTag(tag).setLine(line).setLevel(level);
-			CmdObservedUtils.getInstance().sendCmdResult(vo);
+			IpfsObservedUtils.getInstance().sendCmdResult(vo);
 		}
-		log.debug("日志级别{}：{}",level,line);
+		log.info("日志级别{}：{}",level,line);
 	}
 }

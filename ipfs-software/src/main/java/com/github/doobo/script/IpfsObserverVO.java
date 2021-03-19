@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class ObServerVO implements Serializable {
+public class IpfsObserverVO implements Serializable {
 
 	/**
 	 * ipfs标识

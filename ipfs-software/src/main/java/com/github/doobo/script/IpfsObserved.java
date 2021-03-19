@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * 被观察者
  */
 @Component
-public class CmdObserved extends Observable {
+public class IpfsObserved extends Observable {
 
     private static boolean IS_OBSERVE;
 
@@ -22,9 +22,9 @@ public class CmdObserved extends Observable {
     @PostConstruct
     public void observerRegister() {
         if(observerList != null && !observerList.isEmpty()) {
-            observerList.stream().filter(f->f instanceof CmdObserver).forEach(this::addObserver);
-            if(observerList.stream().anyMatch(f -> f instanceof CmdObserver)){
-                observerList = observerList.stream().filter(f->f instanceof CmdObserver).collect(Collectors.toList());
+            observerList.stream().filter(f->f instanceof IpfsObserver).forEach(this::addObserver);
+            if(observerList.stream().anyMatch(f -> f instanceof IpfsObserver)){
+                observerList = observerList.stream().filter(f->f instanceof IpfsObserver).collect(Collectors.toList());
                 IS_OBSERVE = true;
             }
         }
@@ -32,9 +32,8 @@ public class CmdObserved extends Observable {
 
     /**
      * 广播信息
-     * @param vo
      */
-    public synchronized void sendCmdResult(ObServerVO vo){
+    public synchronized void sendCmdResult(IpfsObserverVO vo){
         this.setChanged();
         this.notifyObservers(vo);
     }
@@ -42,7 +41,7 @@ public class CmdObserved extends Observable {
     /**
      * 是否有观察者
      */
-    public boolean isObserver(){
+    public static boolean isObserver(){
         return IS_OBSERVE;
     }
 

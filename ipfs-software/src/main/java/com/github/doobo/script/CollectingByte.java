@@ -26,10 +26,10 @@ public class CollectingByte extends LogOutputStream {
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
 		super.write(b, off, len);
-		if(CmdObservedUtils.getInstance().isObserver()){
-			ObServerVO vo = new ObServerVO();
+		if(IpfsObservedUtils.isObserver()){
+			IpfsObserverVO vo = new IpfsObserverVO();
 			vo.setTag(tag).setOut(b).setOff(off).setLen(len);
-			CmdObservedUtils.getInstance().sendCmdResult(vo);
+			IpfsObservedUtils.getInstance().sendCmdResult(vo);
 		}
 	}
 

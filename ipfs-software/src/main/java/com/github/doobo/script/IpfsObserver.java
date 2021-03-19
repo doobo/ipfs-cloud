@@ -6,16 +6,16 @@ import java.util.Observer;
 /**
  * 命名执行后的观察者
  */
-public abstract class CmdObserver implements Observer {
+public abstract class IpfsObserver implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        if(!(o instanceof CmdObserved) || !(arg instanceof ObServerVO)){
+        if(!(o instanceof IpfsObserved) || !(arg instanceof IpfsObserverVO)){
             return;
         }
-        ObServerVO vo = (ObServerVO) arg;
+        IpfsObserverVO vo = (IpfsObserverVO) arg;
         handleObserver(vo);
     }
 
-    public abstract void handleObserver(ObServerVO vo);
+    public abstract void handleObserver(IpfsObserverVO vo);
 }

@@ -9,14 +9,14 @@ import java.util.Observable;
  * 被观察者
  */
 @Component
-public class CmdObservedUtils extends Observable {
+public class IpfsObservedUtils extends Observable {
 
-    private static CmdObserved INSTANCE;
+    private static IpfsObserved INSTANCE;
 
     /**
      * 获取被观察者实例
      */
-    public static CmdObserved getInstance(){
+    public static IpfsObserved getInstance(){
         if(INSTANCE == null){
             throw new IllegalArgumentException("CmdObserved is Undefined");
         }
@@ -24,7 +24,14 @@ public class CmdObservedUtils extends Observable {
     }
 
     @Autowired
-    public void setObserved(CmdObserved observed) {
+    public void setObserved(IpfsObserved observed) {
         INSTANCE = observed;
     }
+
+	/**
+	 * 是否有观察者
+	 */
+	public static boolean isObserver(){
+		return IpfsObserved.isObserver();
+	}
 }

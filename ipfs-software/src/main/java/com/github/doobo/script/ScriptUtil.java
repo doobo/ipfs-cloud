@@ -26,8 +26,6 @@ public class ScriptUtil {
 
 	/**
 	 * make script file
-	 * @param scriptFileName
-	 * @param content
 	 */
 	public static void markScriptFile(String scriptFileName, String content) throws Exception {
 		try(FileOutputStream fileOutputStream = new FileOutputStream(scriptFileName)){
@@ -60,7 +58,7 @@ public class ScriptUtil {
 		return execCmd(command, scriptFile, params, streamHandler);
 	}
 
-	public static int execCmd(String command, String scriptFile, CollectingLog clg, Long timeout, String... params) throws IOException {
+	public static int execCmdLine(String command, String scriptFile, CollectingLog clg, Long timeout, String... params) throws IOException {
 		PumpStreamHandler streamHandler = new PumpStreamHandler(clg);
 		return execCmd(command, scriptFile, params, streamHandler, timeout);
 	}
