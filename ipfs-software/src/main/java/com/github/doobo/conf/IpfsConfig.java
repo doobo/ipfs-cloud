@@ -60,4 +60,6 @@ public class IpfsConfig {
 	 * 节点信息
 	 */
 	private List<Node> nodes;
+
+	private String topic;
 }

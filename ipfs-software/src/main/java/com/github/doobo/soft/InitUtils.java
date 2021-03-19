@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.conf.Node;
 import com.github.doobo.params.StringParams;
+import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.utils.*;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -44,6 +45,8 @@ public class InitUtils {
 	public static String IPFS;
 
 	public static String IPFS_EXTEND;
+
+	private static String NODE_ID;
 
 	public static boolean initIpfsEnv(String ipfsDir){
 		IPFS_DIR = ipfsDir == null? IPFS_DIR: ipfsDir;
@@ -178,7 +181,7 @@ public class InitUtils {
 	 * 启动ipfs daemon程序
 	 */
 	public static void startDaemon(){
-		TerminalUtils.asyncExecute(IPFS_EXTEND + " daemon");
+		TerminalUtils.asyncExecute(IPFS_EXTEND + " daemon --enable-pubsub-experiment");
 	}
 
 	/**
@@ -300,5 +303,27 @@ public class InitUtils {
 			return false;
 		}
 		return result.contains(String.format("Key: %s",cid));
+	}
+
+	/**
+	 * 发送广播数据
+	 */
+	public static void pubMsg(String topic, String data) {
+		ScriptUtil.execToString(IPFS, null, 5*1000L
+			, "pubsub", "pub", topic, data, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
+	}
+
+	/**
+	 * 获取节点ID
+	 */
+	public static String getNodeId(){
+		if(NODE_ID != null){
+			return NODE_ID;
+		}
+		Node ipfsNodeInfo = getIpfsNodeInfo();
+		if(ipfsNodeInfo != null && StringUtils.isNotBlank(ipfsNodeInfo.getCid())){
+			NODE_ID = ipfsNodeInfo.getCid();
+		}
+		return NODE_ID;
 	}
 }

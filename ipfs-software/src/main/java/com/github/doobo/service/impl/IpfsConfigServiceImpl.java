@@ -1,11 +1,17 @@
 package com.github.doobo.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.doobo.conf.IpfsConfig;
+import com.github.doobo.model.IpfsPubMsgVO;
+import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.service.IpfsConfigService;
 import com.github.doobo.soft.InitUtils;
+import com.github.doobo.soft.SequenceUtils;
+import com.github.doobo.soft.SystemClock;
 import com.github.doobo.utils.CommonUtils;
 import com.github.doobo.utils.OsUtils;
+import com.github.doobo.utils.ResultUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -79,5 +85,22 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 			}
 		}
 		return result;
+	}
+
+
+	/**
+	 * 广播信息
+	 */
+	@Override
+	public ResultTemplate<Boolean> pubMsg(IpfsPubMsgVO vo){
+		if(vo == null){
+			return ResultUtils.of(Boolean.FALSE);
+		}
+		vo.setId(SequenceUtils.nextId());
+		vo.setIpfs(InitUtils.getNodeId());
+		vo.setTime(SystemClock.now());
+		vo.setTopic(ipfsConfig.getTopic());
+		InitUtils.pubMsg(vo.getTopic(), JSON.toJSONString(vo));
+		return ResultUtils.of(Boolean.TRUE);
 	}
 }

@@ -45,6 +45,14 @@ public class IpfsObserved extends Observable {
         return IS_OBSERVE;
     }
 
+	/**
+	 * 设置是否有观察者
+	 * @param flag
+	 */
+	public void setObserver(Boolean flag){
+    	IS_OBSERVE = flag;
+	}
+
     /**
      * 获取所有观察者
      */

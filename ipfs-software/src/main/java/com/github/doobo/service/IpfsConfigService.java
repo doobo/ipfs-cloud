@@ -1,6 +1,8 @@
 package com.github.doobo.service;
 
 import com.github.doobo.conf.IpfsConfig;
+import com.github.doobo.model.IpfsPubMsgVO;
+import com.github.doobo.params.ResultTemplate;
 
 import java.util.List;
 
@@ -15,7 +17,11 @@ public interface IpfsConfigService {
 
 	/**
 	 * 获取Ipfs所有节点配置
-	 * @return
 	 */
 	List<IpfsConfig> queryNodeConfigList();
+
+	/**
+	 * 广播一条信息
+	 */
+	ResultTemplate<Boolean> pubMsg(IpfsPubMsgVO vo);
 }

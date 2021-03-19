@@ -2,6 +2,8 @@ package com.github.doobo.config;
 
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.conf.Node;
+import com.github.doobo.script.CollectingLog;
+import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.service.IpfsConfigApiService;
 import com.github.doobo.soft.InitUtils;
 import com.github.doobo.utils.CommonUtils;
@@ -79,5 +81,23 @@ public class IpfsInitClient implements CommandLineRunner {
 		}
 		InitUtils.startDaemon();
 		log.info("IPFS守护程序启动成功....");
+		initSub();
+	}
+
+	/**
+	 * 订阅广播
+	 */
+	public void initSub(){
+		new Thread(() -> {
+			try {
+				Thread.sleep(10000);
+				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog()
+					, "pubsub", "sub", ipfsConfig.getTopic(), "--encoding", "json"
+					, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]);
+				System.out.println(96);
+			} catch (Exception e) {
+				log.error("Ipfs Sub Error", e);
+			}
+		}).start();
 	}
 }

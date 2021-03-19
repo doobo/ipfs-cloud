@@ -28,6 +28,6 @@ public class CollectingLog extends LogOutputStream {
 			vo.setTag(tag).setLine(line).setLevel(level);
 			IpfsObservedUtils.getInstance().sendCmdResult(vo);
 		}
-		log.info("日志级别{}：{}",level,line);
+		log.debug("日志级别{}：{}",level,line);
 	}
 }
