@@ -1,7 +1,7 @@
 package com.github.doobo.service;
 
 import com.github.doobo.conf.IpfsConfig;
-import com.github.doobo.model.IpfsPubMsgVO;
+import com.github.doobo.model.IpfsPubVO;
 import com.github.doobo.params.ResultTemplate;
 
 import java.util.List;
@@ -23,5 +23,5 @@ public interface IpfsConfigService {
 	/**
 	 * 广播一条信息
 	 */
-	ResultTemplate<Boolean> pubMsg(IpfsPubMsgVO vo);
+	ResultTemplate<Boolean> pubMsg(IpfsPubVO vo);
 }

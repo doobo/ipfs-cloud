@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 public class IpfsBackupController implements IpfsBackupControllerApi {
 
 	@Resource
-	IpfsBackupService ipfsBackupService;
+	private IpfsBackupService ipfsBackupService;
 
 	/**
 	 * 跳转到文件管理界面

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.conf.Node;
 import com.github.doobo.params.StringParams;
+import com.github.doobo.script.CollectingLog;
 import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.utils.*;
 import com.jayway.jsonpath.Configuration;
@@ -78,9 +79,9 @@ public class InitUtils {
 	 * 初始化windows环境
 	 */
 	public static boolean initWin64Ipfs(){
-		FileUtils.createFile(".ipfs/go-ipfs", ".goIpfsExe");
+		FileUtils.createFile(IPFS_DIR + "/go-ipfs", ".goIpfsExe");
 		byte[] rs = FileUtils.readResourcesByte("lib/win64/go-ipfs.zip");
-		try (OutputStream out = new FileOutputStream(".ipfs/go-ipfs/ipfs.exe")){
+		try (OutputStream out = new FileOutputStream(IPFS_DIR+"/go-ipfs/ipfs.exe")){
 			byte[] ipfs = FileUtils.queryFileInZip(rs, "go-ipfs/ipfs.exe");
 			out.write(ipfs);
 			IPFS = new File(IPFS_DIR+"/go-ipfs/ipfs.exe").getCanonicalPath();
@@ -325,5 +326,70 @@ public class InitUtils {
 			NODE_ID = ipfsNodeInfo.getCid();
 		}
 		return NODE_ID;
+	}
+
+	public static void updateBootstrap(List<IpfsConfig> nodeConfigList) {
+		if (nodeConfigList == null || nodeConfigList.isEmpty()) {
+			return;
+		}
+		nodeConfigList.forEach(m -> {
+			if (CommonUtils.hasValue(m.getNodes())) {
+				Node node = m.getNodes().get(0);
+				node.setPort(node.getPort() == null ? m.getPort().toString() : node.getPort());
+				if (OsUtils.checkIpPortOpen(node.getIp(), Integer.parseInt(node.getPort()))) {
+					String ipfs;
+					if (WordUtils.isIpV4Address(node.getIp())) {
+						ipfs = String.format("/ip4/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
+					} else {
+						ipfs = String.format("/dnsaddr/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
+					}
+					TerminalUtils.syncExecuteStr(IPFS_EXTEND, "bootstrap add", ipfs);
+				}
+			}
+		});
+	}
+
+	/**
+	 * 订阅广播
+	 */
+	public  static boolean initSub(IpfsConfig ipfsConfig) throws InterruptedException {
+		String rs = "Error";
+		int i = 0;
+		while (i < 10 && rs != null && rs.contains("Error")){
+			i ++;
+			rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
+				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
+				"pubsub", "ls");
+			Thread.sleep(3000L);
+		}
+		rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
+			IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
+			"pubsub", "ls");
+
+		if(rs != null && rs.contains(ipfsConfig.getTopic())){
+			return Boolean.TRUE;
+		}
+		new Thread(() -> {
+			try {
+				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog()
+					, "pubsub", "sub", ipfsConfig.getTopic(), "--encoding", "json"
+					, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]);
+			} catch (Exception e) {
+				log.error("Ipfs Sub Error", e);
+			}
+		}).start();
+
+		i = 0;
+		while (i < 10 && rs != null &&  !rs.contains(ipfsConfig.getTopic())){
+			Thread.sleep(3000L);
+			i ++;
+			rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
+				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
+				"pubsub", "ls");
+		}
+		if(rs != null && rs.contains(ipfsConfig.getTopic())){
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
 	}
 }

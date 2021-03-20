@@ -1,5 +1,9 @@
 package com.github.doobo.config;
 
+import com.alibaba.fastjson.JSON;
+import com.github.doobo.model.IpfsSubVO;
+import com.github.doobo.soft.SystemClock;
+import com.github.doobo.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -18,13 +22,13 @@ public class WebSocketServer {
 
 	@PostConstruct
 	public void init() {
-		log.debug("websocket 加载");
+		log.debug("webSocket init.");
 	}
 
 	private static final AtomicInteger OnlineCount = new AtomicInteger(0);
 
 	// concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
-	private static final CopyOnWriteArraySet<Session> SessionSet = new CopyOnWriteArraySet<Session>();
+	private static final CopyOnWriteArraySet<Session> SessionSet = new CopyOnWriteArraySet<>();
 
 
 	/**
@@ -35,7 +39,11 @@ public class WebSocketServer {
 		SessionSet.add(session);
 		int cnt = OnlineCount.incrementAndGet(); // 在线数加1
 		log.info("有连接加入，当前连接数为：{}", cnt);
-		SendMessage(session, "连接成功");
+		IpfsSubVO vo = new IpfsSubVO();
+		vo.setId(0L);
+		vo.setTime(SystemClock.now());
+		vo.setFromSessionId(session.getId());
+		sendMessage(session, JSON.toJSONString(ResultUtils.of(vo)));
 	}
 
 	/**
@@ -50,14 +58,13 @@ public class WebSocketServer {
 
 	/**
 	 * 收到客户端消息后调用的方法
-	 *
 	 * @param message 客户端发送过来的消息
 	 */
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		log.info("来自客户端的消息：{}",message);
-		SendMessage(session, "收到消息，消息内容："+message);
-
+		 log.info("来自客户端的消息：{}",message);
+		 //暂不处理发送过来的消息,后期可处理用户登录与当前session绑定
+		//SendMessage(session, "收到消息"+message);
 	}
 
 	/**
@@ -76,36 +83,29 @@ public class WebSocketServer {
 	 * @param session
 	 * @param message
 	 */
-	public static void SendMessage(Session session, String message) {
+	public static void sendMessage(Session session, String message) {
 		try {
-//            session.getBasicRemote().sendText(String.format("%s (From Server，Session ID=%s)",message,session.getId()));
 			session.getBasicRemote().sendText(message);
 		} catch (IOException e) {
-			log.error("发送消息出错：{}", e.getMessage());
-			e.printStackTrace();
+			log.error("发送消息出错", e);
 		}
 	}
 
 	/**
 	 * 群发消息
-	 * @param message
-	 * @throws IOException
 	 */
-	public static void BroadCastInfo(String message) throws IOException {
+	public static void broadCastInfo(String message) {
 		for (Session session : SessionSet) {
 			if(session.isOpen()){
-				SendMessage(session, message);
+				sendMessage(session, message);
 			}
 		}
 	}
 
 	/**
 	 * 指定Session发送消息
-	 * @param sessionId
-	 * @param message
-	 * @throws IOException
 	 */
-	public static void SendMessage(String message, String sessionId) throws IOException {
+	public static boolean sendMessage(String message, String sessionId) {
 		Session session = null;
 		for (Session s : SessionSet) {
 			if(s.getId().equals(sessionId)){
@@ -114,10 +114,10 @@ public class WebSocketServer {
 			}
 		}
 		if(session!=null){
-			SendMessage(session, message);
+			sendMessage(session, message);
+		} else{
+			return Boolean.FALSE;
 		}
-		else{
-			log.warn("没有找到你指定ID的会话：{}",sessionId);
-		}
+		return Boolean.TRUE;
 	}
 }

@@ -35,7 +35,7 @@ public class IpfsInitClient implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		//初始化Ipfs环境
-		if(!InitUtils.initIpfsEnv()){
+		if(!InitUtils.initIpfsEnv(ipfsConfig.getPath())){
 			return;
 		}
 
@@ -59,45 +59,16 @@ public class IpfsInitClient implements CommandLineRunner {
 		}else{
 			InitUtils.delSwarmKey();
 		}
-
 		//添加其它网关节点
 		List<IpfsConfig> nodeConfigList = ipfsConfigApiService.queryNodeConfigList();
-		if(nodeConfigList != null && !nodeConfigList.isEmpty()){
-			nodeConfigList.forEach(m->{
-				if(CommonUtils.hasValue(m.getNodes())){
-					Node node = m.getNodes().get(0);
-					node.setPort(node.getPort()==null?m.getPort().toString():node.getPort());
-					if(OsUtils.checkIpPortOpen(node.getIp(), Integer.parseInt(node.getPort()))){
-						String ipfs;
-						if(WordUtils.isIpV4Address(node.getIp())){
-							ipfs = String.format("/ip4/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
-						}else {
-							ipfs = String.format("/dnsaddr/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
-						}
-						TerminalUtils.syncExecuteStr(IPFS_EXTEND, "bootstrap add", ipfs);
-					}
-				}
-			});
-		}
+		InitUtils.updateBootstrap(nodeConfigList);
 		InitUtils.startDaemon();
+		boolean flag = InitUtils.initSub(ipfsConfig);
 		log.info("IPFS守护程序启动成功....");
-		initSub();
+		if(flag){
+			log.info("Ipfs订阅消息成功:{}",  ipfsConfig.getTopic());
+		}
 	}
 
-	/**
-	 * 订阅广播
-	 */
-	public void initSub(){
-		new Thread(() -> {
-			try {
-				Thread.sleep(10000);
-				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog()
-					, "pubsub", "sub", ipfsConfig.getTopic(), "--encoding", "json"
-					, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]);
-				System.out.println(96);
-			} catch (Exception e) {
-				log.error("Ipfs Sub Error", e);
-			}
-		}).start();
-	}
+
 }

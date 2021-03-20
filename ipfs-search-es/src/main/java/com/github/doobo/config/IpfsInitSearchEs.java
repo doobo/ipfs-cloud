@@ -1,13 +1,9 @@
 package com.github.doobo.config;
 
 import com.github.doobo.conf.IpfsConfig;
-import com.github.doobo.conf.Node;
 import com.github.doobo.service.IpfsConfigApiService;
 import com.github.doobo.soft.InitUtils;
-import com.github.doobo.utils.CommonUtils;
-import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.TerminalUtils;
-import com.github.doobo.utils.WordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -32,7 +28,7 @@ public class IpfsInitSearchEs implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		if(!InitUtils.initIpfsEnv()){
+		if(!InitUtils.initIpfsEnv(ipfsConfig.getPath())){
 			return;
 		}
 		//初始化Ipfs环境
@@ -53,26 +49,9 @@ public class IpfsInitSearchEs implements CommandLineRunner {
 		}else{
 			InitUtils.delSwarmKey();
 		}
-
 		//添加其它网关节点
 		List<IpfsConfig> nodeConfigList = ipfsConfigApiService.queryNodeConfigList();
-		if(nodeConfigList != null && !nodeConfigList.isEmpty()){
-			nodeConfigList.forEach(m->{
-				if(CommonUtils.hasValue(m.getNodes())){
-					Node node = m.getNodes().get(0);
-					node.setPort(node.getPort()==null?m.getPort().toString():node.getPort());
-					if(OsUtils.checkIpPortOpen(node.getIp(), Integer.parseInt(node.getPort()))){
-						String ipfs;
-						if(WordUtils.isIpV4Address(node.getIp())){
-							ipfs = String.format("/ip4/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
-						}else {
-							ipfs = String.format("/dnsaddr/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
-						}
-						TerminalUtils.syncExecuteStr(IPFS_EXTEND, "bootstrap add", ipfs);
-					}
-				}
-			});
-		}
+		InitUtils.updateBootstrap(nodeConfigList);
 		InitUtils.startDaemon();
 		log.info("IPFS守护程序启动成功....");
 	}

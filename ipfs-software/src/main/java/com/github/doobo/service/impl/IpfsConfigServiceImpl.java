@@ -3,8 +3,9 @@ package com.github.doobo.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.doobo.conf.IpfsConfig;
-import com.github.doobo.model.IpfsPubMsgVO;
+import com.github.doobo.model.IpfsPubVO;
 import com.github.doobo.params.ResultTemplate;
+import com.github.doobo.script.PwdUtils;
 import com.github.doobo.service.IpfsConfigService;
 import com.github.doobo.soft.InitUtils;
 import com.github.doobo.soft.SequenceUtils;
@@ -14,6 +15,7 @@ import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.ResultUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -34,13 +36,13 @@ import java.util.Objects;
 public class IpfsConfigServiceImpl implements IpfsConfigService {
 
 	@Resource
-	IpfsConfig ipfsConfig;
+	private IpfsConfig ipfsConfig;
 
 	@Value("${spring.application.name}")
 	private String instance;
 
 	@Resource
-	DiscoveryClient discoveryClient;
+	private DiscoveryClient discoveryClient;
 
 	/**
 	 *  获取单个Ipfs网关基础配置
@@ -92,15 +94,18 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 	 * 广播信息
 	 */
 	@Override
-	public ResultTemplate<Boolean> pubMsg(IpfsPubMsgVO vo){
+	public ResultTemplate<Boolean> pubMsg(IpfsPubVO vo){
 		if(vo == null){
 			return ResultUtils.of(Boolean.FALSE);
 		}
 		vo.setId(SequenceUtils.nextId());
 		vo.setIpfs(InitUtils.getNodeId());
 		vo.setTime(SystemClock.now());
-		vo.setTopic(ipfsConfig.getTopic());
-		InitUtils.pubMsg(vo.getTopic(), JSON.toJSONString(vo));
+		if(StringUtils.isBlank(vo.getTopic())) {
+			vo.setTopic(ipfsConfig.getTopic());
+		}
+		String msg = PwdUtils.encode(JSON.toJSONString(vo),  ipfsConfig.getMsgPwd());
+		InitUtils.pubMsg(vo.getTopic(), msg);
 		return ResultUtils.of(Boolean.TRUE);
 	}
 }

@@ -61,5 +61,18 @@ public class IpfsConfig {
 	 */
 	private List<Node> nodes;
 
+	/**
+	 * 广播节点
+	 */
 	private String topic;
+
+	/**
+	 * ipfs 初始化路径
+	 */
+	private String path;
+
+	/**
+	 * 消息加密密钥
+	 */
+	private String msgPwd;
 }

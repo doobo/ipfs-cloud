@@ -3,11 +3,12 @@ package com.github.doobo.model;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Map;
-
+/**
+ * ipfs广播数据格式
+ */
 @Data
 @Accessors(chain = true)
-public class IpfsPubMsgVO {
+public class IpfsPubVO extends  IpfsPubSub {
 
 	/**
 	 * 全局自增ID
@@ -29,13 +30,4 @@ public class IpfsPubMsgVO {
 	 */
 	private String msg;
 
-	/**
-	 * 时间戳
-	 */
-	private Long time;
-
-	/**
-	 * 自定义内容
-	 */
-	private Map<String,Object> body;
 }

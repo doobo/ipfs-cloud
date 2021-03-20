@@ -24,7 +24,7 @@ public class InitIpfsProject implements CommandLineRunner {
 	 */
 	@Override
 	public void run(String... args) throws Exception {
-		if(!InitUtils.initIpfsEnv()){
+		if(!InitUtils.initIpfsEnv(ipfsConfig.getPath())){
 			return;
 		}
 		//初始化Ipfs环境
