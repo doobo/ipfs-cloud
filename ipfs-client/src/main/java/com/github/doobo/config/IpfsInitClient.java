@@ -1,15 +1,9 @@
 package com.github.doobo.config;
 
 import com.github.doobo.conf.IpfsConfig;
-import com.github.doobo.conf.Node;
-import com.github.doobo.script.CollectingLog;
-import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.service.IpfsConfigApiService;
 import com.github.doobo.soft.InitUtils;
-import com.github.doobo.utils.CommonUtils;
-import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.TerminalUtils;
-import com.github.doobo.utils.WordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

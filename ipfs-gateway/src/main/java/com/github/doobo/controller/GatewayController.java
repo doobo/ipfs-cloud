@@ -1,10 +1,8 @@
 package com.github.doobo.controller;
 
 import com.github.doobo.conf.IpfsConfig;
-import com.github.doobo.model.IpfsPubVO;
 import com.github.doobo.service.IpfsConfigService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.factory.GatewayFilterFactory;
 import org.springframework.cloud.gateway.route.RouteDefinition;
@@ -30,20 +28,12 @@ public class GatewayController implements ApplicationEventPublisherAware {
 	@Resource
 	private IpfsConfigService ipfsConfigService;
 
-	private RouteDefinitionLocator routeDefinitionLocator;
-	private List<GlobalFilter> globalFilters;
-	private List<GatewayFilterFactory> GatewayFilters;
 	private RouteDefinitionWriter routeDefinitionWriter;
-	private RouteLocator routeLocator;
 
 	public GatewayController(RouteDefinitionLocator routeDefinitionLocator, List<GlobalFilter> globalFilters,
 									 List<GatewayFilterFactory> GatewayFilters, RouteDefinitionWriter routeDefinitionWriter,
 									 RouteLocator routeLocator) {
-		this.routeDefinitionLocator = routeDefinitionLocator;
-		this.globalFilters = globalFilters;
-		this.GatewayFilters = GatewayFilters;
 		this.routeDefinitionWriter = routeDefinitionWriter;
-		this.routeLocator = routeLocator;
 	}
 
 	/**

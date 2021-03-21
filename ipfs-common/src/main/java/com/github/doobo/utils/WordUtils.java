@@ -52,7 +52,6 @@ public class WordUtils {
 
 	/**
 	 * 首字母大写
-	 * @param string
 	 */
 	public static String toUpperCaseIndex(String string) {
 		char[] methodName = string.toCharArray();
@@ -158,8 +157,6 @@ public class WordUtils {
 
 	/**
 	 * 正则全局替换字符
-	 * @param regex
-	 * @param replacement
 	 */
 	public static String replaceAllStr(String regex, String src, String replacement){
 		if(src == null || src.isEmpty()){
@@ -175,8 +172,6 @@ public class WordUtils {
 
 	/**
 	 * 正则过滤替换字符
-	 * @param regex
-	 * @param replacement
 	 */
 	public static String filterAllStr(String regex, String src, String replacement){
 		if(src == null || src.isEmpty()){
@@ -189,8 +184,6 @@ public class WordUtils {
 
 	/**
 	 * 保留word字符,其它多替换成指定字符
-	 * @param str
-	 * @param word
 	 */
 	public static String plusOut(String str, String word, String replacement) {
 		return str.replaceAll("\\G((?:" + word + ")*+).", "$1"+replacement);
@@ -198,8 +191,6 @@ public class WordUtils {
 
 	/**
 	 * 返回字符串后面的数字
-	 * @param str
-	 * @return
 	 */
 	public static String getStrEndNumber(String str){
 		Pattern pattern = Pattern.compile("\\d+$");
@@ -212,7 +203,6 @@ public class WordUtils {
 
 	/**
 	 * 判断是否是IPV4地址
-	 * @param ip
 	 */
 	public static boolean isIpV4Address(String ip){
 		if(ip == null){
@@ -223,7 +213,6 @@ public class WordUtils {
 
 	/**
 	 * 模拟JS的encodeURIComponent
-	 * @param str
 	 */
 	public static String encodeURIComponent(String str){
 		try {
@@ -241,7 +230,6 @@ public class WordUtils {
 
 	/**
 	 * 模拟JS使用的encodeURI
-	 * @param str
 	 */
 	public static String encodeURI(String str) {
 		String isoStr = null;

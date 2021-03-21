@@ -1,6 +1,5 @@
 package com.github.doobo.controller;
 
-import com.github.doobo.api.IpfsControllerApi;
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.model.IpfsPubVO;
 import com.github.doobo.params.ResultTemplate;
@@ -18,22 +17,22 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-public class IpfsController implements IpfsControllerApi {
+public class IpfsController {
 
 	@Resource
 	private IpfsConfigService ipfsConfigService;
 
-	@Override
+	@GetMapping("/ipfs")
 	public ResultTemplate<Boolean> exitFile(String cid){
 		return ResultUtils.of(InitUtils.existIpfsFile(cid));
 	}
 
-	@Override
+	@GetMapping("/ipfs/config")
 	public IpfsConfig getIpfsConfig() {
 		return ipfsConfigService.queryIpfsConfig();
 	}
 
-	@Override
+	@GetMapping("/ipfs/nodes")
 	public List<IpfsConfig> queryNodeConfigList() {
 		return ipfsConfigService.queryNodeConfigList();
 	}
@@ -41,7 +40,7 @@ public class IpfsController implements IpfsControllerApi {
 	/**
 	 * 发送广播消息
 	 */
-	@Override
+	@PostMapping("/ipfs/pubMsg")
 	public ResultTemplate<Boolean> pubMsg(@RequestBody IpfsPubVO vo){
 		return ipfsConfigService.pubMsg(vo);
 	}

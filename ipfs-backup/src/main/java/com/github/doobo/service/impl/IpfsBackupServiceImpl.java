@@ -35,7 +35,6 @@ public class IpfsBackupServiceImpl implements IpfsBackupService {
 	/**
 	 * 备份文件服务
 	 * 根据需要,可记录失败告警日志等
-	 * @param info
 	 */
 	@Override
 	@Async("customServiceExecutor")

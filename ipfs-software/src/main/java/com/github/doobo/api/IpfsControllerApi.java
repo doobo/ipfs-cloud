@@ -5,7 +5,6 @@ import com.github.doobo.model.IpfsPubVO;
 import com.github.doobo.params.ResultTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
