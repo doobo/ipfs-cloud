@@ -11,6 +11,8 @@ public class GlobalResponseHandler extends AbstractGlobalResponseHandler {
 		return uri.contains("/v2/api-docs") ||
 		 	uri.contains("/v3/api-docs") ||
 			uri.contains("/swagger-resources") ||
+			uri.contains("/ipfs/nodes") ||
+			uri.contains("/ipfs/config") ||
 			uri.contains("/actuator");
 	}
 }

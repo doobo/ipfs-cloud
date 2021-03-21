@@ -16,6 +16,7 @@ import com.github.doobo.utils.ResultUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -49,8 +50,13 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 	 */
 	@Override
 	public IpfsConfig queryIpfsConfig() {
-		ipfsConfig.setNodes(Collections.singletonList(InitUtils.getIpfsNodeInfo()));
-		return ipfsConfig;
+		IpfsConfig config = new IpfsConfig();
+		BeanUtils.copyProperties(ipfsConfig, config);
+		config.setTopic(null);
+		config.setSwarmKey(null);
+		config.setPath(null);
+		config.setNodes(Collections.singletonList(InitUtils.getIpfsNodeInfo()));
+		return config;
 	}
 
 	/**

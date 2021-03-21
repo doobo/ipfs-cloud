@@ -1,4 +1,4 @@
-package com.github.doobo.config;
+package com.github.doobo.conf;
 
 import feign.Retryer;
 import org.springframework.context.annotation.Bean;

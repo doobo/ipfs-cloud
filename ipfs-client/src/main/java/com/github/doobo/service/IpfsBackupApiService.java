@@ -1,7 +1,7 @@
 package com.github.doobo.service;
 
 import com.github.doobo.api.IpfsBackupControllerApi;
-import com.github.doobo.config.FeignConfig;
+import com.github.doobo.conf.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 
 /**

@@ -4,7 +4,6 @@ import com.github.doobo.params.StringParams;
 import lombok.experimental.PackagePrivate;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -41,12 +40,12 @@ public class OsUtils {
 			connect.setReuseAddress(true);
 			connect.connect(new InetSocketAddress(ip, port),100);
 			return connect.isConnected();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return false;
 		}finally{
 			try {
 				connect.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				log.info("CloseSocketError",e);
 			}
 		}

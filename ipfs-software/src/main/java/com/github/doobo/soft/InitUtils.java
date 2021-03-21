@@ -338,6 +338,9 @@ public class InitUtils {
 				node.setPort(node.getPort() == null ? m.getPort().toString() : node.getPort());
 				if (OsUtils.checkIpPortOpen(node.getIp(), Integer.parseInt(node.getPort()))) {
 					String ipfs;
+					if(node.getIp() != null &&  "localhost".equals(node.getIp())){
+						node.setIp("127.0.0.1");
+					}
 					if (WordUtils.isIpV4Address(node.getIp())) {
 						ipfs = String.format("/ip4/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
 					} else {

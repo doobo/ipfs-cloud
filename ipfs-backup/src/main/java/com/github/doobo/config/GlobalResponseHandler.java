@@ -8,6 +8,10 @@ public class GlobalResponseHandler extends AbstractGlobalResponseHandler {
 
 	@Override
 	public boolean notNecessaryWrapperURI(String uri) {
-		return uri.contains("/v2/api-docs") || uri.contains("/swagger-resources") || uri.contains("/actuator");
+		return uri.contains("/v2/api-docs")
+			|| uri.contains("/ipfs/nodes")
+			|| uri.contains("/ipfs/config")
+			|| uri.contains("/swagger-resources")
+			|| uri.contains("/actuator");
 	}
 }
