@@ -128,6 +128,7 @@ public class InitUtils {
 			rs =FileUtils.readResourcesByte("key/swarm.key");
 		}else {
 			try {
+				swarmKey = swarmKey.replace("\\n", System.lineSeparator());
 				rs = swarmKey.getBytes(UTF_8.name());
 			} catch (UnsupportedEncodingException e) {
 				log.warn("creatSwarmKeyError", e);

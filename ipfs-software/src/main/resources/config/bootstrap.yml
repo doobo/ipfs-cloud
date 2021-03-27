@@ -8,7 +8,7 @@ eureka:
   instance:
     #指定服务暴露的端口，可以和服务不同
     non-secure-port: ${server.port}
-    instance-id: ${spring.application.name}:${server.port}
+    instance-id: ${eureka.instance.hostname}:${server.port}
     status-page-url-path: http://${eureka.instance.hostname}:${eureka.instance.non-secure-port}/actuator/info
     health-check-url-path: http://${eureka.instance.hostname}:${eureka.instance.non-secure-port}/actuator/health
   client:
