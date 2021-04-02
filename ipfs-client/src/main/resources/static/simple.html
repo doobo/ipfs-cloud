@@ -1,19 +1,16 @@
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>websocket测试</title>
     <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <style type="text/css">
-       body, h3,h4{
-            text-align:center;
-        }
+       body, h3,h4{text-align:center;}
     </style>
 </head>
 <body>
 <h3>WebSocket测试，客户端接收到的消息如下：</h3>
-<textarea id = "messageId" readonly="readonly" cols="150" rows="30" >
-</textarea>
-
+<textarea id = "messageId" readonly="readonly" cols="150" rows="30" ></textarea>
 <script type="text/javascript">
     var socket;
     if (typeof (WebSocket) == "undefined") {
@@ -50,6 +47,5 @@
         };
     }
 </script>
-
 </body>
 </html>

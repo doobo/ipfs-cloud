@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 /**
  * 远程备份服务调用
  */
-@FeignClient(name = "ipfs-backup", configuration = FeignConfig.class
+@FeignClient(name = "ipfs-backup", configuration = FeignConfig.class, contextId = "ipfsBackupApiService"
 	, fallbackFactory = IpfsBackupApiFallbackService.class)
 public interface IpfsBackupApiService extends IpfsBackupControllerApi {
 }

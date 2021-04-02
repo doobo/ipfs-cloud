@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 远程服务调用
  */
-@FeignClient(name = "ipfs-gateway", configuration = FeignConfig.class
+@FeignClient(name = "ipfs-gateway", configuration = FeignConfig.class, contextId = "ipfsConfigApiService"
 	, fallbackFactory = IpfsConfigApiFallbackService.class)
 public interface IpfsConfigApiService {
 	/**

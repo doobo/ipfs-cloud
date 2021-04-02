@@ -25,7 +25,7 @@ public class IpfsPubSub {
 	/**
 	 * 去的用户标识
 	 */
-	private String toSessionId;
+	private Long toSessionId;
 
 	/**
 	 * 信息标记

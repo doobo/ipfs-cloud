@@ -70,7 +70,7 @@ public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
 	/**
 	 * 构建返回的JSON数据格式
 	 */
-	public static ResultTemplate<?> response(Throwable e) {
+	public static ResultTemplate<Object> response(Throwable e) {
 		return ExceptionHandlerUtils.convertResultTemplate(e);
 	}
 

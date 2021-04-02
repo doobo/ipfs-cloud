@@ -2,6 +2,7 @@ package com.github.doobo.config;
 
 import com.alibaba.fastjson.JSON;
 import com.github.doobo.model.IpfsSubVO;
+import com.github.doobo.soft.SequenceUtils;
 import com.github.doobo.soft.SystemClock;
 import com.github.doobo.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -10,15 +11,13 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
-import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Component
 @ServerEndpoint(value = "/ipfs/sub")
 public class WebSocketServer {
-
 
 	@PostConstruct
 	public void init() {
@@ -27,22 +26,21 @@ public class WebSocketServer {
 
 	private static final AtomicInteger OnlineCount = new AtomicInteger(0);
 
-	// concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
-	private static final CopyOnWriteArraySet<Session> SessionSet = new CopyOnWriteArraySet<>();
-
+	//concurrent包的线程安全Map，用来存放每个客户端对应的Session对象
+	private static final ConcurrentHashMap<Long, Session> SESSION_MAP = new ConcurrentHashMap<>();
 
 	/**
 	 * 连接建立成功调用的方法
 	 */
 	@OnOpen
 	public void onOpen(Session session) {
-		SessionSet.add(session);
 		int cnt = OnlineCount.incrementAndGet(); // 在线数加1
 		log.info("有连接加入，当前连接数为：{}", cnt);
 		IpfsSubVO vo = new IpfsSubVO();
-		vo.setId(0L);
+		vo.setId(SequenceUtils.nextId());
 		vo.setTime(SystemClock.now());
 		vo.setFromSessionId(session.getId());
+		SESSION_MAP.put(vo.getId(), session);
 		sendMessage(session, JSON.toJSONString(ResultUtils.of(vo)));
 	}
 
@@ -51,9 +49,28 @@ public class WebSocketServer {
 	 */
 	@OnClose
 	public void onClose(Session session) {
-		SessionSet.remove(session);
-		int cnt = OnlineCount.decrementAndGet();
-		log.info("有连接关闭，当前连接数为：{}", cnt);
+		if(!SESSION_MAP.containsValue(session)){
+			return;
+		}
+		for(Long item : SESSION_MAP.keySet()){
+			if(session.equals(SESSION_MAP.get(item))){
+				SESSION_MAP.remove(item);
+				int cnt = OnlineCount.decrementAndGet();
+				log.info("有连接关闭，当前连接数为：{}", cnt);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * 适用于分布式环境下的Session关闭
+	 */
+	public void removeSessionById(Long id){
+		if(SESSION_MAP.containsKey(id)){
+			SESSION_MAP.remove(id);
+			int cnt = OnlineCount.decrementAndGet();
+			log.info("有连接关闭，当前连接数为：{}", cnt);
+		}
 	}
 
 	/**
@@ -69,24 +86,19 @@ public class WebSocketServer {
 
 	/**
 	 * 出现错误
-	 * @param session
-	 * @param error
 	 */
 	@OnError
 	public void onError(Session session, Throwable error) {
 		log.error("发生错误：{}，Session ID： {}",error.getMessage(),session.getId());
-		error.printStackTrace();
 	}
 
 	/**
 	 * 发送消息，实践表明，每次浏览器刷新，session会发生变化。
-	 * @param session
-	 * @param message
 	 */
 	public static void sendMessage(Session session, String message) {
 		try {
 			session.getBasicRemote().sendText(message);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error("发送消息出错", e);
 		}
 	}
@@ -95,7 +107,7 @@ public class WebSocketServer {
 	 * 群发消息
 	 */
 	public static void broadCastInfo(String message) {
-		for (Session session : SessionSet) {
+		for (Session session : SESSION_MAP.values()) {
 			if(session.isOpen()){
 				sendMessage(session, message);
 			}
@@ -103,21 +115,14 @@ public class WebSocketServer {
 	}
 
 	/**
-	 * 指定Session发送消息
+	 * 指定Session发送消息,分布式环境下必须适用返回的指定ID
 	 */
-	public static boolean sendMessage(String message, String sessionId) {
-		Session session = null;
-		for (Session s : SessionSet) {
-			if(s.getId().equals(sessionId)){
-				session = s;
-				break;
-			}
-		}
-		if(session!=null){
-			sendMessage(session, message);
-		} else{
+	public static boolean sendMessage(String message, Long sessionId) {
+		if(!SESSION_MAP.containsKey(sessionId)){
 			return Boolean.FALSE;
 		}
+		Session session = SESSION_MAP.get(sessionId);
+		sendMessage(session, message);
 		return Boolean.TRUE;
 	}
 }

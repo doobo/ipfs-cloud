@@ -55,8 +55,8 @@ public class IpfsObserverHandler extends IpfsObserver {
 	 * 发送消息格式化
 	 */
 	public void sendMsg(String data, Throwable throwable){
-		if(StringUtils.isBlank(data)){
-			WebSocketServer.broadCastInfo(JSON.toJSONString(ResultUtils.ofThrowable( throwable)));
+		if(StringUtils.isBlank(data) && throwable != null){
+			WebSocketServer.broadCastInfo(JSON.toJSONString(ResultUtils.ofThrowable(throwable)));
 		}
 		IpfsSubVO iso = JSON.parseObject(data,  IpfsSubVO.class);
 		if(iso == null){
@@ -68,11 +68,11 @@ public class IpfsObserverHandler extends IpfsObserver {
 		if(StringUtils.isNotBlank(iso.getMsg())){
 			res.setOkMessage(iso.getMsg());
 		}
-		if(StringUtils.isNotBlank(iso.getToSessionId())){
-			WebSocketServer.sendMessage(JSON.toJSONString(res),  iso.getToSessionId());
+		if(iso.getToSessionId() != null){
+			WebSocketServer.sendMessage(JSON.toJSONString(res), iso.getToSessionId());
 			return;
 		}
-		WebSocketServer.broadCastInfo(JSON.toJSONString(ResultUtils.of( ipo)));
+		WebSocketServer.broadCastInfo(JSON.toJSONString(ResultUtils.of(ipo)));
 	}
 
 }
