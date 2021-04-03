@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.conf.Node;
 import com.github.doobo.params.StringParams;
+import com.github.doobo.script.CollectingConsole;
 import com.github.doobo.script.CollectingLog;
 import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.utils.*;
@@ -21,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -35,13 +37,18 @@ public class InitUtils {
 		= Configuration.builder().build().addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
 
 	/**
+	 * ipfs启动线程池
+	 */
+	private final static ForkJoinPool POOL = new ForkJoinPool();
+
+	/**
 	 * ipfs命令
 	 */
 	private static String IPFS_DIR = ".ipfs";
 
 	public static String IPFS_CONF = "";
 
-	public static String[] IPFS_CONF_ARRAY= new String[]{"-c", ""};
+	public static String[] IPFS_CONF_ARRAY= new String[]{"-c", "", "daemon", "--enable-pubsub-experiment"};
 
 	public static String IPFS;
 
@@ -87,7 +94,7 @@ public class InitUtils {
 			IPFS = new File(IPFS_DIR+"/go-ipfs/ipfs.exe").getCanonicalPath();
 			IPFS_CONF = String.format(" -c '%s'", new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
 			IPFS_CONF_ARRAY[1] = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
-			IPFS_EXTEND = String.format("%s -c '%s'", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
+			IPFS_EXTEND = String.format("%s -c %s", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
 		} catch (Exception e){
 			log.error("init windows ipfs env fail", e);
 			return false;
@@ -183,7 +190,14 @@ public class InitUtils {
 	 * 启动ipfs daemon程序
 	 */
 	public static void startDaemon(){
-		TerminalUtils.asyncExecute(IPFS_EXTEND + " daemon --enable-pubsub-experiment");
+		POOL.execute(() -> {
+			try {
+				ScriptUtil.execCmdLine(IPFS,  null, new CollectingConsole(), Long.MAX_VALUE, IPFS_CONF_ARRAY);
+			} catch (Exception e) {
+				log.info("start ipfs daemon Error", e);
+			}
+		});
+		//TerminalUtils.asyncExecute(IPFS_EXTEND + " daemon --enable-pubsub-experiment");
 	}
 
 	/**
@@ -364,7 +378,7 @@ public class InitUtils {
 			rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
-			Thread.sleep(3000L);
+			Thread.sleep(1000L);
 		}
 		rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
 			IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
@@ -373,7 +387,7 @@ public class InitUtils {
 		if(rs != null && rs.contains(ipfsConfig.getTopic())){
 			return Boolean.TRUE;
 		}
-		new Thread(() -> {
+		POOL.execute(()->{
 			try {
 				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog()
 					, "pubsub", "sub", ipfsConfig.getTopic(), "--encoding", "json"
@@ -381,12 +395,11 @@ public class InitUtils {
 			} catch (Exception e) {
 				log.error("Ipfs Sub Error", e);
 			}
-		}).start();
-
+		});
 		i = 0;
 		while (i < 10 && rs != null &&  !rs.contains(ipfsConfig.getTopic())){
-			Thread.sleep(3000L);
 			i ++;
+			Thread.sleep(1000L);
 			rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");

@@ -1,6 +1,7 @@
 package com.github.doobo.config;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.model.IpfsPubVO;
 import com.github.doobo.model.IpfsSubVO;
@@ -38,7 +39,13 @@ public class IpfsObserverHandler extends IpfsObserver {
 			if(StringUtils.isBlank(vo.getLine())){
 				return;
 			}
-			IpfsJsonVO ipo = JSON.parseObject(vo.getLine(), IpfsJsonVO.class);
+			IpfsJsonVO ipo;
+			try {
+				ipo = JSON.parseObject(vo.getLine(), IpfsJsonVO.class);
+			}catch (JSONException e){
+				log.info("异常数据", e);
+				return;
+			}
 			String msg = ipo.getData();
 			if(StringUtils.isBlank(msg)){
 				return;
@@ -47,7 +54,6 @@ public class IpfsObserverHandler extends IpfsObserver {
 			sendMsg(data, null);
 		} catch (Exception e) {
 			log.warn("SendBroadCastInfoError", e);
-			sendMsg(null,  e);
 		}
 	}
 
