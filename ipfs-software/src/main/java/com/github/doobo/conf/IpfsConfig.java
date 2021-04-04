@@ -75,4 +75,19 @@ public class IpfsConfig {
 	 * 消息加密密钥
 	 */
 	private String msgPwd;
+
+	/**
+	 * 启用定时任务
+	 */
+	private boolean cron;
+
+	/**
+	 *  间隔多少时间执行，单位秒
+	 */
+	private Integer fixedDelay;
+
+	/**
+	 * 延迟多长时间启动定时任务,单位秒
+	 */
+	private Integer delay;
 }

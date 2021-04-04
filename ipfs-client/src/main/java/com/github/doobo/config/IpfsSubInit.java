@@ -7,6 +7,9 @@ import org.springframework.context.SmartLifecycle;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 消息订阅与分发webSocket
@@ -26,6 +29,19 @@ public class IpfsSubInit  implements SmartLifecycle {
 	@Override
 	public void start() {
 		isRunning = true;
+		//启用定时检测
+		if(ipfsConfig.isCron()){
+			ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+			service.scheduleAtFixedRate(() -> {
+				try {
+					InitUtils.initSub(ipfsConfig);
+				} catch (InterruptedException e) {
+					log.info("startIpfsSubError", e);
+				}
+			}, ipfsConfig.getDelay(), ipfsConfig.getFixedDelay(), TimeUnit.SECONDS);
+			return;
+		}
+		//不启用定时检测
 		boolean flag = false;
 		try {
 			flag = InitUtils.initSub(ipfsConfig);

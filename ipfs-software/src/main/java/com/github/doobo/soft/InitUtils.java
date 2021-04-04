@@ -369,6 +369,8 @@ public class InitUtils {
 	 * 订阅广播
 	 */
 	public  static boolean initSub(IpfsConfig ipfsConfig) throws InterruptedException {
+		File lock = new File(IPFS_CONF + File.separator + "repo.lock");
+		lock.deleteOnExit();
 		String rs = "Error";
 		int i = 0;
 		while (i < 10 && rs != null && rs.contains("Error")){
@@ -386,11 +388,7 @@ public class InitUtils {
 		}
 		POOL.execute(()->{
 			try {
-				File lock = new File(IPFS_CONF + File.separator + "repo.lock");
-				if(lock.exists()){
-					lock.deleteOnExit();
-					sleep(3000);
-				}
+				lock.deleteOnExit();
 				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog(ipfsConfig.getTopic())
 					, "pubsub", "sub", ipfsConfig.getTopic(), "--encoding", "json"
 					, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]);
