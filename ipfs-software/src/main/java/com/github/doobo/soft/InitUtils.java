@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
+import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
@@ -92,9 +93,9 @@ public class InitUtils {
 			byte[] ipfs = FileUtils.queryFileInZip(rs, "go-ipfs/ipfs.exe");
 			out.write(ipfs);
 			IPFS = new File(IPFS_DIR+"/go-ipfs/ipfs.exe").getCanonicalPath();
-			IPFS_CONF = String.format(" -c '%s'", new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
+			IPFS_CONF =new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
 			IPFS_CONF_ARRAY[1] = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
-			IPFS_EXTEND = String.format("%s -c %s", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
+			IPFS_EXTEND = String.format("%s -c '%s'", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
 		} catch (Exception e){
 			log.error("init windows ipfs env fail", e);
 			return false;
@@ -158,9 +159,7 @@ public class InitUtils {
 	public static void delSwarmKey(){
 		String ipfsHome = IPFS_DIR + File.separator + ".ipfs";
 		File file = FileUtils.createFile(ipfsHome, "swarm.key");
-		if(file.exists()){
-			file.deleteOnExit();
-		}
+		file.deleteOnExit();
 	}
 
 	/**
@@ -192,12 +191,13 @@ public class InitUtils {
 	public static void startDaemon(){
 		POOL.execute(() -> {
 			try {
+				File lock = new File(IPFS_CONF + File.separator + "repo.lock");
+				lock.deleteOnExit();
 				ScriptUtil.execCmdLine(IPFS,  null, new CollectingConsole(), Long.MAX_VALUE, IPFS_CONF_ARRAY);
 			} catch (Exception e) {
 				log.info("start ipfs daemon Error", e);
 			}
 		});
-		//TerminalUtils.asyncExecute(IPFS_EXTEND + " daemon --enable-pubsub-experiment");
 	}
 
 	/**
@@ -284,7 +284,6 @@ public class InitUtils {
 
 	/**
 	 * linux和mac os下面的ipfs环境初始化
-	 * @param rs
 	 */
 	private static boolean initUnixIpfs(byte[] rs) {
 		try (OutputStream out = new FileOutputStream(IPFS_DIR + "/go-ipfs.tar.gz")){
@@ -296,9 +295,9 @@ public class InitUtils {
 				TerminalUtils.execCmd("tar zxvf go-ipfs.tar.gz", new File(IPFS_DIR));
 			}
 			IPFS = new File(IPFS_DIR + "/go-ipfs/ipfs").getCanonicalPath();
-			IPFS_CONF = String.format(" -c '%s'", new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
+			IPFS_CONF = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
 			IPFS_CONF_ARRAY[1] = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
-			IPFS_EXTEND = String.format("%s -c '%s'", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
+			IPFS_EXTEND = String.format("%s -c %s", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
 		} catch (Exception e){
 			log.error("init windows ipfs env fail", e);
 			return false;
@@ -308,7 +307,6 @@ public class InitUtils {
 
 	/**
 	 * 判断当前IPFS节点是否能读取到文件
-	 * @param cid
 	 */
 	public static boolean existIpfsFile(String cid){
 		if(cid == null ||  cid.isEmpty()){
@@ -374,22 +372,26 @@ public class InitUtils {
 		String rs = "Error";
 		int i = 0;
 		while (i < 10 && rs != null && rs.contains("Error")){
-			i ++;
-			rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
+			i += 1;
+			sleep(3000L);
+			rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
-			Thread.sleep(1000L);
 		}
-		rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
+		rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
 			IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 			"pubsub", "ls");
-
 		if(rs != null && rs.contains(ipfsConfig.getTopic())){
 			return Boolean.TRUE;
 		}
 		POOL.execute(()->{
 			try {
-				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog()
+				File lock = new File(IPFS_CONF + File.separator + "repo.lock");
+				if(lock.exists()){
+					lock.deleteOnExit();
+					sleep(3000);
+				}
+				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog(ipfsConfig.getTopic())
 					, "pubsub", "sub", ipfsConfig.getTopic(), "--encoding", "json"
 					, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]);
 			} catch (Exception e) {
@@ -398,9 +400,9 @@ public class InitUtils {
 		});
 		i = 0;
 		while (i < 10 && rs != null &&  !rs.contains(ipfsConfig.getTopic())){
-			i ++;
-			Thread.sleep(1000L);
-			rs = ScriptUtil.execToString(IPFS, null, 10 * 1000L,
+			i += 1;
+			sleep(1000L);
+			rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
 		}

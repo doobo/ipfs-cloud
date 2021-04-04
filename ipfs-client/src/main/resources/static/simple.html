@@ -22,7 +22,7 @@
         //注意ws、wss使用不同的端口。我使用自签名的证书测试，
         //无法使用wss，浏览器打开WebSocket时报错
         //ws对应http、wss对应https。
-        socket = new WebSocket("ws://localhost:6103/ipfs/sub");
+        socket = new WebSocket("ws://"+ location.host + "/ipfs/sub");
         //连接打开事件
         socket.onopen = function() {
             console.log("Socket 已打开");

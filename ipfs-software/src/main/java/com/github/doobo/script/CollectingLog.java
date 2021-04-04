@@ -9,17 +9,17 @@ import org.apache.commons.exec.LogOutputStream;
 @Slf4j
 public class CollectingLog extends LogOutputStream {
 
+	/**
+	 * 消息体标识,topic
+	 */
+	private String tag = "line";
+
 	public CollectingLog() {
 	}
 
 	public CollectingLog(String tag) {
 		this.tag = tag;
 	}
-
-	/**
-	 * 消息体标识
-	 */
-	private String tag = "line";
 
 	@Override
 	protected void processLine(String line, int level) {

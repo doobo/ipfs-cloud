@@ -5,7 +5,7 @@ import com.github.doobo.service.IpfsConfigApiService;
 import com.github.doobo.soft.InitUtils;
 import com.github.doobo.utils.TerminalUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.SmartLifecycle;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -18,7 +18,9 @@ import static com.github.doobo.soft.InitUtils.IPFS_EXTEND;
  */
 @Slf4j
 @Component
-public class IpfsInitClient implements CommandLineRunner {
+public class IpfsInitClient implements SmartLifecycle {
+
+	private volatile boolean isRunning = false;
 
 	@Resource
 	IpfsConfigApiService ipfsConfigApiService;
@@ -27,24 +29,21 @@ public class IpfsInitClient implements CommandLineRunner {
 	private IpfsConfig ipfsConfig;
 
 	@Override
-	public void run(String... args) throws Exception {
+	public void start()  {
+		isRunning = true;
 		//初始化Ipfs环境
 		if(!InitUtils.initIpfsEnv(ipfsConfig.getPath())){
 			return;
 		}
-
 		if(!InitUtils.isIpfsInit()){
 			TerminalUtils.syncExecute(IPFS_EXTEND + " init", null, 60000);
 			log.info("IPFS is already initialized.");
 		}
-
 		if(!ipfsConfig.isStartDaemon()){
 			return;
 		}
-
 		//修改默认端口号
 		InitUtils.updateConfig(ipfsConfig);
-
 		//是否是私有网络
 		if(ipfsConfig.isPrivateNetwork()){
 			if(InitUtils.createIpfsPrivateNetwork(ipfsConfig.getBootstrap(), ipfsConfig.getSwarmKey())){
@@ -57,12 +56,23 @@ public class IpfsInitClient implements CommandLineRunner {
 		List<IpfsConfig> nodeConfigList = ipfsConfigApiService.queryNodeConfigList();
 		InitUtils.updateBootstrap(nodeConfigList);
 		InitUtils.startDaemon();
-		boolean flag = InitUtils.initSub(ipfsConfig);
 		log.info("IPFS守护程序启动成功....");
-		if(flag){
-			log.info("Ipfs订阅消息成功:{}",  ipfsConfig.getTopic());
-		}
 	}
 
+	@Override
+	public int getPhase() {
+		return 0;
+	}
 
+	@Override
+	public void stop() {
+		isRunning = false;
+		log.info("IpfsInitClient Stop!");
+	}
+
+	@Override
+	public boolean isRunning() {
+		return isRunning;
+	}
 }
+

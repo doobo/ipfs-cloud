@@ -16,7 +16,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 /**
@@ -24,14 +23,10 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class IpfsObserverHandler extends IpfsObserver {
+public class IpfsSubHandler extends IpfsObserver  {
 
 	@Resource
 	private IpfsConfig ipfsConfig;
-
-	@PostConstruct
-	public void init(){
-	}
 
 	@Override
 	public void handleObserver(IpfsObserverVO vo) {
@@ -80,5 +75,4 @@ public class IpfsObserverHandler extends IpfsObserver {
 		}
 		WebSocketServer.broadCastInfo(JSON.toJSONString(ResultUtils.of(ipo)));
 	}
-
 }
