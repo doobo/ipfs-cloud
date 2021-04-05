@@ -81,7 +81,6 @@
     </properties>
 
     <modules>
-        <module>ipfs-gateway</module>
         <module>ipfs-common</module>
         <module>ipfs-software</module>
         <module>ipfs-client</module>

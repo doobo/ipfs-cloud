@@ -345,6 +345,7 @@ public class InitUtils {
 		if (nodeConfigList == null || nodeConfigList.isEmpty()) {
 			return;
 		}
+		NODE_ID = getNodeId();
 		nodeConfigList.forEach(m -> {
 			if (CommonUtils.hasValue(m.getNodes())) {
 				Node node = m.getNodes().get(0);
@@ -359,7 +360,9 @@ public class InitUtils {
 					} else {
 						ipfs = String.format("/dnsaddr/%s/tcp/%s/ipfs/%s", node.getIp(), node.getPort(), node.getCid());
 					}
-					TerminalUtils.syncExecuteStr(IPFS_EXTEND, "bootstrap add", ipfs);
+					if(NODE_ID != null && !NODE_ID.equals(node.getCid())){
+						TerminalUtils.syncExecuteStr(IPFS_EXTEND, "bootstrap add", ipfs);
+					}
 				}
 			}
 		});
@@ -369,8 +372,6 @@ public class InitUtils {
 	 * 订阅广播
 	 */
 	public  static boolean initSub(IpfsConfig ipfsConfig) throws InterruptedException {
-		File lock = new File(IPFS_CONF + File.separator + "repo.lock");
-		lock.deleteOnExit();
 		String rs = "Error";
 		int i = 0;
 		while (i < 10 && rs != null && rs.contains("Error")){
@@ -390,7 +391,6 @@ public class InitUtils {
 		}
 		POOL.execute(()->{
 			try {
-				lock.deleteOnExit();
 				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog(ipfsConfig.getTopic())
 					, "pubsub", "sub", ipfsConfig.getTopic(), "--encoding", "json"
 					, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]);
@@ -417,6 +417,6 @@ public class InitUtils {
 	 * 关闭线程池
 	 */
 	public static void closePool(){
-		POOL.shutdown();
+		POOL.shutdownNow();
 	}
 }

@@ -60,6 +60,7 @@ public class IpfsSubInit  implements SmartLifecycle {
 	public void stop(Runnable callback) {
 		callback.run();
 		isRunning = false;
+		log.info("IpfsSubInit stop");
 	}
 
 	/**
@@ -70,12 +71,12 @@ public class IpfsSubInit  implements SmartLifecycle {
 	@Override
 	public void stop() {
 		isRunning = false;
-		log.info("stop");
+		log.info("stop can't run");
 	}
 
 	@Override
 	public int getPhase() {
-		return Integer.MAX_VALUE;
+		return 100;
 	}
 
 	/**
