@@ -23,6 +23,8 @@ public class IpfsSubInit  implements SmartLifecycle {
 
 	private volatile boolean isRunning = false;
 
+	private ScheduledExecutorService service = null;
+
 	/**
 	 * 启动Ipfs订阅
 	 */
@@ -31,25 +33,29 @@ public class IpfsSubInit  implements SmartLifecycle {
 		isRunning = true;
 		//启用定时检测
 		if(ipfsConfig.isCron()){
-			ScheduledExecutorService service = Executors.newScheduledThreadPool(1);
+			service = Executors.newScheduledThreadPool(1);
 			service.scheduleAtFixedRate(() -> {
 				try {
-					InitUtils.initSub(ipfsConfig);
-				} catch (InterruptedException e) {
+					if(InitUtils.initSub(ipfsConfig)){
+						log.info("Ipfs订阅消息成功:{}",  ipfsConfig.getTopic());
+					}else{
+						log.info("Ipfs订阅消息失败");
+					}
+				} catch (Exception e) {
 					log.info("startIpfsSubError", e);
 				}
 			}, ipfsConfig.getDelay(), ipfsConfig.getFixedDelay(), TimeUnit.SECONDS);
 			return;
 		}
 		//不启用定时检测
-		boolean flag = false;
 		try {
-			flag = InitUtils.initSub(ipfsConfig);
-		} catch (InterruptedException e) {
+			if(InitUtils.initSub(ipfsConfig)){
+				log.info("Ipfs订阅消息成功:{}",  ipfsConfig.getTopic());
+			}else{
+				log.info("Ipfs订阅消息失败");
+			}
+		} catch (Exception e) {
 			log.info("startIpfsSubError", e);
-		}
-		if(flag){
-			log.info("Ipfs订阅消息成功:{}",  ipfsConfig.getTopic());
 		}
 	}
 
@@ -60,6 +66,9 @@ public class IpfsSubInit  implements SmartLifecycle {
 	public void stop(Runnable callback) {
 		callback.run();
 		isRunning = false;
+		if(service != null){
+			service.shutdownNow();
+		}
 		log.info("IpfsSubInit stop");
 	}
 

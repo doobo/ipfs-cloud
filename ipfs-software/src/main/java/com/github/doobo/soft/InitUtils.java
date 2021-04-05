@@ -40,7 +40,7 @@ public class InitUtils {
 	/**
 	 * ipfs启动线程池
 	 */
-	private final static ForkJoinPool POOL = new ForkJoinPool();
+	private final static ForkJoinPool POOL = new ForkJoinPool(2);
 
 	/**
 	 * ipfs命令
@@ -376,7 +376,7 @@ public class InitUtils {
 		int i = 0;
 		while (i < 10 && rs != null && rs.contains("Error")){
 			i += 1;
-			sleep(3000L);
+			sleep(1000L);
 			rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
@@ -391,7 +391,7 @@ public class InitUtils {
 		}
 		POOL.execute(()->{
 			try {
-				ScriptUtil.execCmd(InitUtils.IPFS, null, new CollectingLog(ipfsConfig.getTopic())
+				ScriptUtil.execCmdLine(InitUtils.IPFS, null, new CollectingLog(ipfsConfig.getTopic()), Long.MAX_VALUE
 					, "pubsub", "sub", ipfsConfig.getTopic(), "--encoding", "json"
 					, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]);
 			} catch (Exception e) {
@@ -405,6 +405,7 @@ public class InitUtils {
 			rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
+			rs = rs == null? "" : rs;
 			log.info("pubsub ls: {}", rs);
 		}
 		if(rs != null && rs.contains(ipfsConfig.getTopic())){

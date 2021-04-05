@@ -28,6 +28,9 @@ public class IpfsController {
 	@Resource
 	private IpfsConfigService ipfsConfigService;
 
+	@Resource
+	private IpfsConfig ipfsConfig;
+
 	@GetMapping("ipfs")
 	public ResultTemplate<Boolean> exitFile(String cid){
 		return ResultUtils.of(InitUtils.existIpfsFile(cid));
@@ -49,6 +52,14 @@ public class IpfsController {
 	@PostMapping("ipfs/pubMsg")
 	public ResultTemplate<Boolean> pubMsg(@RequestBody IpfsPubVO vo){
 		return ipfsConfigService.pubMsg(vo);
+	}
+
+	/**
+	 *  启动消息订阅
+	 */
+	@GetMapping("ipfs/startSub")
+	public ResultTemplate<Boolean> startSub() throws InterruptedException {
+		return ResultUtils.of(InitUtils.initSub(ipfsConfig));
 	}
 
 	/**
