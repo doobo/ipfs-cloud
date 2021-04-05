@@ -67,6 +67,7 @@ public class IpfsInitClient implements SmartLifecycle {
 	@Override
 	public void stop() {
 		isRunning = false;
+		InitUtils.closePool();
 		log.info("IpfsInitClient Stop!");
 	}
 

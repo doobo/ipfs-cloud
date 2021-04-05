@@ -379,10 +379,12 @@ public class InitUtils {
 			rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
+			log.info("pubsub ls: {}", rs);
 		}
 		rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
 			IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 			"pubsub", "ls");
+		log.info("pubsub ls: {}", rs);
 		if(rs != null && rs.contains(ipfsConfig.getTopic())){
 			return Boolean.TRUE;
 		}
@@ -403,10 +405,18 @@ public class InitUtils {
 			rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
+			log.info("pubsub ls: {}", rs);
 		}
 		if(rs != null && rs.contains(ipfsConfig.getTopic())){
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
+	}
+
+	/**
+	 * 关闭线程池
+	 */
+	public static void closePool(){
+		POOL.shutdown();
 	}
 }
