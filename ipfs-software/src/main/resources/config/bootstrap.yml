@@ -24,4 +24,4 @@ logging:
     root: info
     com.github.doobo: info
   file:
-    path: data/logs/${spring.application.name}
+    path: data/${spring.application.name}
