@@ -9,6 +9,7 @@ import org.apache.commons.exec.PumpStreamHandler;
 import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -23,6 +24,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Slf4j
 @PackagePrivate
 public class ScriptUtil {
+
+	/**
+	 * 超时时间
+	 */
+	private static Long TIMEOUT_TIME = 60 * 1000L;
 
 	/**
 	 * make script file
@@ -68,6 +74,11 @@ public class ScriptUtil {
 		return execCmd(command, scriptFile, params, streamHandler, timeout);
 	}
 
+	public static int execCmdPwd(String command, File pwd, CollectingLog clg, Long timeout, String... params) throws IOException {
+		PumpStreamHandler streamHandler = new PumpStreamHandler(clg);
+		return execCmd(command, pwd, params, streamHandler, timeout);
+	}
+
 	public static int execCmd(String command, String scriptFile, String[] params, PumpStreamHandler streamHandler) throws IOException {
 		CommandLine commandline = new CommandLine(command);
 		if(!StringUtils.isEmpty(scriptFile)){
@@ -92,7 +103,7 @@ public class ScriptUtil {
 			commandline.addArgument(scriptFile);
 		}
 		if(timeout == null){
-			timeout = 60L * 1000;
+			timeout = TIMEOUT_TIME;
 		}
 		if (params != null && params.length > 0) {
 			commandline.addArguments(params);
@@ -102,6 +113,29 @@ public class ScriptUtil {
 		exec.setExitValues(null);
 		ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
 		exec.setWatchdog(watchdog);
+		exec.setStreamHandler(streamHandler);
+		return exec.execute(commandline);
+	}
+
+	/**
+	 * 指定超时时间和脚本执行路径
+	 */
+	public static int execCmd(String command, File pwd, String[] params, PumpStreamHandler streamHandler, Long timeout) throws IOException {
+		CommandLine commandline = new CommandLine(command);
+		if (params != null && params.length > 0) {
+			commandline.addArguments(params);
+		}
+		if(timeout == null){
+			timeout = TIMEOUT_TIME;
+		}
+		// execCmd
+		DefaultExecutor exec = new DefaultExecutor();
+		exec.setExitValues(null);
+		ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
+		exec.setWatchdog(watchdog);
+		if(pwd != null){
+			exec.setWorkingDirectory(pwd);
+		}
 		exec.setStreamHandler(streamHandler);
 		return exec.execute(commandline);
 	}

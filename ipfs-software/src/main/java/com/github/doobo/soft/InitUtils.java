@@ -312,7 +312,8 @@ public class InitUtils {
 		if(cid == null ||  cid.isEmpty()){
 			return false;
 		}
-		String result = TerminalUtils.execCmd(3,IPFS, "block stat", cid, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
+		String result = ScriptUtil.execToString(IPFS, null, 3000L,
+			"block", "stat", cid, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
 		if(result == null || result.isEmpty()){
 			return false;
 		}

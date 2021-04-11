@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 /**
  * @author doobo
@@ -36,7 +37,12 @@ public class IpfsBackupController implements IpfsBackupControllerApi {
 
 	@Override
 	public ResultTemplate<Boolean> backUpFile(@Validated @RequestBody IpfsFileInfo info) {
-		ipfsBackupService.backUpFile(info);
+		try {
+			ipfsBackupService.backUpFile(info);
+		} catch (IOException e) {
+			log.error("backUpFileError", e);
+			return ResultUtils.of(Boolean.FALSE);
+		}
 		return ResultUtils.of(Boolean.TRUE);
 	}
 }

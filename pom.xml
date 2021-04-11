@@ -16,7 +16,7 @@
 
     <name>ipfs-parent</name>
     <url>https://gitee.com/doobo/ipfs-cloud</url>
-    <description>基于SpringCloud的IPFS私有云,主要解决文件存储分发问题,不考虑挖矿,支持内网部署和多区域集群部署,(北京、上海、广州、香港、北美、欧洲)组网</description>
+    <description>一个基于IPFS的全球分布式文件系统，也是一个简单的MQ中间件，可用于直播本地推流，全球实时同步，多区域内网融合等</description>
 
     <licenses>
         <license>
@@ -62,7 +62,7 @@
         <commons.lang3.version>3.8.1</commons.lang3.version>
         <json.path.version>2.4.0</json.path.version>
         <fast.json.version>1.2.68</fast.json.version>
-        <elfinder.version>1.3</elfinder.version>
+        <elfinder.version>1.4</elfinder.version>
         <bboss.version>6.2.0</bboss.version>
         <jasypt.version>3.0.3</jasypt.version>
         <spring.boot.version>2.2.6.RELEASE</spring.boot.version>
