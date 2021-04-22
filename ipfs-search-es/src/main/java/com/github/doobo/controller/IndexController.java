@@ -30,10 +30,10 @@ import java.util.List;
 public class IndexController implements IpfsSearchControllerApi {
 
 	@Resource(name = "ipfsSearch")
-	ClientInterface clientInterface;
+	private ClientInterface clientInterface;
 
 	@Resource
-	IpfsSearchService ipfsSearchService;
+	private IpfsSearchService ipfsSearchService;
 
 	//@GetMapping("")
 	public ResultTemplate<Object> indexPage(){
@@ -60,9 +60,6 @@ public class IndexController implements IpfsSearchControllerApi {
 
 	/**
 	 * 通过IPFS下载文件,适合小文件
-	 * @param cid
-	 * @param response
-	 * @throws IOException
 	 */
 	@GetMapping("/cat/{cid}")
 	public void get(@PathVariable("cid") String cid, HttpServletResponse response) throws IOException {
@@ -84,7 +81,8 @@ public class IndexController implements IpfsSearchControllerApi {
 			}
 		}
 		try(ServletOutputStream outputStream = response.getOutputStream()){
-			outputStream.write(TerminalUtils.syncExecute(InitUtils.IPFS, "cat", cid));
+			outputStream.write(TerminalUtils.syncExecute(InitUtils.IPFS, "cat"
+				, cid, InitUtils.IPFS_CONF_ARRAY[0], InitUtils.IPFS_CONF_ARRAY[1]));
 		}
 	}
 

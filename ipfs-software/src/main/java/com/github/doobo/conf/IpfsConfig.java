@@ -42,6 +42,11 @@ public class IpfsConfig {
 	private boolean privateNetwork;
 
 	/**
+	 * 私有秘钥
+	 */
+	private String swarmKey;
+
+	/**
 	 * 是否启动go-ipfs
 	 */
 	private boolean startDaemon;
@@ -55,4 +60,34 @@ public class IpfsConfig {
 	 * 节点信息
 	 */
 	private List<Node> nodes;
+
+	/**
+	 * 广播节点
+	 */
+	private String topic;
+
+	/**
+	 * ipfs 初始化路径
+	 */
+	private String path;
+
+	/**
+	 * 消息加密密钥
+	 */
+	private String msgPwd;
+
+	/**
+	 * 启用定时任务
+	 */
+	private boolean cron;
+
+	/**
+	 *  间隔多少时间执行，单位秒
+	 */
+	private Integer fixedDelay;
+
+	/**
+	 * 延迟多长时间启动定时任务,单位秒
+	 */
+	private Integer delay;
 }

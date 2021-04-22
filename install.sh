@@ -10,5 +10,6 @@
 #git push gitee master --force
 
 mvn clean
-mvn release:prepare
+mvn install
+#mvn release:prepare
 #mvn release:perform

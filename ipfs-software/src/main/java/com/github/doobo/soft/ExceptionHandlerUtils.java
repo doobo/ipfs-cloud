@@ -21,9 +21,8 @@ public class ExceptionHandlerUtils {
 
 	/**
 	 * 通用异常处理
-	 * @param e
 	 */
-	public static ResultTemplate<?> convertResultTemplate(Throwable e){
+	public static ResultTemplate<Object> convertResultTemplate(Throwable e){
 		if (e instanceof BindException) {
 			return ResultUtils.of(null, new ErrorInfo(0,
 				getErrorResultMessage(((BindException) e).getAllErrors())));
@@ -42,7 +41,7 @@ public class ExceptionHandlerUtils {
 				return ResultUtils.of(null, new ErrorInfo(directReturnException.getCode(), e.getMessage()));
 			}
 			if(directReturnException.getData() instanceof ResultTemplate){
-				return (ResultTemplate<?>) directReturnException.getData();
+				return (ResultTemplate<Object>) directReturnException.getData();
 			}
 			return ResultUtils.of(directReturnException.getData());
 		}

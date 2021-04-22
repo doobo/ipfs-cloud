@@ -1,7 +1,10 @@
 package com.github.doobo.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.exec.*;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteWatchdog;
+import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.StreamUtils;
 
@@ -128,7 +131,6 @@ public class TerminalUtils {
 
 	/**
 	 * 异步启动,不阻塞
-	 * @param sh
 	 */
 	public static void asyncExecute(String sh) {
 		new Thread(() -> {
@@ -138,9 +140,6 @@ public class TerminalUtils {
 
 	/**
 	 * 有返回执行程序
-	 * @param cmd
-	 * @param pwd
-	 * @param timeout 等待时间,毫秒
 	 */
 	public static byte[] syncExecute(String cmd, String pwd, long timeout){
 		File file = pwd == null?null: new File(pwd);
@@ -165,8 +164,6 @@ public class TerminalUtils {
 
 	/**
 	 * 设置等待时间
-	 * @param cmd
-	 * @param timeout
 	 */
 	public static byte[] syncExecute(String cmd, long timeout){
 		return syncExecute(cmd, null, timeout);
@@ -174,7 +171,6 @@ public class TerminalUtils {
 
 	/**
 	 * 立即返回
-	 * @param cmd
 	 */
 	public static byte[] syncExecute(File pwd, String... cmd){
 		String sh = null;
@@ -192,7 +188,6 @@ public class TerminalUtils {
 
 	/**
 	 * 立即返回
-	 * @param cmd
 	 */
 	public static byte[] syncExecute(String... cmd){
 		return syncExecute(null, cmd);
@@ -200,7 +195,6 @@ public class TerminalUtils {
 
 	/**
 	 * 立即返回
-	 * @param cmd
 	 */
 	public static String syncExecuteStr(String... cmd){
 		try {
@@ -213,8 +207,6 @@ public class TerminalUtils {
 
 	/**
 	 * 主程序带参数执行
-	 * @param main
-	 * @param params
 	 */
 	public static String syncMainExecute(String main, String ...params) {
 		CommandLine commandLine = new CommandLine(main);

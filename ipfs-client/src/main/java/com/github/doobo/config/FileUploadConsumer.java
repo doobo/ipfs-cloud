@@ -26,7 +26,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.github.doobo.soft.InitUtils.IPFS;
+import static com.github.doobo.soft.InitUtils.*;
 
 @Slf4j
 @Component
@@ -105,6 +105,9 @@ public class FileUploadConsumer extends CmdObserver {
 			return st;
 		}
 		String curPath = path.getPath(), iph;
+		if(curPath == null){
+			return st;
+		}
 		for(PathVO item :  st){
 			iph = item.getPath();
 			if(iph.length() > curPath.length() && iph.startsWith(curPath)){
@@ -129,9 +132,9 @@ public class FileUploadConsumer extends CmdObserver {
 		}
 		String result;
 		if(OsUtils.getSystemType() == StringParams.Windows){
-			result = TerminalUtils.syncExecuteStr(IPFS, "add", String.format("\"%s\"", name));
+			result = TerminalUtils.syncExecuteStr(IPFS_EXTEND, "add", String.format("\"%s\"", name));
 		}else{
-			result = TerminalUtils.syncMainExecute(IPFS, "add", name);
+			result = TerminalUtils.syncMainExecute(IPFS, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1], "add", name);
 		}
 		name = name.replace(StringParams.SLASH_DOUBLE.str(),StringParams.BACKSLASH.str())
 			.replace(StringParams.SLASH.str(),StringParams.BACKSLASH.str());
@@ -160,9 +163,9 @@ public class FileUploadConsumer extends CmdObserver {
 				item.setName(file.getName());
 				rs.add(item);
 				if(OsUtils.getSystemType() == StringParams.Windows){
-					result = TerminalUtils.syncExecuteStr(IPFS, "add", "-r", String.format("\"%s\"", item.getPath()));
+					result = TerminalUtils.syncExecuteStr(IPFS_EXTEND, "add", "-r", String.format("\"%s\"", item.getPath()));
 				}else{
-					result = TerminalUtils.syncMainExecute(IPFS, "add", "-r", item.getPath());
+					result = TerminalUtils.syncMainExecute(IPFS, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1], "add", "-r", item.getPath());
 				}
 				cid = ipfsPathCid(result, item.getName());
 				if(cid != null && !cid.isEmpty()){
