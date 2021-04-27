@@ -1,64 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8" />
-    <title>Spring Boot WebSocket+广播式</title>
+    <meta charset="UTF-8">
+    <title>websocket测试</title>
+    <script src="https://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <style type="text/css">
+        body, h3,h4{text-align:center;}
+    </style>
 </head>
-<body onload="disconnect()">
-<noscript>
-    <h2 style="color:#ff0000">貌似你的浏览器不支持websocket</h2>
-</noscript>
-<div>
-    <div>
-        <button id="connect" onclick="connect()">连接</button>
-        <button id="disconnect"  onclick="disconnect();">断开连接</button>
-    </div>
-    <div id="conversationDiv">
-        <label>输入你的名字</label> <input type="text" id="name" />
-        <br>
-        <label>输入消息</label> <input type="text" id="messgae" />
-        <button id="send" onclick="send();">发送</button>
-        <p id="response"></p>
-    </div>
-</div>
-<script src="https://cdn.bootcss.com/sockjs-client/1.3.0/sockjs.min.js"></script>
-<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<body>
+<h3>WebSocket测试，客户端接收到的消息如下：</h3>
+<textarea id = "messageId" readonly="readonly" cols="150" rows="30" ></textarea>
 <script type="text/javascript">
-    var stompClient = null;
-    var host="http://127.0.0.1:6101/ipfs-client/ipfs";
-    function setConnected(connected) {
-        document.getElementById('connect').disabled = connected;
-        document.getElementById('disconnect').disabled = !connected;
-        document.getElementById('conversationDiv').style.visibility = connected ? 'visible' : 'hidden';
-        $('#response').html();
-    }
-    function connect() {
-        var socket = new SockJS(host+'/sub');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
-            setConnected(true);
-            console.log('Connected:' + frame);
-            stompClient.subscribe('/sub', function(response) {
-                showResponse(response.body);
-            });
-        });
-    }
-    function disconnect() {
-        if (stompClient != null) {
-            stompClient.disconnect();
+    var socket;
+    if (typeof (WebSocket) == "undefined") {
+        console.log("遗憾：您的浏览器不支持WebSocket");
+    } else {
+        console.log("恭喜：您的浏览器支持WebSocket");
+        //实现化WebSocket对象
+        //指定要连接的服务器地址与端口建立连接
+        //注意ws、wss使用不同的端口。我使用自签名的证书测试，
+        //无法使用wss，浏览器打开WebSocket时报错
+        //ws对应http、wss对应https。
+        socket = new WebSocket("ws://"+ location.host + "/ipfs/sub");
+        //连接打开事件
+        socket.onopen = function() {
+            console.log("Socket 已打开");
+            socket.send("消息发送测试(From Client)");
+        };
+        //收到消息事件
+        socket.onmessage = function(msg) {
+            $("#messageId").append(msg.data+ "\n");
+            console.log(msg.data  );
+        };
+        //连接关闭事件
+        socket.onclose = function() {
+            console.log("Socket已关闭");
+        };
+        //发生了错误事件
+        socket.onerror = function() {
+            alert("Socket发生了错误");
         }
-        setConnected(false);
-        console.log("Disconnected");
-    }
-    function send() {
-        var name = $('#name').val();
-        var message = $('#messgae').val();
-        stompClient.send("/sub", {}, JSON.stringify({username:name,message:message}));
-    }
-    function showResponse(message) {
-        var response = $('#response');
-        response.html(message);
+        //窗口关闭时，关闭连接
+        window.unload=function() {
+            socket.close();
+        };
     }
 </script>
 </body>
