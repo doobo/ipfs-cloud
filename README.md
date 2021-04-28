@@ -1,5 +1,5 @@
 # ipfs-cloud
-一个基于IPFS的全球分布式文件系统，也是一个简单的MQ中间件，可用于直播本地推流，全球实时同步，多区域内网融合等
+一个基于IPFS的星际文件系统，也是分布式的WebScoket服务端，基于区块链生成唯一标识，可用于直播推流，全球实时同步文件，多区域内网融合等
 
 > [说明文档](https://gitee.com/doobo/ipfs-cloud/wikis)
 > 博客类小程序源码，快速开通流量主，中台图片上传基于IPFS实现，[体验地址](https://gitee.com/doobo/min-pro)
