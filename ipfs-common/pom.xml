@@ -23,6 +23,12 @@
             <version>${apache.exec.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${apache.compress.version}</version>
+        </dependency>
+
         <!--JSON解析和http工具-->
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>

@@ -88,7 +88,7 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 						});
 						result.add(config);
 					}
-				} catch (IOException e) {
+				} catch (Exception e) {
 					log.error("queryNodeConfigListError", e);
 				}
 			}

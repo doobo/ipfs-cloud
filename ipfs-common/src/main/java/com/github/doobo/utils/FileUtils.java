@@ -2,6 +2,11 @@ package com.github.doobo.utils;
 
 import lombok.experimental.PackagePrivate;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.CompressorInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +18,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -296,4 +302,31 @@ public class FileUtils {
 		}
 	}
 
+	/**
+	 * 解压tar.gz文件
+	 * tar文件只是把多个文件或文件夹打包合成一个文件,本身并没有进行压缩,gz是进行过压缩的文件
+	 */
+	public static void deGzipArchive(String dir, String filepath) throws Exception {
+		final File input = new File(filepath);
+		try(InputStream is = new FileInputStream(input);
+			CompressorInputStream in = new GzipCompressorInputStream(is, true);
+			TarArchiveInputStream tin = new TarArchiveInputStream(in)) {
+			TarArchiveEntry entry = tin.getNextTarEntry();
+			while (entry != null) {
+				File archiveEntry = new File(dir, entry.getName());
+				boolean mks = archiveEntry.getParentFile().mkdirs();
+				if (entry.isDirectory()) {
+					mks = archiveEntry.mkdir();
+					entry = tin.getNextTarEntry();
+					log.info("创建目录{}", mks);
+					continue;
+				}
+				log.info("创建目录{}", mks);
+				OutputStream out = new FileOutputStream(archiveEntry);
+				IOUtils.copy(tin, out);
+				out.close();
+				entry = tin.getNextTarEntry();
+			}
+		}
+	}
 }

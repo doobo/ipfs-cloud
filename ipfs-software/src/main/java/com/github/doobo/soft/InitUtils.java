@@ -286,15 +286,15 @@ public class InitUtils {
 	 * linux和mac os下面的ipfs环境初始化
 	 */
 	private static boolean initUnixIpfs(byte[] rs) {
-		try (OutputStream out = new FileOutputStream(IPFS_DIR + "/go-ipfs.tar.gz")){
+		String filepath = IPFS_DIR + "/go-ipfs.tar.gz";
+		try (OutputStream out = new FileOutputStream(filepath)){
 			out.write(rs);
 			out.flush();
 			out.close();
-			String tar = TerminalUtils.execCmd("which tar");
-			if(tar != null && !tar.isEmpty()){
-				TerminalUtils.execCmd("tar zxvf go-ipfs.tar.gz", new File(IPFS_DIR));
-			}
+			//添加执行权限
+			FileUtils.deGzipArchive(IPFS_DIR, filepath);
 			IPFS = new File(IPFS_DIR + "/go-ipfs/ipfs").getCanonicalPath();
+			ScriptUtil.execToString("chmod", null, 3 * 1000L, "+x" , IPFS);
 			IPFS_CONF = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
 			IPFS_CONF_ARRAY[1] = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
 			IPFS_EXTEND = String.format("%s -c %s", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
