@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ipfs-backup
+    name: ipfs-mirror
   profiles:
     active: dev
   servlet:
