@@ -1,8 +1,9 @@
-package com.github.doobo.config;
+package com.github.doobo.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.github.doobo.conf.IpfsConfig;
+import com.github.doobo.config.WebSocketServer;
 import com.github.doobo.model.IpfsPubVO;
 import com.github.doobo.model.IpfsSubVO;
 import com.github.doobo.params.ResultTemplate;

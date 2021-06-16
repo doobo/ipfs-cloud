@@ -1,10 +1,9 @@
-package com.github.doobo.config;
+package com.github.doobo.start;
 
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.soft.InitUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.SmartLifecycle;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.concurrent.Executors;
@@ -15,8 +14,7 @@ import java.util.concurrent.TimeUnit;
  * 消息订阅与分发webSocket
  */
 @Slf4j
-@Component
-public class IpfsSubInit  implements SmartLifecycle {
+public abstract class AbstractIpfsSubStart implements SmartLifecycle {
 
 	@Resource
 	private IpfsConfig ipfsConfig;

@@ -1,4 +1,4 @@
-package com.github.doobo.config;
+package com.github.doobo.start;
 
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.service.IpfsConfigApiService;
@@ -6,7 +6,6 @@ import com.github.doobo.soft.InitUtils;
 import com.github.doobo.utils.TerminalUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.SmartLifecycle;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,8 +16,7 @@ import static com.github.doobo.soft.InitUtils.IPFS_EXTEND;
  * ipfs环境初始化
  */
 @Slf4j
-@Component
-public class IpfsInitClient implements SmartLifecycle {
+public abstract class AbstractIpfsInitClient implements SmartLifecycle {
 
 	private volatile boolean isRunning = false;
 
