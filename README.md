@@ -32,11 +32,11 @@
 文件搜索服务的es实现,需要搜索文件的可启动，可根据文件的cid、节点id、文件类型、文件名、文件内容、添加的时间范围来搜索相关文件
 [搜索页面前端代码](https://gitee.com/doobo/ipfs-search)
 
-### ipfs-backup
-文件备份服务，按需启动，如需要备份上传的文件，可启动，ipfs-client上传后，会调用该服务，进行文件备份
+### ipfs-mirror
+文件镜像备份服务，按需启动，如需要备份上传的文件，可启动，ipfs-client上传后，会调用该服务，进行文件备
 
 ### ipfs-register
-简单的springCloud注册中心程序，需要内网隔离部署的可启动，其它服务启动时，添加参数:
+简单的springCloud注册中心程序，需要内网隔离部署的可启动，其它服务启动时，添加如下参数:
 ```shell
 -Deureka.client.serviceUrl.defaultZone=http://union:123456@127.0.0.1:6109/eureka/
 ```

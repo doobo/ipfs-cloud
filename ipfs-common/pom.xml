@@ -39,7 +39,14 @@
         <dependency>
             <groupId>com.github.doobo</groupId>
             <artifactId>okhttp-tools</artifactId>
-            <version>1.1</version>
+            <version>${okhttp.tools.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <optional>true</optional>
+            <version>${apache.http.version}</version>
         </dependency>
 
         <!-- 引入FastJson库 -->

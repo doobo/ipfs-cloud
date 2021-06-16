@@ -12,9 +12,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 @EnableHystrix
 @EnableCircuitBreaker
-public class IpfsBackupApplication {
+public class IpfsMirrorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IpfsBackupApplication.class, args);
+		SpringApplication.run(IpfsMirrorApplication.class, args);
 	}
 }

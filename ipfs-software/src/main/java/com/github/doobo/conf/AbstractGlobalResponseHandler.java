@@ -65,9 +65,9 @@ public abstract class AbstractGlobalResponseHandler implements ResponseBodyAdvic
 	public abstract boolean notNecessaryWrapperURI(String uri);
 
 	@ExceptionHandler(value = Throwable.class)
-	public ResponseEntity handleBaseError(Throwable e) {
+	public ResponseEntity<Object> handleBaseError(Throwable e) {
 		HttpStatus status = HttpStatus.OK;
-		ResultTemplate<?> resultTemplate = ExceptionHandlerUtils.convertResultTemplate(e);
+		ResultTemplate<Object> resultTemplate = ExceptionHandlerUtils.convertResultTemplate(e);
 		if(resultTemplate.getErr() != null){
 			resultTemplate.setCode(resultTemplate.getErr().getCode());
 		}
@@ -79,6 +79,6 @@ public abstract class AbstractGlobalResponseHandler implements ResponseBodyAdvic
 				}
 			}
 		}
-		return new ResponseEntity(resultTemplate, status);
+		return new ResponseEntity<>(resultTemplate, status);
 	}
 }

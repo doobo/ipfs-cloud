@@ -29,7 +29,7 @@ public class ExecutorConfig implements AsyncConfigurer {
 		//配置线程池前缀
 		threadPoolTaskExecutor.setThreadNamePrefix("custom-service-");
 		//配置拒绝策略
-		threadPoolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+		threadPoolTaskExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
 		//数据初始化
 		threadPoolTaskExecutor.initialize();
 		return threadPoolTaskExecutor;

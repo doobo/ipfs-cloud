@@ -35,7 +35,7 @@ public class IndexController implements IpfsSearchControllerApi {
 	@Resource
 	private IpfsSearchService ipfsSearchService;
 
-	//@GetMapping("")
+	@GetMapping("")
 	public ResultTemplate<Object> indexPage(){
 		return ResultUtils.of(clientInterface.existIndice("ipfs_search_document"));
 	}
@@ -61,6 +61,7 @@ public class IndexController implements IpfsSearchControllerApi {
 	/**
 	 * 通过IPFS下载文件,适合小文件
 	 */
+	@Deprecated
 	@GetMapping("/cat/{cid}")
 	public void get(@PathVariable("cid") String cid, HttpServletResponse response) throws IOException {
 		if(!InitUtils.existIpfsFile(cid)){
