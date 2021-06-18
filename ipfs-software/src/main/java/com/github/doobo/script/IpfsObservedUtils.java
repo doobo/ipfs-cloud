@@ -3,13 +3,11 @@ package com.github.doobo.script;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Observable;
-
 /**
- * 被观察者
+ * 被观察者工具类
  */
 @Component
-public class IpfsObservedUtils extends Observable {
+public class IpfsObservedUtils {
 
     private static IpfsObserved INSTANCE;
 
@@ -18,7 +16,7 @@ public class IpfsObservedUtils extends Observable {
      */
     public static IpfsObserved getInstance(){
         if(INSTANCE == null){
-            throw new IllegalArgumentException("CmdObserved is Undefined");
+            throw new IllegalArgumentException("IpfsObserved is undefined");
         }
         return INSTANCE;
     }
