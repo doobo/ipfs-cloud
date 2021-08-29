@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
 
-import static java.lang.Thread.sleep;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
@@ -294,7 +294,7 @@ public class InitUtils {
 			//添加执行权限
 			FileUtils.deGzipArchive(IPFS_DIR, filepath);
 			IPFS = new File(IPFS_DIR + "/go-ipfs/ipfs").getCanonicalPath();
-			ScriptUtil.execToString("chmod", null, 3 * 1000L, "+x" , IPFS);
+			ScriptUtil.execToString("chmod", null, TimeUnit.SECONDS.toMillis(3), "+x" , IPFS);
 			IPFS_CONF = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
 			IPFS_CONF_ARRAY[1] = new File(IPFS_DIR+"/.ipfs/").getCanonicalPath();
 			IPFS_EXTEND = String.format("%s -c %s", IPFS, new File(IPFS_DIR+"/.ipfs/").getCanonicalPath());
@@ -312,7 +312,7 @@ public class InitUtils {
 		if(cid == null ||  cid.isEmpty()){
 			return false;
 		}
-		String result = ScriptUtil.execToString(IPFS, null, 3000L,
+		String result = ScriptUtil.execToString(IPFS, null, TimeUnit.SECONDS.toMillis(3),
 			"block", "stat", cid, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
 		if(result == null || result.isEmpty()){
 			return false;
@@ -324,7 +324,7 @@ public class InitUtils {
 	 * 发送广播数据
 	 */
 	public static void pubMsg(String topic, String data) {
-		ScriptUtil.execToString(IPFS, null, 5*1000L
+		ScriptUtil.execToString(IPFS, null, TimeUnit.SECONDS.toMillis(5)
 			, "pubsub", "pub", topic, data, IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1]);
 	}
 
@@ -377,13 +377,13 @@ public class InitUtils {
 		int i = 0;
 		while (i < 10 && rs != null && rs.contains("Error")){
 			i += 1;
-			sleep(1000L);
-			rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
+			TimeUnit.SECONDS.sleep(1);
+			rs = ScriptUtil.execToString(IPFS, null, TimeUnit.SECONDS.toMillis(2),
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
 			log.info("pubsub ls: {}", rs);
 		}
-		rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
+		rs = ScriptUtil.execToString(IPFS, null, TimeUnit.SECONDS.toMillis(2),
 			IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 			"pubsub", "ls");
 		log.info("pubsub ls: {}", rs);
@@ -402,8 +402,8 @@ public class InitUtils {
 		i = 0;
 		while (i < 10 && rs != null &&  !rs.contains(ipfsConfig.getTopic())){
 			i += 1;
-			sleep(1000L);
-			rs = ScriptUtil.execToString(IPFS, null, 2 * 1000L,
+			TimeUnit.SECONDS.sleep(1);
+			rs = ScriptUtil.execToString(IPFS, null, TimeUnit.SECONDS.toMillis(2),
 				IPFS_CONF_ARRAY[0], IPFS_CONF_ARRAY[1],
 				"pubsub", "ls");
 			rs = rs == null? "" : rs;

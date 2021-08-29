@@ -9,6 +9,7 @@ import org.springframework.context.SmartLifecycle;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.github.doobo.soft.InitUtils.IPFS_EXTEND;
 
@@ -34,7 +35,7 @@ public abstract class AbstractIpfsInitClient implements SmartLifecycle {
 			return;
 		}
 		if(!InitUtils.isIpfsInit()){
-			TerminalUtils.syncExecute(IPFS_EXTEND + " init", null, 60000);
+			TerminalUtils.syncExecute(IPFS_EXTEND + " init", null, TimeUnit.MINUTES.toMillis(1));
 			log.info("IPFS is already initialized.");
 		}
 		if(!ipfsConfig.isStartDaemon()){
