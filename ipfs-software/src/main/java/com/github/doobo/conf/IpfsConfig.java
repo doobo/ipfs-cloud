@@ -72,11 +72,6 @@ public class IpfsConfig {
 	private String path;
 
 	/**
-	 * 消息加密密钥
-	 */
-	private String msgPwd;
-
-	/**
 	 * 启用定时任务
 	 */
 	private boolean cron;
@@ -90,4 +85,12 @@ public class IpfsConfig {
 	 * 延迟多长时间启动定时任务,单位秒
 	 */
 	private Integer delay;
+
+	private String sm2PublicKey;
+
+	private String sm2PrivateKey;
+
+	private String selfSm2PublicKey;
+
+	private String selfSm2PrivateKey;
 }

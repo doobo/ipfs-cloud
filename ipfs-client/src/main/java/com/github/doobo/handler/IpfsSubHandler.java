@@ -46,7 +46,7 @@ public class IpfsSubHandler extends IpfsObserver  {
 			if(StringUtils.isBlank(msg)){
 				return;
 			}
-			String data = PwdUtils.decode(msg, ipfsConfig.getMsgPwd());
+			String data = PwdUtils.decode(msg, ipfsConfig.getSm2PrivateKey());
 			sendMsg(data, null);
 		} catch (Exception e) {
 			log.warn("SendBroadCastInfoError", e);
