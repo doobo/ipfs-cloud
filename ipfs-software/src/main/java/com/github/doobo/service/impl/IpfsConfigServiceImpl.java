@@ -54,7 +54,6 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 		config.setTopic(null);
 		config.setSwarmKey(null);
 		config.setPath(null);
-		config.setSm2PublicKey(config.getSm2PublicKey());
 		config.setSm2PrivateKey(null);
 		config.setSelfSm2PrivateKey(null);
 		config.setNodes(Collections.singletonList(InitUtils.getIpfsNodeInfo()));

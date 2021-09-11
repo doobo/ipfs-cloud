@@ -37,6 +37,11 @@ public class IpfsConfig {
 	private Integer httpPort;
 
 	/**
+	 * 绑定的本机IP
+	 */
+	private String bindIp;
+
+	/**
 	 * 是否私有网络
 	 */
 	private boolean privateNetwork;

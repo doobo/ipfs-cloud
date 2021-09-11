@@ -41,6 +41,8 @@ public abstract class AbstractIpfsInitClient implements SmartLifecycle {
 		if(!ipfsConfig.isStartDaemon()){
 			return;
 		}
+		//检测端口是否被占用,占用后递增端口号
+		InitUtils.configAvailablePort(ipfsConfig);
 		//修改默认端口号
 		InitUtils.updateConfig(ipfsConfig);
 		//是否是私有网络

@@ -20,7 +20,6 @@ public class WordUtils {
 
 	/**
 	 * 下划线转驼峰
-	 * @param str
 	 */
 	public static String lineToHump(String str) {
 		if(str == null || str.isEmpty() || !str.contains("_")){
@@ -38,7 +37,6 @@ public class WordUtils {
 
 	/**
 	 * 驼峰转下划线
-	 * @param str
 	 */
 	public static String humpToLine(String str) {
 		Matcher matcher = humpPattern.matcher(str);
@@ -61,8 +59,6 @@ public class WordUtils {
 
 	/**
 	 * 首字母小写
-	 * @param string
-	 * @return
 	 */
 	public static String toLowerCaseIndex(String string) {
 		char[] methodName = string.toCharArray();
@@ -72,7 +68,6 @@ public class WordUtils {
 
 	/**
 	 * 字符转成大写
-	 * @param chars
 	 */
 	public static char toUpperCase(char chars) {
 		if (97 <= chars && chars <= 122) {
@@ -83,7 +78,6 @@ public class WordUtils {
 
 	/**
 	 * 字符转成小写
-	 * @param chars
 	 */
 	public static char toLowerCase(char chars) {
 		if (65 <= chars && chars <= 90) {
@@ -231,8 +225,8 @@ public class WordUtils {
 	/**
 	 * 模拟JS使用的encodeURI
 	 */
-	public static String encodeURI(String str) {
-		String isoStr = null;
+	public static String encodeURI(String str){
+		String isoStr;
 		try {
 			isoStr = new String(str.getBytes(UTF_8.name()), "ISO-8859-1");
 		} catch (UnsupportedEncodingException e) {
@@ -240,7 +234,7 @@ public class WordUtils {
 		}
 		char[] chars = isoStr.toCharArray();
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < chars.length; i++) {
+		for(int i = 0; i < chars.length; i++) {
 			if ((chars[i] <= 'z' && chars[i] >= 'a')
 				|| (chars[i] <= 'Z' && chars[i] >= 'A') || chars[i] == '-'
 				|| chars[i] == '_' || chars[i] == '.' || chars[i] == '!'

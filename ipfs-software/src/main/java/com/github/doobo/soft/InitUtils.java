@@ -21,6 +21,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
@@ -159,7 +160,7 @@ public class InitUtils {
 	public static void delSwarmKey(){
 		String ipfsHome = IPFS_DIR + File.separator + ".ipfs";
 		File file = FileUtils.createFile(ipfsHome, "swarm.key");
-		file.deleteOnExit();
+		FileUtils.deleteFiles(Collections.singletonList(file.getAbsolutePath()));
 	}
 
 	/**
@@ -264,8 +265,10 @@ public class InitUtils {
 		}
 		//修改5001接口
 		String api = TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.API");
-		if(api != null){
+		if(api != null && !api.isEmpty()){
 			String num = WordUtils.getStrEndNumber(api);
+			//初始化时替换一次
+			api = api.replace("127.0.0.1", ipfsConfig.getBindIp());
 			if(num != null) {
 				TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.API", api.replace(num
 					, ipfsConfig.getAdminPort().toString()));
@@ -273,7 +276,8 @@ public class InitUtils {
 		}
 		//修改8080接口
 		String gateway = TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.Gateway");
-		if(gateway != null){
+		if(gateway != null && !gateway.isEmpty()){
+			gateway = gateway.replace("127.0.0.1", ipfsConfig.getBindIp());
 			String num = WordUtils.getStrEndNumber(gateway);
 			if(num != null) {
 				TerminalUtils.syncExecuteStr(IPFS_EXTEND, "config Addresses.Gateway", gateway.replace(num
@@ -353,7 +357,7 @@ public class InitUtils {
 				node.setPort(node.getPort() == null ? m.getPort().toString() : node.getPort());
 				if (OsUtils.checkIpPortOpen(node.getIp(), Integer.parseInt(node.getPort()))) {
 					String ipfs;
-					if(node.getIp() != null &&  "localhost".equals(node.getIp())){
+					if(node.getIp() != null && "localhost".equals(node.getIp())){
 						node.setIp("127.0.0.1");
 					}
 					if (WordUtils.isIpV4Address(node.getIp())) {
@@ -413,6 +417,54 @@ public class InitUtils {
 			return Boolean.TRUE;
 		}
 		return Boolean.FALSE;
+	}
+
+	/**
+	 * 替换可用的端口号
+	 */
+	public static void configAvailablePort(IpfsConfig ipfsConfig){
+		if(ipfsConfig == null){
+			return;
+		}
+		if(ipfsConfig.getPort() == null){
+			ipfsConfig.setPort(14001);
+		}
+		if(ipfsConfig.getAdminPort() == null){
+			ipfsConfig.setAdminPort(15001);
+		}
+		if(ipfsConfig.getHttpPort() == null){
+			ipfsConfig.setHttpPort(18080);
+		}
+		if(StringUtils.isBlank(ipfsConfig.getBindIp())){
+			ipfsConfig.setBindIp("127.0.0.1");
+		}
+		int count = 0;
+		while (OsUtils.checkIpPortOpen(ipfsConfig.getBindIp(), ipfsConfig.getPort())){
+			count ++;
+			ipfsConfig.setPort(ipfsConfig.getPort() + 1);
+			log.warn("change ipfs port:{}", ipfsConfig.getPort());
+			if(count > 10){
+				break;
+			}
+		}
+		count = 0;
+		while (OsUtils.checkIpPortOpen(ipfsConfig.getBindIp(), ipfsConfig.getAdminPort())){
+			count ++;
+			ipfsConfig.setAdminPort(ipfsConfig.getAdminPort() + 1);
+			log.warn("change ipfs admin port:{}", ipfsConfig.getAdminPort());
+			if(count > 10){
+				break;
+			}
+		}
+		count = 0;
+		while (OsUtils.checkIpPortOpen(ipfsConfig.getBindIp(), ipfsConfig.getHttpPort())){
+			count ++;
+			ipfsConfig.setHttpPort(ipfsConfig.getHttpPort() + 1);
+			log.warn("change ipfs http port:{}", ipfsConfig.getHttpPort());
+			if(count > 10){
+				break;
+			}
+		}
 	}
 
 	/**
