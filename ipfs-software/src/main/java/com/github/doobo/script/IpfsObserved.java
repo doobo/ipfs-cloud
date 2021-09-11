@@ -21,13 +21,16 @@ public class IpfsObserved extends Observable {
 
     @PostConstruct
     public void observerRegister() {
-        if(observerList != null && !observerList.isEmpty()) {
-            observerList.stream().filter(f->f instanceof IpfsObserver).forEach(this::addObserver);
-            if(observerList.stream().anyMatch(f -> f instanceof IpfsObserver)){
-                observerList = observerList.stream().filter(f->f instanceof IpfsObserver).collect(Collectors.toList());
-                IS_OBSERVE = true;
-            }
+        if(observerList == null || observerList.isEmpty()) {
+			return;
         }
+		List<Observer> collect = observerList.stream().filter(f -> f instanceof IpfsObserver).collect(Collectors.toList());
+		if(collect.isEmpty()){
+			return;
+		}
+		collect.forEach(this::addObserver);
+		observerList = collect;
+		IS_OBSERVE = true;
     }
 
     /**

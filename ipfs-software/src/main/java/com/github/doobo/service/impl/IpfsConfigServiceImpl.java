@@ -3,7 +3,7 @@ package com.github.doobo.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.doobo.conf.IpfsConfig;
-import com.github.doobo.model.IpfsPubVO;
+import com.github.doobo.jms.ExchangeMsg;
 import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.script.PwdUtils;
 import com.github.doobo.service.IpfsConfigService;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import vip.ipav.okhttp.OkHttpClientTools;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -103,18 +102,22 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 	 * 广播信息
 	 */
 	@Override
-	public ResultTemplate<Boolean> pubMsg(IpfsPubVO vo){
-		if(vo == null){
+	public ResultTemplate<Boolean> pubMsg(ExchangeMsg msg){
+		if(msg == null){
 			return ResultUtils.of(Boolean.FALSE);
 		}
-		vo.setId(SequenceUtils.nextId());
-		vo.setIpfs(InitUtils.getNodeId());
-		vo.setTime(SystemClock.now());
-		if(StringUtils.isBlank(vo.getTopic())) {
-			vo.setTopic(ipfsConfig.getTopic());
+		long id = SequenceUtils.nextId();
+		if(msg.getRequestId() == null){
+			msg.setRequestId(id);
 		}
-		String msg = PwdUtils.encode(JSON.toJSONString(vo),  ipfsConfig.getSm2PublicKey());
-		InitUtils.pubMsg(vo.getTopic(), msg);
+		msg.setMsgId(id);
+		msg.setOriginCid(InitUtils.getNodeId());
+		msg.setTimeStamp(SystemClock.now());
+		if(StringUtils.isBlank(msg.getTopic())) {
+			msg.setTopic(ipfsConfig.getTopic());
+		}
+		String enc = PwdUtils.encode(JSON.toJSONString(msg),  ipfsConfig.getSm2PublicKey());
+		InitUtils.pubMsg(msg.getTopic(), enc);
 		return ResultUtils.of(Boolean.TRUE);
 	}
 }

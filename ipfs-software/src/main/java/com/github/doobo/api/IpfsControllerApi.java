@@ -1,7 +1,7 @@
 package com.github.doobo.api;
 
 import com.github.doobo.conf.IpfsConfig;
-import com.github.doobo.model.IpfsPubVO;
+import com.github.doobo.jms.ExchangeMsg;
 import com.github.doobo.params.ResultTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,7 +32,7 @@ public interface IpfsControllerApi {
 	 * 广播消息
 	 */
 	@PostMapping("/ipfs/pubMsg")
-	ResultTemplate<Boolean> pubMsg(IpfsPubVO vo);
+	ResultTemplate<Boolean> pubMsg(ExchangeMsg vo);
 
 
 }

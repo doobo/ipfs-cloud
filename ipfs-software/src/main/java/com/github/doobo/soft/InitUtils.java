@@ -419,6 +419,8 @@ public class InitUtils {
 	 * 关闭线程池
 	 */
 	public static void closePool(){
-		POOL.shutdownNow();
+		if(!POOL.isShutdown()) {
+			POOL.shutdownNow();
+		}
 	}
 }

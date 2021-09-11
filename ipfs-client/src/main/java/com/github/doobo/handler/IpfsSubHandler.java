@@ -4,13 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.github.doobo.conf.IpfsConfig;
 import com.github.doobo.config.WebSocketServer;
-import com.github.doobo.model.IpfsPubVO;
-import com.github.doobo.model.IpfsSubVO;
+import com.github.doobo.jms.ExchangeMsg;
+import com.github.doobo.jms.RequestTypeEnum;
 import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.script.IpfsJsonVO;
 import com.github.doobo.script.IpfsObserver;
 import com.github.doobo.script.IpfsObserverVO;
 import com.github.doobo.script.PwdUtils;
+import com.github.doobo.soft.InitUtils;
 import com.github.doobo.utils.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,50 +31,28 @@ public class IpfsSubHandler extends IpfsObserver  {
 	private IpfsConfig ipfsConfig;
 
 	@Override
-	public void handleObserver(IpfsObserverVO vo) {
-		try {
-			if(StringUtils.isBlank(vo.getLine())){
-				return;
-			}
-			IpfsJsonVO ipo;
-			try {
-				ipo = JSON.parseObject(vo.getLine(), IpfsJsonVO.class);
-			}catch (JSONException e){
-				log.info("异常数据", e);
-				return;
-			}
-			String msg = ipo.getData();
-			if(StringUtils.isBlank(msg)){
-				return;
-			}
-			String data = PwdUtils.decode(msg, ipfsConfig.getSm2PrivateKey());
-			sendMsg(data, null);
-		} catch (Exception e) {
-			log.warn("SendBroadCastInfoError", e);
+	public IpfsConfig getCurConfig() {
+		return ipfsConfig;
+	}
+
+	@Override
+	public void handleObserver(ExchangeMsg msg) {
+		if(msg == null){
+			return;
 		}
+		sendMsg(msg);
 	}
 
 	/**
 	 * 发送消息格式化
 	 */
-	public void sendMsg(String data, Throwable throwable){
-		if(StringUtils.isBlank(data) && throwable != null){
-			WebSocketServer.broadCastInfo(JSON.toJSONString(ResultUtils.ofThrowable(throwable)));
-		}
-		IpfsSubVO iso = JSON.parseObject(data,  IpfsSubVO.class);
-		if(iso == null){
+	public void sendMsg(ExchangeMsg msg){
+		ResultTemplate<ExchangeMsg> res = ResultUtils.of(msg);
+		if(msg.getRequestType() != null
+			&& RequestTypeEnum.P2P.getType().equalsIgnoreCase(msg.getRequestType())){
+			WebSocketServer.sendMessage(JSON.toJSONString(res), msg.getRequestId());
 			return;
 		}
-		IpfsPubVO ipo = new IpfsPubVO();
-		BeanUtils.copyProperties(iso, ipo);
-		ResultTemplate<IpfsPubVO> res = ResultUtils.of(ipo);
-		if(StringUtils.isNotBlank(iso.getMsg())){
-			res.setOkMessage(iso.getMsg());
-		}
-		if(iso.getToSessionId() != null){
-			WebSocketServer.sendMessage(JSON.toJSONString(res), iso.getToSessionId());
-			return;
-		}
-		WebSocketServer.broadCastInfo(JSON.toJSONString(ResultUtils.of(ipo)));
+		WebSocketServer.broadCastInfo(JSON.toJSONString(res));
 	}
 }

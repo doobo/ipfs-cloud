@@ -1,10 +1,9 @@
 package com.github.doobo.controller;
 
-
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.github.doobo.conf.IpfsConfig;
-import com.github.doobo.model.IpfsPubVO;
+import com.github.doobo.jms.ExchangeMsg;
 import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.service.IpfsConfigService;
 import com.github.doobo.soft.InitUtils;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
-
 
 @Slf4j
 @RestController
@@ -50,7 +48,7 @@ public class IpfsController {
 	 * 发送广播消息
 	 */
 	@PostMapping("ipfs/pubMsg")
-	public ResultTemplate<Boolean> pubMsg(@RequestBody IpfsPubVO vo){
+	public ResultTemplate<Boolean> pubMsg(@RequestBody ExchangeMsg vo){
 		return ipfsConfigService.pubMsg(vo);
 	}
 

@@ -1,7 +1,7 @@
 package com.github.doobo.config;
 
 import com.alibaba.fastjson.JSON;
-import com.github.doobo.model.IpfsSubVO;
+import com.github.doobo.jms.ExchangeMsg;
 import com.github.doobo.soft.SequenceUtils;
 import com.github.doobo.soft.SystemClock;
 import com.github.doobo.utils.ResultUtils;
@@ -36,11 +36,13 @@ public class WebSocketServer {
 	public void onOpen(Session session) {
 		int cnt = OnlineCount.incrementAndGet(); // 在线数加1
 		log.info("有连接加入，当前连接数为：{}", cnt);
-		IpfsSubVO vo = new IpfsSubVO();
-		vo.setId(SequenceUtils.nextId());
-		vo.setTime(SystemClock.now());
-		vo.setFromSessionId(session.getId());
-		SESSION_MAP.put(vo.getId(), session);
+		long id = SequenceUtils.nextId();
+		ExchangeMsg vo = new ExchangeMsg();
+		vo.setMsgId(id);
+		vo.setTimeStamp(SystemClock.now());
+		vo.setSessionId(session.getId());
+		vo.setRequestId(id);
+		SESSION_MAP.put(id, session);
 		sendMessage(session, JSON.toJSONString(ResultUtils.of(vo)));
 	}
 
