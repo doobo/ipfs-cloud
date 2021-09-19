@@ -54,8 +54,8 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 		config.setTopic(null);
 		config.setSwarmKey(null);
 		config.setPath(null);
-		config.setSm2PrivateKey(null);
-		config.setSelfSm2PrivateKey(null);
+		config.setPrivateKey(null);
+		config.setOwnPrivateKey(null);
 		config.setNodes(Collections.singletonList(InitUtils.getIpfsNodeInfo()));
 		return config;
 	}
@@ -115,7 +115,7 @@ public class IpfsConfigServiceImpl implements IpfsConfigService {
 		if(StringUtils.isBlank(msg.getTopic())) {
 			msg.setTopic(ipfsConfig.getTopic());
 		}
-		String enc = PwdUtils.encode(JSON.toJSONString(msg),  ipfsConfig.getSm2PublicKey());
+		String enc = PwdUtils.encode(JSON.toJSONString(msg),  ipfsConfig.getPublicKey());
 		InitUtils.pubMsg(msg.getTopic(), enc);
 		return ResultUtils.of(Boolean.TRUE);
 	}

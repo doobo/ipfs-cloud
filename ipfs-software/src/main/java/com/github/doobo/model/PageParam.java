@@ -13,13 +13,13 @@ import java.util.Map;
  */
 @Data
 @Accessors(chain = true)
-public class PageParam {
+public class PageParam implements java.io.Serializable{
 
 	/**
 	 * 每页显示的条数
 	 */
     @Min(value = 0, message = "每页显示的条数最小为0")
-	@Max(value = 10000, message = "每次查询不超过1W条")
+	@Max(value = 100000, message = "每次查询不超过1W条")
     @JsonProperty("size")
     private Long size = 20L;
 

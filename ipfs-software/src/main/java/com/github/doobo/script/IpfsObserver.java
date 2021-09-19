@@ -56,7 +56,7 @@ public abstract class IpfsObserver implements Observer {
 			if(curConfig == null){
 				return;
 			}
-			msg = PwdUtils.decode(msg, curConfig.getSm2PrivateKey());
+			msg = PwdUtils.decode(msg, curConfig.getPrivateKey());
 			if(msg == null || msg.isEmpty()){
 				return;
 			}

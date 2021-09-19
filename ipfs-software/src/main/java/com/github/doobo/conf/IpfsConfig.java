@@ -91,11 +91,11 @@ public class IpfsConfig {
 	 */
 	private Integer delay;
 
-	private String sm2PublicKey;
+	private String publicKey;
 
-	private String sm2PrivateKey;
+	private String privateKey;
 
-	private String selfSm2PublicKey;
+	private String ownPublicKey;
 
-	private String selfSm2PrivateKey;
+	private String ownPrivateKey;
 }
