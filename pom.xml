@@ -2,19 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.10.RELEASE</version>
-        <relativePath />
-    </parent>
-
     <groupId>ipfs.cloud</groupId>
     <artifactId>ipfs-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.3-SNAPSHOT</version>
 
-    <name>ipfs-parent</name>
+    <name>ipfs-cloud</name>
     <url>https://gitee.com/doobo/ipfs-cloud</url>
     <description>一个基于IPFS的全球分布式文件系统，也是一个简单的MQ中间件，可用于直播本地推流，全球实时同步，多区域内网融合等</description>
 
@@ -58,18 +51,19 @@
     </distributionManagement>
 
     <properties>
+        <lombok.version>1.18.12</lombok.version>
         <apache.exec.version>1.3</apache.exec.version>
         <apache.compress.version>1.20</apache.compress.version>
         <commons.lang3.version>3.8.1</commons.lang3.version>
         <json.path.version>2.4.0</json.path.version>
-        <fast.json.version>1.2.68</fast.json.version>
+        <fast.json.version>1.2.78</fast.json.version>
         <elfinder.version>1.4</elfinder.version>
         <okhttp.tools.version>1.2</okhttp.tools.version>
         <apache.http.version>4.5.13</apache.http.version>
         <bboss.version>6.2.0</bboss.version>
         <hutool.crypto.version>5.7.10</hutool.crypto.version>
         <bouncycastle.version>1.69</bouncycastle.version>
-        <spring.boot.version>2.2.6.RELEASE</spring.boot.version>
+        <spring.boot.version>2.6.2</spring.boot.version>
         <spring-cloud.version>Hoxton.SR11</spring-cloud.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -86,12 +80,13 @@
     </properties>
 
     <modules>
-        <module>ipfs-common</module>
-        <module>ipfs-software</module>
-        <module>ipfs-client</module>
-        <module>ipfs-mirror</module>
+        <module>ipfs-cloud-common</module>
+        <module>ipfs-cloud-platform</module>
+        <module>ipfs-cloud-client</module>
+        <module>ipfs-cloud-mirror</module>
         <module>ipfs-search-es</module>
-        <module>ipfs-register</module>
+        <module>ipfs-cloud-register</module>
+        <module>ipfs-cloud-core</module>
     </modules>
 
     <dependencyManagement>
@@ -100,6 +95,13 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

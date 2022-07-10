@@ -7,9 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ipfs-search-es</artifactId>
-
-    <properties />
+    <artifactId>ipfs-cloud-client</artifactId>
 
     <dependencies>
         <dependency>
@@ -51,44 +49,21 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>ipfs.cloud</groupId>
             <artifactId>ipfs-cloud-paltform</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
-        </dependency>
-
-        <!--bboss-->
-        <dependency>
-            <groupId>com.bbossgroups.plugins</groupId>
-            <artifactId>bboss-elasticsearch-rest-jdbc</artifactId>
-            <version>${bboss.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.bbossgroups.plugins</groupId>
-            <artifactId>bboss-elasticsearch-spring-boot-starter</artifactId>
-            <version>${bboss.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.slf4j</groupId>
-                    <artifactId>slf4j-log4j12</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.vaadin.external.google</groupId>
-                    <artifactId>android-json</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
@@ -100,5 +75,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

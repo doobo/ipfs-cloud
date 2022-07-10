@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ipfs-parent</artifactId>
+        <groupId>ipfs.cloud</groupId>
+        <version>1.3-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>ipfs-cloud-paltform</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>ipfs-cloud-win</module>
+        <module>ipfs-cloud-mac</module>
+        <module>ipfs-cloud-linux</module>
+        <module>ipfs-cloud-union</module>
+        <module>ipfs-cloud-api</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>ipfs.cloud</groupId>
+            <artifactId>ipfs-cloud-union</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ipfs.cloud</groupId>
+            <artifactId>ipfs-cloud-linux</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ipfs.cloud</groupId>
+            <artifactId>ipfs-cloud-mac</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ipfs.cloud</groupId>
+            <artifactId>ipfs-cloud-win</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
