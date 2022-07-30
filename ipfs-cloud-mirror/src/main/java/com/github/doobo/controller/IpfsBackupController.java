@@ -1,6 +1,6 @@
 package com.github.doobo.controller;
 
-import com.github.doobo.api.IpfsBackupControllerApi;
+import com.github.doobo.handler.IpfsBackupControllerApi;
 import com.github.doobo.model.IpfsFileInfo;
 import com.github.doobo.params.ResultTemplate;
 import com.github.doobo.service.IpfsBackupService;

@@ -3,7 +3,7 @@ package ipfs.common;
 import com.github.doobo.utils.CommonUtils;
 import com.github.doobo.weight.WeightParent;
 import com.github.doobo.weight.WeightRandom;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;

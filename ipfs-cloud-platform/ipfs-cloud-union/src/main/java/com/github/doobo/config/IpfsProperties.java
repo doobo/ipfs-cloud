@@ -1,20 +1,18 @@
-package com.github.doobo.model;
+package com.github.doobo.config;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
- * ipfs常用基本配置
+ * IPFS基本配置
+ *
+ * @Description: ipfs-cloud
+ * @User: doobo
+ * @Time: 2022-07-30 21:26
  */
 @Data
-@Component
-@Accessors(chain = true)
 @ConfigurationProperties(prefix = "ipfs")
-public class IpfsConfig {
+public class IpfsProperties {
 
 	/**
 	 * ipfs默认寻址地址
@@ -60,11 +58,6 @@ public class IpfsConfig {
 	 * 是否写.ipfs文件
 	 */
 	private boolean writeFile;
-
-	/**
-	 * 节点信息
-	 */
-	private List<Node> nodes;
 
 	/**
 	 * 广播节点

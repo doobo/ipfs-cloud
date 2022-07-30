@@ -10,7 +10,7 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import vip.ipav.okhttp.OkHttpClientTools;
 
 import java.io.*;

@@ -1,6 +1,6 @@
 package com.github.doobo.controller;
 
-import com.github.doobo.api.IpfsSearchControllerApi;
+import com.github.doobo.handler.IpfsSearchControllerApi;
 import com.github.doobo.model.IpfsFileInfo;
 import com.github.doobo.model.SearchVO;
 import com.github.doobo.params.DirectReturnException;

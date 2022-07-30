@@ -6,7 +6,7 @@ import cn.hutool.crypto.SmUtil;
 import cn.hutool.crypto.asymmetric.SM2;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * sm2简单测试

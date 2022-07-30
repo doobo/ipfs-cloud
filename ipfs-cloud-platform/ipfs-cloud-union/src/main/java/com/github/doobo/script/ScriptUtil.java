@@ -1,6 +1,5 @@
 package com.github.doobo.script;
 
-import lombok.experimental.PackagePrivate;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -22,13 +21,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * 4、python 异常输出优先级高于标准输出，体现在Log文件中，因此推荐通过logging方式打日志保持和异常信息一致；否则用prinf日志顺序会错乱
  */
 @Slf4j
-@PackagePrivate
-public class ScriptUtil {
+public abstract class ScriptUtil {
 
 	/**
 	 * 超时时间
 	 */
-	private static Long TIMEOUT_TIME = 60 * 1000L;
+	private final static Long TIMEOUT_TIME = 60 * 1000L;
 
 	/**
 	 * make script file

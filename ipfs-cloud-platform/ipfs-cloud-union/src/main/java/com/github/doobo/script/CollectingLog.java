@@ -23,11 +23,6 @@ public class CollectingLog extends LogOutputStream {
 
 	@Override
 	protected void processLine(String line, int level) {
-		/*if(IpfsObservedUtils.isObserver()){
-			IpfsObserverVO vo = new IpfsObserverVO();
-			vo.setTag(tag).setLine(line).setLevel(level);
-			IpfsObservedUtils.getInstance().sendCmdResult(vo);
-		}*/
 		log.debug("日志级别{}：{}",level,line);
 	}
 }

@@ -8,6 +8,26 @@
     <artifactId>ipfs-cloud-api</artifactId>
     <version>1.3-SNAPSHOT</version>
 
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <lombok.version>1.18.16</lombok.version>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>ipfs.cloud</groupId>
+            <artifactId>ipfs-cloud-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
