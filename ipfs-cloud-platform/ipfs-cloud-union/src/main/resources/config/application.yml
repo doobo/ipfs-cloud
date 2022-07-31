@@ -1,20 +1,9 @@
 server:
-  port: 6103
   servlet:
     encoding:
       charset: UTF-8
       enabled: true
       force: true
-
-spring:
-  application:
-    name: ipfs-client
-  profiles:
-    active: dev
-  servlet:
-    multipart:
-      max-file-size: 10GB
-      max-request-size: 30GB
 
 ipfs:
   port: 14001

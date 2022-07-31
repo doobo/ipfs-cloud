@@ -9,4 +9,9 @@ package com.github.doobo.bo;
  */
 public abstract class StaticIpfsConstant {
 
+	/**
+	 * IPFS所在目录
+	 */
+	public static String IPFS_DIR = ".ipfs";
+
 }

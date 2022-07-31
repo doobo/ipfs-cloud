@@ -1,7 +1,8 @@
-package com.github.doobo.config;
+package com.github.doobo.bo;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
 
 /**
  * IPFS基本配置
@@ -11,13 +12,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @Time: 2022-07-30 21:26
  */
 @Data
-@ConfigurationProperties(prefix = "ipfs")
-public class IpfsProperties {
+public class IpfsProperties implements java.io.Serializable{
 
 	/**
 	 * ipfs默认寻址地址
 	 */
-	private String[] bootstrap;
+	private List<String> bootstrap;
 
 	/**
 	 * ipfs的通信端口号

@@ -114,9 +114,7 @@ public class PlatformInitFactory {
             return ResultUtils.ofFail("未匹配到执行器");
         }
         try {
-            Optional.ofNullable(tuple)
-                    .ifPresent(c -> Optional.ofNullable(c.beforeTuple(handler))
-                        .ifPresent(n -> n.accept(request)));
+            Optional.ofNullable(tuple).flatMap(c -> Optional.ofNullable(c.beforeTuple(handler))).ifPresent(n -> n.accept(request));
             return fun.apply(handler);
         }catch (Throwable e){
             if(Objects.isNull(tuple)){
@@ -128,9 +126,7 @@ public class PlatformInitFactory {
             }
             orElse.accept(request);
         }finally {
-            Optional.ofNullable(tuple)
-                    .ifPresent(c -> Optional.ofNullable(c.endTuple(handler))
-                        .ifPresent(n->n.accept(request)));
+            Optional.ofNullable(tuple).flatMap(c -> Optional.ofNullable(c.endTuple(handler))).ifPresent(n -> n.accept(request));
         }
         return ResultUtils.ofFail("方法执行异常");
     }
@@ -158,7 +154,7 @@ public class PlatformInitFactory {
 	/**
 	 * SPI注册所有实现类
 	 */
-	public static synchronized List<PlatformInitHandler> registerHandlerList() {
+	public static synchronized void registerHandlerList() {
 		ServiceLoader<PlatformInitHandler> filtersImplements = ServiceLoader.load(PlatformInitHandler.class);
 		List<PlatformInitHandler> receiptHandlerList = new ArrayList<>();
 		//把找到的所有的Filter的实现类放入List中
@@ -166,10 +162,14 @@ public class PlatformInitFactory {
 			receiptHandlerList.add(filtersImplement);
 		}
 		if(isEmpty(receiptHandlerList)){
-			return receiptHandlerList;
+			return;
 		}
 		receiptHandlerList.sort(Comparator.comparing(PlatformInitHandler::getPhase));
 		addHandlerList(receiptHandlerList);
-		return receiptHandlerList;
+	}
+
+	//注册处理器
+	static {
+		registerHandlerList();
 	}
 }

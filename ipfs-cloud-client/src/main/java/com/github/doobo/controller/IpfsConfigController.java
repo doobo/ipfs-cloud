@@ -17,5 +17,4 @@ public class IpfsConfigController {
 		mv.setViewName("redirect:/fm.html#elf_A_");
 		return mv;
 	}
-
 }

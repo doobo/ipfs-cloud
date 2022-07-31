@@ -1,0 +1,83 @@
+{
+  "properties": [
+    {
+      "name": "ipfs.port",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.port."
+    },
+    {
+      "name": "ipfs.adminPort",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.adminPort."
+    },
+    {
+      "name": "ipfs.httpPort",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.httpPort."
+    },
+    {
+      "name": "ipfs.bindIp",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.bindIp."
+    },
+    {
+      "name": "ipfs.privateNetwork",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.privateNetwork."
+    },
+    {
+      "name": "ipfs.startDaemon",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.startDaemon."
+    },
+    {
+      "name": "ipfs.writeFile",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.writeFile."
+    },
+    {
+      "name": "ipfs.swarmKey",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.swarmKey."
+    },
+    {
+      "name": "ipfs.topic",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.topic."
+    },
+    {
+      "name": "ipfs.path",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.path."
+    },
+    {
+      "name": "ipfs.cron",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.cron."
+    },
+    {
+      "name": "ipfs.fixedDelay",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.fixedDelay."
+    },
+    {
+      "name": "ipfs.delay",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.delay."
+    },
+    {
+      "name": "ipfs.publicKey",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.publicKey."
+    },
+    {
+      "name": "ipfs.privateKey",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.privateKey."
+    },
+    {
+      "name": "ipfs.bootstrap",
+      "type": "java.lang.String",
+      "description": "Description for ipfs.bootstrap."
+    }
+  ] }

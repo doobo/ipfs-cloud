@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ipfs-mirror</artifactId>
+    <artifactId>ipfs-cloud-mirror</artifactId>
 
     <dependencies>
         <dependency>
@@ -50,7 +50,7 @@
 
         <dependency>
             <groupId>ipfs.cloud</groupId>
-            <artifactId>ipfs-cloud-paltform</artifactId>
+            <artifactId>ipfs-cloud-platform</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

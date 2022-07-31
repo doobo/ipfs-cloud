@@ -1,4 +1,4 @@
-package com.github.doobo.scan;
+package com.github.doobo.config;
 
 import cn.yours.elfinder.ElFinderConstants;
 import cn.yours.elfinder.configuration.CmdObserver;
@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-
-
 
 @Slf4j
 @Component

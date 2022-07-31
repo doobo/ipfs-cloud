@@ -52,7 +52,7 @@
 
         <dependency>
             <groupId>ipfs.cloud</groupId>
-            <artifactId>ipfs-cloud-paltform</artifactId>
+            <artifactId>ipfs-cloud-platform</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

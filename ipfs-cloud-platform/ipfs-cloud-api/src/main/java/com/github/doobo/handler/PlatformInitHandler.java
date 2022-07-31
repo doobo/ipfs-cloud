@@ -1,6 +1,9 @@
 package com.github.doobo.handler;
 
 import com.github.doobo.bo.PlatformInitRequest;
+import com.github.doobo.bo.PlatformInitResponse;
+import com.github.doobo.bo.PlatformStartRequest;
+import com.github.doobo.vbo.ResultTemplate;
 
 /**
  * 平台初始化处理器
@@ -20,10 +23,44 @@ public interface PlatformInitHandler {
 		return DEFAULT_PHASE;
 	}
 
+	default String getName(){
+		return this.getClass().getName();
+	}
+
 	/**
 	 * 简单判断处理器是否匹配
 	 */
 	default boolean matching(PlatformInitRequest request){
-		return Boolean.TRUE;
+		return Boolean.FALSE;
 	}
+
+	/**
+	 * 初始化IPFS
+	 */
+	ResultTemplate<PlatformInitResponse> initIpfs(PlatformInitRequest request);
+
+	/**
+	 * 启动IPFS
+	 */
+	ResultTemplate<PlatformInitResponse> startIpfs(PlatformStartRequest request);
+
+	/**
+	 * 	停止IPFS
+	 */
+	ResultTemplate<PlatformInitResponse> stopIpfs(PlatformStartRequest request);
+
+	/**
+	 * 重启IPFS
+	 */
+	ResultTemplate<PlatformInitResponse> restartIpfs(PlatformStartRequest request);
+
+	/**
+	 * 开启监听
+	 */
+	ResultTemplate<PlatformInitResponse> startTopic(PlatformInitRequest request);
+
+	/**
+	 * 停止监听
+	 */
+	ResultTemplate<PlatformInitResponse> stopTopic(PlatformInitRequest request);
 }

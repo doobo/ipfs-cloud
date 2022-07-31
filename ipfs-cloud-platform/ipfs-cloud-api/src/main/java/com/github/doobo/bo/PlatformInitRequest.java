@@ -22,9 +22,9 @@ public class PlatformInitRequest implements java.io.Serializable {
 	private String osName;
 
 	/**
-	 * IPFS包解压目录
+	 * IPFS初始化目录
 	 */
-	private String zipDir;
+	private String initDir;
 
 	/**
 	 * 启动扩展参数

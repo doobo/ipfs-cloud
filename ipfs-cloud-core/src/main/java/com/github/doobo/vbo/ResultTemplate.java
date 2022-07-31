@@ -120,4 +120,16 @@ public class ResultTemplate<T> implements Serializable {
     public void setClueId(String clueId) {
         this.clueId = clueId;
     }
+
+	@Override
+	public String toString() {
+		return "{" +
+			"success=" + success +
+			", result=" + result +
+			", message='" + message + '\'' +
+			", errorCode='" + errorCode + '\'' +
+			", errorMessage='" + errorMessage + '\'' +
+			", clueId='" + clueId + '\'' +
+			'}';
+	}
 }

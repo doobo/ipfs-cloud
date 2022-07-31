@@ -1,4 +1,4 @@
-package com.github.doobo.scan;
+package com.github.doobo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

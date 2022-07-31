@@ -22,7 +22,7 @@ public class IpfsNodeInfo implements java.io.Serializable{
 
 	private String cid;
 
-	private List<String> ipfs;
+	private List<String> address;
 
 	private String agentVersion;
 

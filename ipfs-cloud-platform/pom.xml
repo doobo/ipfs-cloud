@@ -7,7 +7,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ipfs-cloud-paltform</artifactId>
+    <artifactId>ipfs-cloud-platform</artifactId>
     <packaging>pom</packaging>
 
     <modules>
