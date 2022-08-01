@@ -42,7 +42,7 @@ public class IpfsProperties implements java.io.Serializable{
 	/**
 	 * 是否私有网络
 	 */
-	private boolean privateNetwork;
+	private Boolean privateNetwork;
 
 	/**
 	 * 私有秘钥
@@ -52,12 +52,12 @@ public class IpfsProperties implements java.io.Serializable{
 	/**
 	 * 是否启动go-ipfs
 	 */
-	private boolean startDaemon;
+	private Boolean startDaemon;
 
 	/**
 	 * 是否写.ipfs文件
 	 */
-	private boolean writeFile;
+	private Boolean writeFile;
 
 	/**
 	 * 广播节点
@@ -72,7 +72,7 @@ public class IpfsProperties implements java.io.Serializable{
 	/**
 	 * 启用定时任务
 	 */
-	private boolean cron;
+	private Boolean cron;
 
 	/**
 	 *  间隔多少时间执行，单位秒

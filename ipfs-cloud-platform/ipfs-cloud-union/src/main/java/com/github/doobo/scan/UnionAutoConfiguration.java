@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @AutoConfigureOrder(PlatformInitHandler.DEFAULT_PHASE)
 @ComponentScans({@ComponentScan("com.github.doobo.factory")
 	,@ComponentScan("com.github.doobo.config")
+	,@ComponentScan("com.github.doobo.controller")
 })
 public class UnionAutoConfiguration {
 }

@@ -2,6 +2,7 @@ package com.github.doobo.controller;
 
 import com.github.doobo.bo.IpfsProperties;
 import com.github.doobo.config.IpfsInitConfig;
+import com.github.doobo.config.IpfsInitDefaultConfig;
 import com.github.doobo.factory.PlatformInitFactory;
 import com.github.doobo.handler.PlatformInitHandler;
 import com.github.doobo.utils.ResultUtils;
@@ -15,6 +16,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/ipfs/union")
 public class UnionPageController {
+
+	/**
+	 * 获取IPFS默认属性
+	 */
+	@GetMapping("/default")
+	public ResultTemplate<IpfsProperties> getDefaultProperties(){
+		return ResultUtils.of(IpfsInitDefaultConfig.getDefaultIpfsProperties());
+	}
+
 
 	/**
 	 * 获取IPFS基本属性
