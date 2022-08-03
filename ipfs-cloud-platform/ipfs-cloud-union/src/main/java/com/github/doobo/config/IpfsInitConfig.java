@@ -41,7 +41,7 @@ public class IpfsInitConfig {
 		properties.setAdminPort(Optional.ofNullable(properties.getAdminPort()).orElse(defaultIpfsProperties.getAdminPort()));
 		properties.setHttpPort(Optional.ofNullable(properties.getHttpPort()).orElse(defaultIpfsProperties.getHttpPort()));
 		properties.setBindIp(Optional.ofNullable(properties.getBindIp()).orElse(defaultIpfsProperties.getBindIp()));
-		properties.setPath(Optional.ofNullable(properties.getPath()).orElse(defaultIpfsProperties.getPath()));
+		properties.setInitDir(Optional.ofNullable(properties.getInitDir()).orElse(defaultIpfsProperties.getInitDir()));
 		properties.setPrivateNetwork(Optional.ofNullable(properties.getPrivateNetwork()).orElse(defaultIpfsProperties.getPrivateNetwork()));
 		properties.setStartDaemon(Optional.ofNullable(properties.getStartDaemon()).orElse(defaultIpfsProperties.getStartDaemon()));
 		properties.setSwarmKey(Optional.ofNullable(properties.getSwarmKey()).orElse(defaultIpfsProperties.getSwarmKey()));

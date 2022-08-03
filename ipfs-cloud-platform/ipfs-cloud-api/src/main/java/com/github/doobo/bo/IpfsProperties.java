@@ -67,7 +67,7 @@ public class IpfsProperties implements java.io.Serializable{
 	/**
 	 * ipfs 初始化路径
 	 */
-	private String path;
+	private String initDir;
 
 	/**
 	 * 启用定时任务

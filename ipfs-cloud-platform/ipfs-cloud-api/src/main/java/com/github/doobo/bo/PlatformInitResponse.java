@@ -11,4 +11,18 @@ public class PlatformInitResponse implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 配置目录:.ipfs
+	 */
+	private String ipfsDir;
+
+	/**
+	 * 程序路径
+	 */
+	private String ipfsPath;
+
+	/**
+	 * 节点信息
+	 */
+	private IpfsNodeInfo info;
 }

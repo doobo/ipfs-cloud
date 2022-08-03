@@ -2,7 +2,9 @@ package com.github.doobo.bo;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 平台初始化入参
@@ -22,17 +24,21 @@ public class PlatformInitRequest implements java.io.Serializable {
 	private String osName;
 
 	/**
-	 * IPFS初始化目录
-	 */
-	private String initDir;
-
-	/**
 	 * 启动扩展参数
 	 */
 	private List<String> extParams;
 
 	/**
-	 * 节点信息
+	 * 启动参数配置
 	 */
-	private IpfsNodeInfo info;
+	private IpfsProperties properties;
+
+	/**
+	 * 添加扩展参数
+	 */
+	public PlatformInitRequest addExtParam(String code){
+		extParams = Optional.ofNullable(extParams).orElseGet(ArrayList::new);
+		extParams.add(code);
+		return this;
+	}
 }

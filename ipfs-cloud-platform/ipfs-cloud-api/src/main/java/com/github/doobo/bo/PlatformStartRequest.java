@@ -10,5 +10,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class PlatformStartRequest extends PlatformInitRequest{
 
-	private IpfsProperties properties;
+	/**
+	 * 节点信息
+	 */
+	private IpfsNodeInfo info;
 }

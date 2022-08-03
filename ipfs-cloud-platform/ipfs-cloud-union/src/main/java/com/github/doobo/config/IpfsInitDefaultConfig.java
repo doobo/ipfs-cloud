@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinWorkerThread;
+
 /**
  * IPFS默认配置
  *
@@ -30,4 +33,24 @@ public class IpfsInitDefaultConfig {
 	public static IpfsProperties getDefaultIpfsProperties() {
 		return (IpfsProperties)SpringUtil.getBean("defaultIpfsProperties");
 	}
+
+	private static class CustomForkJoinWorkerThread extends ForkJoinWorkerThread {
+		CustomForkJoinWorkerThread(ForkJoinPool pool) {
+			super(pool);
+			setContextClassLoader(Thread.currentThread().getContextClassLoader());
+		}
+	}
+
+	/**
+	 * 创建线程池
+	 */
+	public static ForkJoinPool createForkJoinPool() {
+		return new ForkJoinPool(
+			ForkJoinPool.getCommonPoolParallelism(),
+			CustomForkJoinWorkerThread::new,
+			null,
+			true
+		);
+	}
+
 }

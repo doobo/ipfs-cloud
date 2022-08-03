@@ -9,20 +9,20 @@ import com.github.doobo.vbo.ResultTemplate;
 import java.util.Objects;
 
 /**
- * Mac系统处理器
+ * Linux系统处理器
  *
  * @Description: ipfs-cloud
  * @User: doobo
- * @Time: 2022-08-03 16:48
+ * @Time: 2022-08-03 16:42
  */
-public class PlatformInitMacHandler extends AbstractPlatformInitHandler {
+public class PlatformInitLinuxHandler extends AbstractPlatformInitHandler {
 
 	@Override
 	public boolean matching(PlatformInitRequest request) {
 		if(Objects.isNull(request) || Objects.isNull(request.getOsName())){
 			return Boolean.FALSE;
 		}
-		return request.getOsName().startsWith("Mac OS");
+		return !request.getOsName().startsWith("Mac OS") && !request.getOsName().startsWith("Windows");
 	}
 
 	@Override
