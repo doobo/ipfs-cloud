@@ -1,5 +1,7 @@
 package com.github.doobo.bo;
 
+import lombok.Data;
+
 /**
  * 启动返回参数
  *
@@ -7,6 +9,7 @@ package com.github.doobo.bo;
  * @User: doobo
  * @Time: 2022-07-29 11:28
  */
+@Data
 public class PlatformInitResponse implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1L;

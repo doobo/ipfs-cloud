@@ -34,8 +34,7 @@
 
         <dependency>
             <groupId>ipfs.cloud</groupId>
-            <artifactId>ipfs-cloud-platform</artifactId>
-            <type>pom</type>
+            <artifactId>ipfs-cloud-union</artifactId>
             <version>${project.version}</version>
         </dependency>
 

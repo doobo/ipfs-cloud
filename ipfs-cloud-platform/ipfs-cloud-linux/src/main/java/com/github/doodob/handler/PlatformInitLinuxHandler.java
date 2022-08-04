@@ -36,22 +36,7 @@ public class PlatformInitLinuxHandler extends AbstractPlatformInitHandler {
 	}
 
 	@Override
-	public ResultTemplate<PlatformInitResponse> stopIpfs(PlatformStartRequest request) {
-		return null;
-	}
-
-	@Override
-	public ResultTemplate<PlatformInitResponse> restartIpfs(PlatformStartRequest request) {
-		return null;
-	}
-
-	@Override
 	public ResultTemplate<PlatformInitResponse> startTopic(PlatformInitRequest request) {
-		return null;
-	}
-
-	@Override
-	public ResultTemplate<PlatformInitResponse> stopTopic(PlatformInitRequest request) {
 		return null;
 	}
 }

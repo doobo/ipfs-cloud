@@ -47,7 +47,7 @@ public interface PlatformInitHandler {
 	/**
 	 * 	停止IPFS
 	 */
-	ResultTemplate<PlatformInitResponse> stopIpfs(PlatformStartRequest request);
+	ResultTemplate<Boolean> stopIpfs(PlatformStartRequest request);
 
 	/**
 	 * 重启IPFS
@@ -62,5 +62,5 @@ public interface PlatformInitHandler {
 	/**
 	 * 停止监听
 	 */
-	ResultTemplate<PlatformInitResponse> stopTopic(PlatformInitRequest request);
+	ResultTemplate<Boolean> stopTopic(PlatformInitRequest request);
 }
