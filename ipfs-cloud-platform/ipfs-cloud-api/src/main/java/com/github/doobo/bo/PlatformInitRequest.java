@@ -41,4 +41,12 @@ public class PlatformInitRequest implements java.io.Serializable {
 		extParams.add(code);
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		return "PlatformInitRequest{" +
+			"osName='" + osName + '\'' +
+			", extParams=" + extParams +
+			'}';
+	}
 }

@@ -14,4 +14,12 @@ public class PlatformStartRequest extends PlatformInitRequest{
 	 * 节点信息
 	 */
 	private IpfsNodeInfo info;
+
+	@Override
+	public String toString() {
+		return "PlatformStartRequest{" +
+			"osName='" + this.getOsName() + '\'' +
+			", extParams=" + this.getExtParams() +
+			'}';
+	}
 }

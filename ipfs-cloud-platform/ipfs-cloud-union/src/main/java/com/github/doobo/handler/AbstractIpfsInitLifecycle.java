@@ -7,6 +7,7 @@ import com.github.doobo.vbo.ResultTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.SmartLifecycle;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -29,7 +30,7 @@ public abstract class AbstractIpfsInitLifecycle implements SmartLifecycle {
 	@Override
 	public void start() {
 		isRunning = true;
-		log.info("AbstractIpfsInitLifecycle start...");
+		log.info("ipfs init server start...");
 		PlatformStartRequest request = new PlatformStartRequest();
 		request.setOsName(System.getProperty("os.name"));
 		ResultTemplate<PlatformInitResponse> result = AbstractPlatformInitHandler.initAndStartIpfs(request);
@@ -39,7 +40,7 @@ public abstract class AbstractIpfsInitLifecycle implements SmartLifecycle {
 	@Override
 	public void stop() {
 		isRunning = false;
-		log.info("AbstractIpfsInitLifecycle stop...");
+		log.info("ipfs init server stop...");
 		PlatformStartRequest request = new PlatformStartRequest();
 		request.setOsName(System.getProperty("os.name"));
 		ResultTemplate<Boolean> template = PlatformInitFactory.executeHandler(request, handler -> handler.stopIpfs(request));
