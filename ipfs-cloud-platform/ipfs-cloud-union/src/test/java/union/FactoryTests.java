@@ -3,11 +3,14 @@ package union;
 import com.github.doobo.bo.PlatformInitRequest;
 import com.github.doobo.bo.PlatformInitResponse;
 import com.github.doobo.factory.PlatformInitFactory;
+import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.vbo.HookTuple;
 import com.github.doobo.vbo.ResultTemplate;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class FactoryTests {
@@ -47,5 +50,13 @@ public class FactoryTests {
 		ResultTemplate<PlatformInitResponse> result = PlatformInitFactory
 			.executeHandler(request, handler -> handler.initIpfs(request), hook);
 		System.out.println(result);
+	}
+
+	@Test
+	public void testScript(){
+		String result = ScriptUtil.execNotHandleQuoting("/Users/diding/other/ipfs-cloud/data/go-ipfs/ipfs"
+			, "-c", "/Users/diding/other/ipfs-cloud/data/.ipfs"
+			, "config", "Addresses.Swarm", "--json", "[\"/ip6/::/tcp/4001\"]");
+		Optional.ofNullable(result).filter(StringUtils::isNotBlank).ifPresent(System.out::println);
 	}
 }

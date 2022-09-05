@@ -9,7 +9,7 @@ ipfs:
     writeFile: true
     swarmKey: '/key/swarm/psk/1.0.0/\n/base16/\na948088bcc8b6f603a2dd062a9db57db0140c4ea88075729e5605e3d3ddb4eac'
     topic: 145ee96d-fea0-4555-8573-db2ce1dd7e55
-    initDir: .ipfs
+    initDir: data
     cron: true
     fixedDelay: 600
     delay: 10

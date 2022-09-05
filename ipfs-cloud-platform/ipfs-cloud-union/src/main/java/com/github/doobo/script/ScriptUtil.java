@@ -5,7 +5,6 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.springframework.util.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -79,7 +78,7 @@ public abstract class ScriptUtil {
 
 	public static int execCmd(String command, String scriptFile, String[] params, PumpStreamHandler streamHandler) throws IOException {
 		CommandLine commandline = new CommandLine(command);
-		if(!StringUtils.isEmpty(scriptFile)){
+		if(!isBlank(scriptFile)){
 			commandline.addArgument(scriptFile);
 		}
 		if (params != null && params.length > 0) {
@@ -97,7 +96,7 @@ public abstract class ScriptUtil {
 	 */
 	public static int execCmd(String command, String scriptFile, String[] params, PumpStreamHandler streamHandler, Long timeout) throws IOException {
 		CommandLine commandline = new CommandLine(command);
-		if(!StringUtils.isEmpty(scriptFile)){
+		if(!isBlank(scriptFile)){
 			commandline.addArgument(scriptFile);
 		}
 		if(timeout == null){
@@ -105,6 +104,29 @@ public abstract class ScriptUtil {
 		}
 		if (params != null && params.length > 0) {
 			commandline.addArguments(params);
+		}
+		// execCmd
+		DefaultExecutor exec = new DefaultExecutor();
+		exec.setExitValues(null);
+		ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
+		exec.setWatchdog(watchdog);
+		exec.setStreamHandler(streamHandler);
+		return exec.execute(commandline);
+	}
+
+	/**
+	 * 指定超时时间
+	 */
+	public static int execCmd(String command, String scriptFile, String[] params, PumpStreamHandler streamHandler, Long timeout, boolean handleQuoting) throws IOException {
+		CommandLine commandline = new CommandLine(command);
+		if(!isBlank(scriptFile)){
+			commandline.addArgument(scriptFile);
+		}
+		if(timeout == null){
+			timeout = TIMEOUT_TIME;
+		}
+		if (params != null && params.length > 0) {
+			commandline.addArguments(params, handleQuoting);
 		}
 		// execCmd
 		DefaultExecutor exec = new DefaultExecutor();
@@ -156,6 +178,54 @@ public abstract class ScriptUtil {
 	}
 
 	/**
+	 *直接返回字符串
+	 */
+	public static String execToString(String command, Long timeout, String... params) {
+		// 标准输出：print （null if watchdog timeout）
+		// 错误输出：logging + 异常 （still exists if watchdog timeout）
+		// 标准输入
+		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+			PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, outputStream);
+			execCmd(command, "", params, streamHandler, timeout);
+			return outputStream.toString(UTF_8.name());
+		} catch (Exception e) {
+			log.warn("execToStringError", e);
+		}
+		return null;
+	}
+
+	/**
+	 *直接返回字符串
+	 */
+	public static String execDefaultTime(String command, String... params) {
+		// 标准输出：print （null if watchdog timeout）
+		// 错误输出：logging + 异常 （still exists if watchdog timeout）
+		// 标准输入
+		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+			PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, outputStream);
+			execCmd(command, "", params, streamHandler, TIMEOUT_TIME);
+			return outputStream.toString(UTF_8.name());
+		} catch (Exception e) {
+			log.warn("execToStringError", e);
+		}
+		return null;
+	}
+
+	/**
+	 *直接返回字符串,不转义参数
+	 */
+	public static String execNotHandleQuoting(String command, String... params) {
+		try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()){
+			PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, outputStream);
+			execCmd(command, "", params, streamHandler, TIMEOUT_TIME, false);
+			return outputStream.toString(UTF_8.name());
+		} catch (Exception e) {
+			log.warn("execToStringError", e);
+		}
+		return null;
+	}
+
+	/**
 	 *直接返回二进制流
 	 */
 	public static byte[] execToByte(String command, String scriptFile, Long timeout, String... params) {
@@ -170,6 +240,21 @@ public abstract class ScriptUtil {
 			log.warn("execToStringError", e);
 		}
 		return null;
+	}
+
+	public static boolean isBlank(CharSequence cs) {
+		int strLen;
+		if (cs != null && (strLen = cs.length()) != 0) {
+			for(int i = 0; i < strLen; ++i) {
+				if (!Character.isWhitespace(cs.charAt(i))) {
+					return false;
+				}
+			}
+
+			return true;
+		} else {
+			return true;
+		}
 	}
 
 }

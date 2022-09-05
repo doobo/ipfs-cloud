@@ -17,12 +17,12 @@ public class PlatformInitResponse implements java.io.Serializable {
 	/**
 	 * 配置目录:.ipfs
 	 */
-	private String ipfsDir;
+	private String configDir;
 
 	/**
 	 * 程序路径
 	 */
-	private String ipfsPath;
+	private String exePath;
 
 	/**
 	 * 节点信息
