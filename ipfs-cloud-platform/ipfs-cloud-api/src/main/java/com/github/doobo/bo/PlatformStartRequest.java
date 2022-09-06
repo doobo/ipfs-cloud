@@ -11,6 +11,16 @@ import lombok.EqualsAndHashCode;
 public class PlatformStartRequest extends PlatformInitRequest{
 
 	/**
+	 * 配置目录:.ipfs
+	 */
+	private String configDir;
+
+	/**
+	 * 程序路径
+	 */
+	private String exePath;
+
+	/**
 	 * 节点信息
 	 */
 	private IpfsNodeInfo info;

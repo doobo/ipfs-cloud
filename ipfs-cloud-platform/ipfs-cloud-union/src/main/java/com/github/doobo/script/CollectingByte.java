@@ -11,17 +11,17 @@ import java.io.IOException;
 @Slf4j
 public class CollectingByte extends LogOutputStream {
 
+	/**
+	 * 消息体标识
+	 */
+	private String tag = "byte";
+
 	public CollectingByte() {
 	}
 
 	public CollectingByte(String tag) {
 		this.tag = tag;
 	}
-
-	/**
-	 * 消息体标识
-	 */
-	private String tag = "byte";
 
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {

@@ -1,8 +1,11 @@
 package union;
 
+import com.alibaba.fastjson.JSON;
+import com.github.doobo.bo.IpfsNodeInfo;
 import com.github.doobo.bo.PlatformInitRequest;
 import com.github.doobo.bo.PlatformInitResponse;
 import com.github.doobo.factory.PlatformInitFactory;
+import com.github.doobo.handler.AbstractPlatformInitHandler;
 import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.vbo.HookTuple;
 import com.github.doobo.vbo.ResultTemplate;
@@ -58,5 +61,18 @@ public class FactoryTests {
 			, "-c", "/Users/diding/other/ipfs-cloud/data/.ipfs"
 			, "config", "Addresses.Swarm", "--json", "[\"/ip6/::/tcp/4001\"]");
 		Optional.ofNullable(result).filter(StringUtils::isNotBlank).ifPresent(System.out::println);
+	}
+
+	@Test
+	public void testNode(){
+		String result = ScriptUtil.execDefaultTime("/Users/diding/other/ipfs-cloud/data/go-ipfs/ipfs"
+			, "-c", "/Users/diding/other/ipfs-cloud/data/.ipfs"
+			, "id");
+		Optional.ofNullable(result).filter(StringUtils::isNotBlank).ifPresent(System.out::println);
+		PlatformInitResponse response = new PlatformInitResponse();
+		response.setExePath("/Users/diding/other/ipfs-cloud/data/go-ipfs/ipfs");
+		response.setConfigDir("/Users/diding/other/ipfs-cloud/data/.ipfs");
+		//IpfsNodeInfo info = AbstractPlatformInitHandler.queryNodeInfo(response);
+		//System.out.println(JSON.toJSONString(info));
 	}
 }

@@ -18,7 +18,7 @@ public class IpfsNodeInfo implements java.io.Serializable{
 
 	private String ip;
 
-	private String port;
+	private Integer port;
 
 	private String cid;
 
@@ -27,4 +27,6 @@ public class IpfsNodeInfo implements java.io.Serializable{
 	private String agentVersion;
 
 	private String protocolVersion;
+
+	private String publicKey;
 }

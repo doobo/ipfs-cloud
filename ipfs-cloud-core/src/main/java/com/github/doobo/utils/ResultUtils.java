@@ -58,7 +58,7 @@ public abstract class ResultUtils {
             tResultTemplate.setResult(500);
             tResultTemplate.setData(data);
             tResultTemplate.setMessage(errorInfo);
-            tResultTemplate.setErrorMessage(errorInfo);
+            tResultTemplate.setSubMsg(errorInfo);
         }
         return tResultTemplate;
     }
@@ -111,7 +111,7 @@ public abstract class ResultUtils {
             tResultTemplate.setSuccess(false);
             tResultTemplate.setResult(500);
             tResultTemplate.setMessage(errorMsg);
-            tResultTemplate.setErrorMessage(errorMsg);
+            tResultTemplate.setSubMsg(errorMsg);
         }
         return tResultTemplate;
     }
@@ -124,7 +124,7 @@ public abstract class ResultUtils {
         tResultTemplate.setSuccess(false);
         tResultTemplate.setResult(500);
         tResultTemplate.setMessage(msg);
-        tResultTemplate.setErrorMessage(msg);
+        tResultTemplate.setSubMsg(msg);
         return tResultTemplate;
     }
 
@@ -136,8 +136,9 @@ public abstract class ResultUtils {
         tResultTemplate.setSuccess(false);
         tResultTemplate.setResult(500);
         tResultTemplate.setMessage(msg);
-        tResultTemplate.setErrorCode(code);
-        tResultTemplate.setErrorMessage(msg);
+        tResultTemplate.setCode(code);
+        tResultTemplate.setSubCode(code);
+        tResultTemplate.setSubMsg(msg);
         return tResultTemplate;
     }
 
@@ -149,9 +150,23 @@ public abstract class ResultUtils {
         tResultTemplate.setSuccess(false);
         tResultTemplate.setResult(code);
         tResultTemplate.setMessage(msg);
-        tResultTemplate.setErrorMessage(msg);
+        tResultTemplate.setSubMsg(msg);
         return tResultTemplate;
     }
+
+	/**
+	 * 错误信息返回
+	 */
+	public static <T> ResultTemplate<T> ofSuccess(String msg, String code) {
+		ResultTemplate<T> tResultTemplate = new ResultTemplate<>();
+		tResultTemplate.setSuccess(true);
+		tResultTemplate.setResult(1);
+		tResultTemplate.setMessage(msg);
+		tResultTemplate.setCode(code);
+		tResultTemplate.setSubMsg(msg);
+		tResultTemplate.setSubCode(code);
+		return tResultTemplate;
+	}
 
     /**
      * 列表返回,可带提示信息

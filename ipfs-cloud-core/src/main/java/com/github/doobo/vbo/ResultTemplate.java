@@ -10,11 +10,13 @@ public class ResultTemplate<T> implements Serializable {
 
     private String message;
 
+    private String code;
+
     private T data;
 
-    private String errorCode;
+    private String subCode;
 
-    private String errorMessage;
+    private String subMsg;
 
     /**
      * 分页参数,无分页时为空
@@ -28,7 +30,7 @@ public class ResultTemplate<T> implements Serializable {
         response.setSuccess(Boolean.FALSE);
         response.setResult(500);
         response.setMessage(msg);
-        response.setErrorMessage(msg);
+        response.setSubMsg(msg);
         return response;
     }
 
@@ -89,20 +91,20 @@ public class ResultTemplate<T> implements Serializable {
         this.data = data;
     }
 
-    public String getErrorCode() {
-        return errorCode;
+    public String getSubCode() {
+        return subCode;
     }
 
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
+    public void setSubCode(String subCode) {
+        this.subCode = subCode;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getSubMsg() {
+        return subMsg;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setSubMsg(String subMsg) {
+        this.subMsg = subMsg;
     }
 
     public PageBaseQuery getPage() {
@@ -121,14 +123,22 @@ public class ResultTemplate<T> implements Serializable {
         this.clueId = clueId;
     }
 
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
 	@Override
 	public String toString() {
 		return "{" +
 			"success=" + success +
 			", result=" + result +
 			", message='" + message + '\'' +
-			", errorCode='" + errorCode + '\'' +
-			", errorMessage='" + errorMessage + '\'' +
+			", errorCode='" + subCode + '\'' +
+			", errorMessage='" + subMsg + '\'' +
 			", clueId='" + clueId + '\'' +
 			'}';
 	}

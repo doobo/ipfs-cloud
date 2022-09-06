@@ -1,10 +1,9 @@
 package com.github.doobo.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.github.doobo.bo.IpfsProperties;
-import com.github.doobo.bo.PlatformInitRequest;
-import com.github.doobo.bo.PlatformInitResponse;
-import com.github.doobo.bo.PlatformStartRequest;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.github.doobo.bo.*;
 import com.github.doobo.config.IpfsInitConfig;
 import com.github.doobo.config.IpfsInitDefaultConfig;
 import com.github.doobo.factory.PlatformInitFactory;
@@ -25,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -38,9 +38,17 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Slf4j
 public abstract class AbstractPlatformInitHandler implements PlatformInitHandler{
 
+	/**
+	 * 后台运行进程
+	 */
 	private static ForkJoinPool startPool;
 
 	private static ForkJoinPool topicPool;
+
+	/**
+	 * 初始化返回信息
+	 */
+	public static PlatformInitResponse RESPONSE = new PlatformInitResponse();
 
 	/**
 	 * 初始化并启动ipfs
@@ -56,7 +64,11 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 		if(Objects.isNull(result) || !result.isSuccess()){
 			return result;
 		}
-		request.setInfo(Optional.ofNullable(result.getData()).orElse(new PlatformInitResponse()).getInfo());
+		//设置全局启动参数
+		RESPONSE = Optional.ofNullable(result.getData()).orElse(RESPONSE);
+		request.setInfo(RESPONSE.getInfo());
+		request.setConfigDir(RESPONSE.getConfigDir());
+		request.setExePath(RESPONSE.getExePath());
 		startPool = Optional.ofNullable(startPool)
 			.filter(startPool-> !startPool.isShutdown())
 			.orElseGet(IpfsInitDefaultConfig::createForkJoinPool);
@@ -203,9 +215,9 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 	}
 
 	/**
-	 * 更新ipfs控制
+	 * 更新ipfs端口配置
 	 */
-	protected void updateConfig(IpfsProperties ipfsConfig, PlatformInitResponse response){
+	protected void updatePortConfig(IpfsProperties ipfsConfig, PlatformInitResponse response){
 		if(Objects.isNull(ipfsConfig) || Objects.isNull(response)){
 			return;
 		}
@@ -276,7 +288,7 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 	/**
 	 * 添加启动节点
 	 */
-	public static void addBootstrap(List<String> nodeConfigList, PlatformInitResponse response) {
+	protected void addBootstrap(List<String> nodeConfigList, PlatformInitResponse response) {
 		if (nodeConfigList == null || nodeConfigList.isEmpty() || Objects.isNull(response)) {
 			return;
 		}
@@ -288,4 +300,32 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 		});
 	}
 
+	/**
+	 * 获取节点配置信息
+	 */
+	protected IpfsNodeInfo queryNodeInfo(PlatformInitResponse response){
+		IpfsNodeInfo info = new IpfsNodeInfo();
+		if(Objects.isNull(response)){
+			return info;
+		}
+		Optional.ofNullable(response.getIpfsConfig()).ifPresent(f -> info.setIp(f.getBindIp()));
+		Optional.ofNullable(response.getIpfsConfig()).ifPresent(f -> info.setPort(f.getPort()));
+		String config = ScriptUtil.execDefaultTime(response.getExePath(), "-c", response.getConfigDir()
+			, "id");
+		Optional.ofNullable(config).filter(StringUtils::isNotBlank).filter(f -> f.startsWith("{"))
+			.ifPresent(m ->{
+				JSONObject parseObject = JSON.parseObject(m);
+				if(Objects.nonNull(parseObject)){
+					info.setCid(parseObject.getString("ID"));
+					info.setAgentVersion(parseObject.getString("AgentVersion"));
+					info.setProtocolVersion(parseObject.getString("ProtocolVersion"));
+					info.setPublicKey(parseObject.getString("PublicKey"));
+					JSONArray addresses = parseObject.getJSONArray("Addresses");
+					if(Objects.nonNull(addresses)){
+						info.setAddress(addresses.stream().map(String::valueOf).collect(Collectors.toList()));
+					}
+				}
+			});
+		return info;
+	}
 }
