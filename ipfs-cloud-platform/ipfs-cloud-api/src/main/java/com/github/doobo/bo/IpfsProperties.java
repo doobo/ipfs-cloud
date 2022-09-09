@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 public class IpfsProperties implements java.io.Serializable{
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * ipfs默认寻址地址
 	 */
@@ -73,16 +75,6 @@ public class IpfsProperties implements java.io.Serializable{
 	 * 启用定时任务
 	 */
 	private Boolean cron;
-
-	/**
-	 *  间隔多少时间执行，单位秒
-	 */
-	private Integer fixedDelay;
-
-	/**
-	 * 延迟多长时间启动定时任务,单位秒
-	 */
-	private Integer delay;
 
 	private String publicKey;
 

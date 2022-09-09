@@ -1,6 +1,7 @@
 package union;
 
 import com.alibaba.fastjson.JSON;
+import com.github.doobo.abs.AbstractPlatformObserved;
 import com.github.doobo.bo.IpfsNodeInfo;
 import com.github.doobo.bo.PlatformInitRequest;
 import com.github.doobo.bo.PlatformInitResponse;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Observable;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -74,5 +76,20 @@ public class FactoryTests {
 		response.setConfigDir("/Users/diding/other/ipfs-cloud/data/.ipfs");
 		//IpfsNodeInfo info = AbstractPlatformInitHandler.queryNodeInfo(response);
 		//System.out.println(JSON.toJSONString(info));
+	}
+
+	@Test
+	public void testMatch(){
+		Object observed = new BBAPlatformObserved();
+		System.out.println(new BBCPlatformObserved() instanceof AbstractPlatformObserved);
+		System.out.println(observed instanceof AbstractPlatformObserved);
+	}
+
+	public static class BBCPlatformObserved extends AbstractPlatformObserved{
+
+	}
+
+	public static class BBAPlatformObserved extends Observable {
+
 	}
 }

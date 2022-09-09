@@ -1,11 +1,8 @@
 package com.github.doodob.handler;
 
-import com.github.doobo.bo.IpfsProperties;
-import com.github.doobo.bo.PlatformInitRequest;
-import com.github.doobo.bo.PlatformInitResponse;
-import com.github.doobo.bo.PlatformStartRequest;
+import com.github.doobo.bo.*;
 import com.github.doobo.handler.AbstractPlatformInitHandler;
-import com.github.doobo.script.CollectingConsole;
+import com.github.doobo.script.CollectingLog;
 import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.utils.CompressorUtils;
 import com.github.doobo.utils.FileUtils;
@@ -17,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Objects;
@@ -117,25 +115,24 @@ public class PlatformInitMacHandler extends AbstractPlatformInitHandler {
 			.with(PlatformInitResponse::setConfigDir, request.getConfigDir())
 			.with(PlatformInitResponse::setExePath, request.getExePath())
 			.build();
-		try {
-			request.addExtParam("-c").addExtParam(request.getConfigDir())
-				.addExtParam("daemon").addExtParam("--enable-pubsub-experiment");
-			String[] params = request.getExtParams().toArray(new String[0]);
-			File lock = new File(request.getConfigDir(),"repo.lock");
-			lock.deleteOnExit();
-			ScriptUtil.execCmdLine(request.getExePath(), null, new CollectingConsole()
-				,Long.MAX_VALUE, params);
-		} catch (Exception e) {
-			log.info("start ipfs daemon Error", e);
-			return ResultUtils.ofFail("start ipfs error:" + e.getMessage());
-		}
-		return ResultUtils.of(response);
+		ResultTemplate<PlatformInitResponse> template = startIpfsByScript(request);
+		return Optional.ofNullable(template).orElseGet(()-> ResultUtils.of(response));
 	}
 
 	@Override
-	public ResultTemplate<PlatformInitResponse> startTopic(PlatformInitRequest request) {
-		log.info("startTopic start:{}", request);
-		return null;
+	public ResultTemplate<Boolean> startTopic(PlatformStartRequest request) {
+		IpfsProperties properties = request.getProperties();
+		if(Objects.isNull(properties) || StringUtils.isBlank(request.getExePath())
+			|| StringUtils.isBlank(request.getConfigDir())){
+			return ResultUtils.ofFail("properties or exePath or configDir is empty");
+		}
+		if(Objects.isNull(properties.getCron()) || !properties.getCron()){
+			return ResultUtils.ofFail("not start push server,cron is null or false.");
+		}
+		if(StringUtils.isBlank(properties.getTopic())){
+			return ResultUtils.ofFail("not start push server,topic is empty.");
+		}
+		return startMsgServer(request);
 	}
 
 	/**

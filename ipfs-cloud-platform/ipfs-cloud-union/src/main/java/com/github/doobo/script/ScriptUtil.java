@@ -71,6 +71,19 @@ public abstract class ScriptUtil {
 		return execCmd(command, scriptFile, params, streamHandler, timeout);
 	}
 
+	/**
+	 * 执行日志监听,参数不特殊处理
+	 */
+	public static int execObservedNotQuoting(String command, CollectingObserved clg, Long timeout, String... params) throws IOException {
+		PumpStreamHandler streamHandler = new PumpStreamHandler(clg);
+		return execCmd(command, "", params, streamHandler, timeout, false);
+	}
+
+	public static int execObserved(String command, CollectingObserved clg, Long timeout, String... params) throws IOException {
+		PumpStreamHandler streamHandler = new PumpStreamHandler(clg);
+		return execCmd(command, "", params, streamHandler, timeout);
+	}
+
 	public static int execCmdPwd(String command, File pwd, CollectingLog clg, Long timeout, String... params) throws IOException {
 		PumpStreamHandler streamHandler = new PumpStreamHandler(clg);
 		return execCmd(command, pwd, params, streamHandler, timeout);

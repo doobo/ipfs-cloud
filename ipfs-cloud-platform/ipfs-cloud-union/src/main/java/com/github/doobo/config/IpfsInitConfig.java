@@ -53,8 +53,6 @@ public class IpfsInitConfig {
 		properties.setOwnPublicKey(Optional.ofNullable(properties.getOwnPublicKey()).orElse(defaultIpfsProperties.getOwnPrivateKey()));
 		properties.setBootstrap(Optional.ofNullable(properties.getBootstrap()).orElse(defaultIpfsProperties.getBootstrap()));
 		properties.setCron(Optional.ofNullable(properties.getCron()).orElse(defaultIpfsProperties.getCron()));
-		properties.setDelay(Optional.ofNullable(properties.getDelay()).orElse(defaultIpfsProperties.getDelay()));
-		properties.setFixedDelay(Optional.ofNullable(properties.getFixedDelay()).orElse(defaultIpfsProperties.getFixedDelay()));
 		isFirst = true;
 		return properties;
 	}

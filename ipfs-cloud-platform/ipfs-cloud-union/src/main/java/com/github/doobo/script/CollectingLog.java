@@ -23,6 +23,6 @@ public class CollectingLog extends LogOutputStream {
 
 	@Override
 	protected void processLine(String line, int level) {
-		log.debug("日志级别{}：{}",level,line);
+		log.debug("script {}: {}", tag, line);
 	}
 }

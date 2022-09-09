@@ -7,11 +7,13 @@ import com.github.doobo.bo.*;
 import com.github.doobo.config.IpfsInitConfig;
 import com.github.doobo.config.IpfsInitDefaultConfig;
 import com.github.doobo.factory.PlatformInitFactory;
+import com.github.doobo.script.CollectingObserved;
 import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.utils.FileUtils;
 import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.ResultUtils;
 import com.github.doobo.utils.WordUtils;
+import com.github.doobo.vbo.Builder;
 import com.github.doobo.vbo.ResultTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -72,7 +74,11 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 		startPool = Optional.ofNullable(startPool)
 			.filter(startPool-> !startPool.isShutdown())
 			.orElseGet(IpfsInitDefaultConfig::createForkJoinPool);
-		startPool.execute(()-> PlatformInitFactory.executeHandler(request, handler-> handler.startIpfs(request)));
+		startPool.execute(()-> PlatformInitFactory.executeHandler(request, handler-> {
+			ResultTemplate<PlatformInitResponse> template = handler.startIpfs(request);
+			Optional.ofNullable(template).filter(f -> !f.isSuccess()).ifPresent(m -> log.error("startIpfsError:{}", m));
+			return template;
+		}));
 		return result;
 	}
 
@@ -89,7 +95,11 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 		topicPool = Optional.ofNullable(topicPool)
 			.filter(startPool-> !startPool.isShutdown())
 			.orElseGet(IpfsInitDefaultConfig::createForkJoinPool);
-		topicPool.execute(()-> PlatformInitFactory.executeHandler(request, handler-> handler.startTopic(request)));
+		topicPool.execute(()-> PlatformInitFactory.executeHandler(request, handler-> {
+			ResultTemplate<Boolean> template = handler.startTopic(request);
+			Optional.ofNullable(template).filter(f -> !f.isSuccess()).ifPresent(m -> log.error("startTopicError:{}", m));
+			return template;
+		}));
 		return ResultUtils.of(Boolean.TRUE);
 	}
 
@@ -296,7 +306,8 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 			String s = ScriptUtil.execDefaultTime(response.getExePath()
 				, "-c", response.getConfigDir()
 				, "bootstrap", "add", m);
-			log.info("bootstrap add:{}", s);
+			Optional.ofNullable(s).filter(StringUtils::isNotBlank)
+				.ifPresent(c -> log.info("bootstrap add:{}", s.replace("\n", "")));
 		});
 	}
 
@@ -327,5 +338,59 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 				}
 			});
 		return info;
+	}
+
+	/**
+	 * 通过脚本启动IPFS
+	 */
+	protected ResultTemplate<PlatformInitResponse> startIpfsByScript(PlatformStartRequest request){
+		try {
+			request.addExtParam("-c").addExtParam(request.getConfigDir())
+				.addExtParam("daemon").addExtParam("--enable-pubsub-experiment");
+			String[] params = request.getExtParams().toArray(new String[0]);
+			File lock = new File(request.getConfigDir(),"repo.lock");
+			lock.deleteOnExit();
+			//初始化日志收集器
+			PlatformObserverRequest observerRequest = Builder.of(PlatformObserverRequest::new)
+				.with(PlatformObserverRequest::setConfigDir, request.getConfigDir())
+				.with(PlatformObserverRequest::setExePath, request.getExePath())
+				.with(PlatformObserverRequest::setType, "start")
+				.build();
+			CollectingObserved observed = new CollectingObserved(observerRequest);
+			ScriptUtil.execObserved(request.getExePath(), observed, Long.MAX_VALUE, params);
+		} catch (Exception e) {
+			log.info("start ipfs daemon Error", e);
+			return ResultUtils.ofFail("start ipfs error:" + e.getMessage());
+		}
+		return null;
+	}
+
+	/**
+	 * 启动消息服务
+	 */
+	protected ResultTemplate<Boolean> startMsgServer(PlatformStartRequest request){
+		try {
+			IpfsProperties properties = request.getProperties();
+			String rs = ScriptUtil.execDefaultTime(request.getExePath(), "-c", request.getConfigDir()
+				, "pubsub", "ls");
+			if(rs != null && rs.contains(properties.getTopic())){
+				return ResultUtils.of(true, "topic already exist");
+			}
+			log.info("start msg server topic:{}", properties.getTopic());
+			//初始化日志收集器
+			PlatformObserverRequest observerRequest = Builder.of(PlatformObserverRequest::new)
+				.with(PlatformObserverRequest::setConfigDir, request.getConfigDir())
+				.with(PlatformObserverRequest::setExePath, request.getExePath())
+				.with(PlatformObserverRequest::setType, "topic")
+				.build();
+			CollectingObserved observed = new CollectingObserved(observerRequest);
+			ScriptUtil.execObserved(request.getExePath(), observed, Long.MAX_VALUE
+				, "-c", request.getConfigDir(), "pubsub", "sub", properties.getTopic()
+				, "--encoding", "json");
+		} catch (Exception e) {
+			log.error("startTopicError:", e);
+			return ResultUtils.ofFail("startTopicError:" + e.getMessage());
+		}
+		return ResultUtils.of(true);
 	}
 }

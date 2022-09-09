@@ -30,7 +30,7 @@ public class PlatformInitMacHandler extends AbstractPlatformInitHandler {
 	}
 
 	@Override
-	public ResultTemplate<PlatformInitResponse> startTopic(PlatformInitRequest request) {
+	public ResultTemplate<Boolean> startTopic(PlatformStartRequest request) {
 		return null;
 	}
 

@@ -136,6 +136,7 @@ public class ResultTemplate<T> implements Serializable {
 		return "{" +
 			"success=" + success +
 			", result=" + result +
+			", code='" + code + '\'' +
 			", message='" + message + '\'' +
 			", errorCode='" + subCode + '\'' +
 			", errorMessage='" + subMsg + '\'' +

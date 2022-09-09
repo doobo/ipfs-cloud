@@ -25,7 +25,7 @@ public class ResultMergeBo extends PageBaseQuery {
     /**
      * 添加结果数据
      */
-    public <T> void addResult(ResultTemplate<T> result){
+    public synchronized <T> void addResult(ResultTemplate<T> result){
         resultList = Optional.ofNullable(resultList).orElseGet(ArrayList::new);
         Optional.ofNullable(result).ifPresent(resultList::add);
     }

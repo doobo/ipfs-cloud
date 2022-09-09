@@ -57,7 +57,7 @@ public interface PlatformInitHandler {
 	/**
 	 * 开启监听
 	 */
-	ResultTemplate<PlatformInitResponse> startTopic(PlatformInitRequest request);
+	ResultTemplate<Boolean> startTopic(PlatformStartRequest request);
 
 	/**
 	 * 停止监听
