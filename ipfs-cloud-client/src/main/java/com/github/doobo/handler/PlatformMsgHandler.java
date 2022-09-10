@@ -1,12 +1,11 @@
 package com.github.doobo.handler;
 
-import com.github.doobo.abs.AbstractPlatformObserver;
-import com.github.doobo.bo.PlatformObserverRequest;
+import com.github.doobo.bo.PubMessageBO;
+import com.github.doobo.bo.PubMsgEncodeBO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
-import java.util.Observable;
 
 /**
  * 消息处理器
@@ -17,15 +16,15 @@ import java.util.Observable;
  */
 @Slf4j
 @Component
-public class PlatformMsgHandler extends AbstractPlatformObserver {
+public class PlatformMsgHandler extends AbstractPlatformMsgHandler {
+
 
 	@Override
-	public boolean matching(PlatformObserverRequest request) {
-		return Objects.equals("topic", request.getType());
-	}
-
-	@Override
-	public void executor(PlatformObserverRequest request, Observable o) {
-		log.info("msg server:{}", request.getMsg());
+	public void handler(PubMessageBO body, PubMsgEncodeBO msg) {
+		if(Objects.isNull(msg) || Objects.isNull(body)){
+			log.error("handler body or msg is null");
+			return;
+		}
+		log.info("handler body:{}", body);
 	}
 }

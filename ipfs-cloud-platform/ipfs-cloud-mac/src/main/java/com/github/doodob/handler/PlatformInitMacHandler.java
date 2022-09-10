@@ -2,7 +2,6 @@ package com.github.doodob.handler;
 
 import com.github.doobo.bo.*;
 import com.github.doobo.handler.AbstractPlatformInitHandler;
-import com.github.doobo.script.CollectingLog;
 import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.utils.CompressorUtils;
 import com.github.doobo.utils.FileUtils;
@@ -14,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Objects;
@@ -126,7 +124,7 @@ public class PlatformInitMacHandler extends AbstractPlatformInitHandler {
 			|| StringUtils.isBlank(request.getConfigDir())){
 			return ResultUtils.ofFail("properties or exePath or configDir is empty");
 		}
-		if(Objects.isNull(properties.getCron()) || !properties.getCron()){
+		if(Objects.isNull(properties.getStartTopic()) || !properties.getStartTopic()){
 			return ResultUtils.ofFail("not start push server,cron is null or false.");
 		}
 		if(StringUtils.isBlank(properties.getTopic())){

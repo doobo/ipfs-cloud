@@ -74,7 +74,7 @@ public class IpfsProperties implements java.io.Serializable{
 	/**
 	 * 启用定时任务
 	 */
-	private Boolean cron;
+	private Boolean startTopic;
 
 	private String publicKey;
 

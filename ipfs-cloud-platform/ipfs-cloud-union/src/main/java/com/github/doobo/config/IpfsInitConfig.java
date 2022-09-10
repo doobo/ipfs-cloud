@@ -52,7 +52,7 @@ public class IpfsInitConfig {
 		properties.setOwnPrivateKey(Optional.ofNullable(properties.getOwnPrivateKey()).orElse(defaultIpfsProperties.getOwnPrivateKey()));
 		properties.setOwnPublicKey(Optional.ofNullable(properties.getOwnPublicKey()).orElse(defaultIpfsProperties.getOwnPrivateKey()));
 		properties.setBootstrap(Optional.ofNullable(properties.getBootstrap()).orElse(defaultIpfsProperties.getBootstrap()));
-		properties.setCron(Optional.ofNullable(properties.getCron()).orElse(defaultIpfsProperties.getCron()));
+		properties.setStartTopic(Optional.ofNullable(properties.getStartTopic()).orElse(defaultIpfsProperties.getStartTopic()));
 		isFirst = true;
 		return properties;
 	}

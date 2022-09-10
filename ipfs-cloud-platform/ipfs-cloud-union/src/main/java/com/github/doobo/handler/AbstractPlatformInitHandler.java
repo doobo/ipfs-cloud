@@ -8,10 +8,12 @@ import com.github.doobo.config.IpfsInitConfig;
 import com.github.doobo.config.IpfsInitDefaultConfig;
 import com.github.doobo.factory.PlatformInitFactory;
 import com.github.doobo.script.CollectingObserved;
+import com.github.doobo.script.PwdUtils;
 import com.github.doobo.script.ScriptUtil;
 import com.github.doobo.utils.FileUtils;
 import com.github.doobo.utils.OsUtils;
 import com.github.doobo.utils.ResultUtils;
+import com.github.doobo.utils.SequenceUtils;
 import com.github.doobo.utils.WordUtils;
 import com.github.doobo.vbo.Builder;
 import com.github.doobo.vbo.ResultTemplate;
@@ -104,6 +106,36 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 	}
 
 	/**
+	 * 发送消息
+	 */
+	public static ResultTemplate<PubMsgEncodeBO> pubMessage(PubMessageBO bo){
+		if(Objects.isNull(bo) || StringUtils.isBlank(bo.getType()) || StringUtils.isBlank(bo.getTarget())){
+			return ResultUtils.ofFail("type or target is empty");
+		}
+		IpfsProperties ipfsConfig = RESPONSE.getIpfsConfig();
+		if(Objects.isNull(ipfsConfig) || !Objects.equals(Boolean.TRUE, ipfsConfig.getStartDaemon())
+			|| StringUtils.isBlank(ipfsConfig.getTopic())){
+			return ResultUtils.ofFail("ipfs not start or topic is blank");
+		}
+		PubMsgEncodeBO pubMsg = bo.instanceEncode();
+		bo.setFrom(Optional.ofNullable(bo.getFrom())
+			.filter(StringUtils::isNotBlank)
+			.orElse(RESPONSE.getCid()));
+		bo.setTimeStamp(Optional.ofNullable(bo.getTimeStamp())
+			.orElseGet(System::currentTimeMillis));
+		bo.setId(Optional.ofNullable(bo.getId())
+			.orElseGet(SequenceUtils::nextId));
+		pubMsg.setFrom(bo.getFrom());
+		String enc = PwdUtils.encode(JSON.toJSONString(bo),  ipfsConfig.getPublicKey());
+		pubMsg.setMsg(enc);
+		String s = ScriptUtil.execToString(RESPONSE.getExePath(), null, TimeUnit.SECONDS.toMillis(5)
+			, "-c", RESPONSE.getConfigDir()
+			, "pubsub", "pub", ipfsConfig.getTopic(), pubMsg.getFormatMsg());
+		Optional.ofNullable(s).filter(StringUtils::isNotBlank).ifPresent(c -> log.info("pub msg:{}", c));
+		return ResultUtils.of(pubMsg);
+	}
+
+	/**
 	 * 重启IPFS
 	 */
 	@Override
@@ -124,17 +156,18 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 	@Override
 	public ResultTemplate<Boolean> stopIpfs(PlatformStartRequest request) {
 		this.stopTopic(request);
-		Optional.ofNullable(startPool).ifPresent(ForkJoinPool::shutdownNow);
+		Optional.ofNullable(startPool).filter(f -> !f.isShutdown())
+			.ifPresent(ForkJoinPool::shutdownNow);
 		return ResultUtils.of(Boolean.TRUE);
 	}
-
 
 	/**
 	 * 停止监听
 	 */
 	@Override
 	public ResultTemplate<Boolean> stopTopic(PlatformInitRequest request) {
-		Optional.ofNullable(topicPool).ifPresent(ForkJoinPool::shutdownNow);
+		Optional.ofNullable(topicPool).filter(f -> !f.isShutdown())
+			.ifPresent(ForkJoinPool::shutdownNow);
 		return ResultUtils.of(Boolean.TRUE);
 	}
 

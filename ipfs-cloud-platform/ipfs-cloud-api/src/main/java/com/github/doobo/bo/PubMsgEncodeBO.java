@@ -35,7 +35,15 @@ public class PubMsgEncodeBO implements java.io.Serializable {
 	 */
 	private String msg;
 
-	public String formatMsg(){
-		return String.format("%s|%s:%s:%s", type, target, msg, from);
+	/**
+	 * 消息公钥匙,特殊加密时使用
+	 */
+	private String publicKey="0";
+
+	/**
+	 * 格式化消息体,方便发送
+	 */
+	public String getFormatMsg(){
+		return String.format("%s:%s:%s:%s:%s", type, target, msg, publicKey, from);
 	}
 }
