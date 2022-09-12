@@ -8,6 +8,11 @@
     <artifactId>ipfs-cloud-linux</artifactId>
     <version>1.3-SNAPSHOT</version>
 
+    <properties>
+        <lombok.version>1.18.16</lombok.version>
+        <slf4j.version>1.7.36</slf4j.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>ipfs.cloud</groupId>
@@ -15,6 +20,22 @@
             <version>${project.version}</version>
             <optional>true</optional>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

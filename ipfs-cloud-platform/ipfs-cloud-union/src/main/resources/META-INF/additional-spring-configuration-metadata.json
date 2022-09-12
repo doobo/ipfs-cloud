@@ -2,17 +2,17 @@
   "properties": [
     {
       "name": "ipfs.port",
-      "type": "java.lang.String",
+      "type": "java.lang.Integer",
       "description": "Description for ipfs.port."
     },
     {
       "name": "ipfs.adminPort",
-      "type": "java.lang.String",
+      "type": "java.lang.Integer",
       "description": "Description for ipfs.adminPort."
     },
     {
       "name": "ipfs.httpPort",
-      "type": "java.lang.String",
+      "type": "java.lang.Integer",
       "description": "Description for ipfs.httpPort."
     },
     {
@@ -27,12 +27,12 @@
     },
     {
       "name": "ipfs.startDaemon",
-      "type": "java.lang.String",
+      "type": "java.lang.Boolean",
       "description": "Description for ipfs.startDaemon."
     },
     {
       "name": "ipfs.writeFile",
-      "type": "java.lang.String",
+      "type": "java.lang.Boolean",
       "description": "Description for ipfs.writeFile."
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "name": "ipfs.delay",
-      "type": "java.lang.String",
+      "type": "java.lang.Long",
       "description": "Description for ipfs.delay."
     },
     {
@@ -79,5 +79,10 @@
       "name": "ipfs.bootstrap",
       "type": "java.lang.String",
       "description": "Description for ipfs.bootstrap."
+    },
+    {
+      "name": "ipfs.startConfig",
+      "type": "java.lang.Boolean",
+      "description": "Description for ipfs.startConfig."
     }
   ] }

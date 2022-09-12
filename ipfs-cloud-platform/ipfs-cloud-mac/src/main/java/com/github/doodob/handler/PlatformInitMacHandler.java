@@ -147,7 +147,7 @@ public class PlatformInitMacHandler extends AbstractPlatformInitHandler {
 			String ipfs = new File(pwd + "/go-ipfs/ipfs").getCanonicalPath();
 			ScriptUtil.execToString("chmod", null, TimeUnit.SECONDS.toMillis(10), "+x" , ipfs);
 		} catch (Exception e){
-			log.error("initUnixIpfs ipfs env fail", e);
+			log.error("initUnixIpfs mac fail", e);
 			return false;
 		}
 		return true;

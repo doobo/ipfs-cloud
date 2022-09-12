@@ -1,5 +1,6 @@
 ipfs:
   default:
+    startConfig: true
     port: 14001
     adminPort: 15001
     httpPort: 18080

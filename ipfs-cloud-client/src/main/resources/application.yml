@@ -1,10 +1,5 @@
 server:
   port: 6103
-  servlet:
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
 
 spring:
   application:
@@ -15,3 +10,21 @@ spring:
     multipart:
       max-file-size: 10GB
       max-request-size: 30GB
+
+ipfs:
+  startConfig: false
+  port: 24001
+  adminPort: 25001
+  httpPort: 28080
+  bindIp: 127.0.0.1
+  privateNetwork: true
+  startDaemon: true
+  writeFile: true
+  swarmKey: '/key/swarm/psk/1.0.0/\n/base16/\na948088bcc8b6f603a2dd062a9db57db0140c4ea88075729e5605e3d3ddb4eac'
+  topic: 145ee96d-fea0-4555-8573-db2ce1dd7e55
+  initDir: data
+  startTopic: true
+  publicKey: 0429ecc958c4f9c6eb0af70264c4a88f5d30dc3e14e0e77678ca4ce8c248f2f9ed9c0bae11d06b6581e10e519df78f6fd72fa0d9528c43cfb30af35f2a44a2941e
+  privateKey: 750a22cdb25b3d022b5be6dd90ad7c8439c4ebe2f77bb9424297c037c0d06638
+  bootstrap:
+    - /ip4/159.75.77.31/tcp/3101/ipfs/QmY4KqdybeSUF89VaBHKvLW8ZCyzznZtU7QZ3J9gLKgqjb

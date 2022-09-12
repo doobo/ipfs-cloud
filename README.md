@@ -85,4 +85,4 @@ nohup java -jar -Dserver.port=9057 -Dipfs.port=9052 -Dipfs.adminPort=9053 -Dipfs
 ```
 
 ## IPFS讨论互助群
-![QQ群.jpeg](https://5fu8.com/ipfs/QmQaeZXpSKZYnrvyuKKPGXkcDZTqyA9cdKuegH4qr3AMgr)
+![QQ群.jpeg](http://cdn.5fu8.com/ipfs/QmQaeZXpSKZYnrvyuKKPGXkcDZTqyA9cdKuegH4qr3AMgr)
