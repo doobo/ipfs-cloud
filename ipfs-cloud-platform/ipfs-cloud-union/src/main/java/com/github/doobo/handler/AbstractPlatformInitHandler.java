@@ -136,6 +136,23 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 	}
 
 	/**
+	 * 初始化并启动ipfs
+	 */
+	public static synchronized ResultTemplate<String> execIpfsShell(PlatformInitRequest request){
+		if(Objects.isNull(request) || Objects.isNull(request.getExtParams())){
+			return ResultUtils.ofFail("入参异常:request");
+		}
+		request.setOsName(Optional.ofNullable(request.getOsName()).filter(StringUtils::isNotBlank)
+			.orElseGet(()-> System.getProperty("os.name")));
+		request.setProperties(Optional.ofNullable(request.getProperties()).orElseGet(IpfsInitConfig::getIpfsProperties));
+		return PlatformInitFactory.executeHandler(request, handler-> {
+			ResultTemplate<String> template = handler.execIpfsCmd(request);
+			Optional.ofNullable(template).filter(f -> !f.isSuccess()).ifPresent(m -> log.error("execIpfsCmdError:{}", m));
+			return template;
+		});
+	}
+
+	/**
 	 * 重启IPFS
 	 */
 	@Override
@@ -425,5 +442,25 @@ public abstract class AbstractPlatformInitHandler implements PlatformInitHandler
 			return ResultUtils.ofFail("startTopicError:" + e.getMessage());
 		}
 		return ResultUtils.of(true);
+	}
+
+	/**
+	 * 执行IPFS命令,并返回结果
+	 */
+	public ResultTemplate<String> execIpfsCmd(PlatformInitRequest request) {
+		if(Objects.isNull(RESPONSE) || Objects.isNull(request) || Objects.isNull(request.getExtParams())){
+			return ResultUtils.ofFail("input params is null:exePath or extParams");
+		}
+		try {
+			List<String> extParams = request.getExtParams();
+			extParams.add(0, RESPONSE.getConfigDir());
+			extParams.add(0, "-c");
+			String[] params = request.getExtParams().toArray(new String[0]);
+			String result = ScriptUtil.execDefaultTime(RESPONSE.getExePath(), params);
+			return ResultUtils.of(result);
+		} catch (Exception e) {
+			log.info("start ipfs daemon Error", e);
+			return ResultUtils.ofFail("execIpfsCmd error:" + e.getMessage());
+		}
 	}
 }

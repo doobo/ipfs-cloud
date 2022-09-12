@@ -63,4 +63,9 @@ public interface PlatformInitHandler {
 	 * 停止监听
 	 */
 	ResultTemplate<Boolean> stopTopic(PlatformInitRequest request);
+
+	/**
+	 * 执行IPFS命令,并返回结果
+	 */
+	ResultTemplate<String> execIpfsCmd(PlatformInitRequest request);
 }
