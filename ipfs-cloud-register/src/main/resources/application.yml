@@ -1,0 +1,6 @@
+server:
+  port: 6109
+
+spring:
+  application:
+    name: ipfs-cloud-register

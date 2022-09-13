@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IpfsMirrorApplication {
+public class IpfsSearchApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IpfsMirrorApplication.class, args);
+		SpringApplication.run(IpfsSearchApplication.class, args);
 	}
 }

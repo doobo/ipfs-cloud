@@ -18,6 +18,7 @@ import java.util.Objects;
 @Component
 public class PlatformMsgHandler extends AbstractPlatformMsgHandler {
 
+
 	@Override
 	public void handler(PubMessageBO body, PubMsgEncodeBO msg) {
 		if(Objects.isNull(msg) || Objects.isNull(body)){

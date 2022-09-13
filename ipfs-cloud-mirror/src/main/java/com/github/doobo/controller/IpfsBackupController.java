@@ -1,10 +1,7 @@
 package com.github.doobo.controller;
 
-import com.github.doobo.handler.IpfsBackupControllerApi;
-import com.github.doobo.model.IpfsFileInfo;
-import com.github.doobo.params.ResultTemplate;
-import com.github.doobo.service.IpfsBackupService;
 import com.github.doobo.utils.ResultUtils;
+import com.github.doobo.vbo.ResultTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +17,7 @@ import java.io.IOException;
  */
 @Slf4j
 @RestController
-public class IpfsBackupController implements IpfsBackupControllerApi {
-
-	@Resource
-	private IpfsBackupService ipfsBackupService;
+public class IpfsBackupController {
 
 	/**
 	 * 跳转到文件管理界面
@@ -33,16 +27,5 @@ public class IpfsBackupController implements IpfsBackupControllerApi {
 		ModelAndView mv = new ModelAndView();
 		mv.setViewName("redirect:/fm.html#elf_A_");
 		return mv;
-	}
-
-	@Override
-	public ResultTemplate<Boolean> backUpFile(@Validated @RequestBody IpfsFileInfo info) {
-		try {
-			ipfsBackupService.backUpFile(info);
-		} catch (IOException e) {
-			log.error("backUpFileError", e);
-			return ResultUtils.of(Boolean.FALSE);
-		}
-		return ResultUtils.of(Boolean.TRUE);
 	}
 }

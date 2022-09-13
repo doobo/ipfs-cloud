@@ -1,0 +1,6 @@
+server:
+  port: 6107
+
+spring:
+  application:
+    name: ipfs-cloud-search

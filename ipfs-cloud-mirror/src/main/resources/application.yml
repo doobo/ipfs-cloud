@@ -1,0 +1,6 @@
+server:
+  port: 6105
+
+spring:
+  application:
+    name: ipfs-cloud-mirror

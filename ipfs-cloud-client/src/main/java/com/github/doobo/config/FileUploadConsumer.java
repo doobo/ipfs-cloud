@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -29,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -162,7 +164,13 @@ public class FileUploadConsumer extends AbstractCmdObserver {
 				cid = ipfsPathCid(result, item.getName());
 				if(cid != null && !cid.isEmpty()){
 					item.setIpfs(cid);
-					item.setRemarks(Collections.singletonList(result));
+					if(StringUtils.isNotBlank(result)){
+						List<String> collect = Arrays.stream(result.split("\n"))
+							.filter(StringUtils::isNotBlank)
+							.map(s -> s.replaceAll("\\s+", " ").trim())
+							.collect(Collectors.toList());
+						item.setRemarks(collect);
+					}
 					item.setTs(Calendar.getInstance().getTimeInMillis());
 				}
 				log.info("uploadFile:{}", item);
