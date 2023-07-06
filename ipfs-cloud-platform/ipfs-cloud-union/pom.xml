@@ -17,7 +17,7 @@
         <commons.lang3.version>3.8.1</commons.lang3.version>
         <apache.compress.version>1.20</apache.compress.version>
         <hutool.crypto.version>5.7.10</hutool.crypto.version>
-        <bouncycastle.version>1.69</bouncycastle.version>
+        <bouncycastle.version>1.74</bouncycastle.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
